@@ -16,6 +16,32 @@ declare module 'styled-components' {
       light: string;
       dark: string;
       text: string;
+    },
+    breakpoints: {
+      xSmall: {
+        min: string;
+        max: string;
+      },
+      small: {
+        min: string;
+        max: string;
+      },
+      medium: {
+        min: string;
+        max: string;
+      },
+      large: {
+        min: string;
+        max: string;
+      },
+      xLarge: {
+        min: string;
+        max: string;
+      },
+      xxLarge: {
+        min: string;
+        max: string;
+      },
     }
   }
 }

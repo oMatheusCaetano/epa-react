@@ -18,6 +18,33 @@ const theme: DefaultTheme = {
     dark: '#BEBFC0',
     text: '#333',
   },
+
+  breakpoints: {
+    xSmall: {
+      min: '0px',
+      max: '575px',
+    },
+    small: {
+      min: '576px',
+      max: '767px',
+    },
+    medium: {
+      min: '768px',
+      max: '991px',
+    },
+    large: {
+      min: '992px',
+      max: '1199px',
+    },
+    xLarge: {
+      min: '1200px',
+      max: '1399px',
+    },
+    xxLarge: {
+      min: '1400px',
+      max: '',
+    },
+  },
 };
 
 export default theme;
