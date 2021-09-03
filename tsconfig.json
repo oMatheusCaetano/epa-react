@@ -1,0 +1,40 @@
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "target": "es2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ]
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "build",
+    "node_modules"
+  ],
+  "files": [
+    "src/styles/styled.d.ts"
+  ]
+}

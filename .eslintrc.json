@@ -1,0 +1,68 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "rules": {
+    "react/no-array-index-key": "off",
+    "react/destructuring-assignment": "off",
+    "@typescript-eslint/explicit-module-boundary-types":"off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/prop-types": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "no-param-reassign": "off",
+    "react/jsx-props-no-spreading": "off",
+    "object-curly-newline": "off",
+    "no-unused-expressions": "off",
+    "react/require-default-props": "off",
+    "no-shadow": "off",
+    "react/jsx-no-target-blank": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "react/button-has-type": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".tsx"]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "camelcase": "off",
+    "@typescript-eslint/ban-types": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "no-use-before-define": "off",
+    "comma-dangle": [2, "always-multiline"]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {},
+      "babel-plugin-root-import": {
+        "rootPathPrefix": "~",
+        "rootPathSuffix": "src"
+      }
+    }
+  }
+}

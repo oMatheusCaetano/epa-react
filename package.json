@@ -1,0 +1,74 @@
+{
+  "name": "epa-web-v2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.2",
+    "@types/axios": "^0.14.0",
+    "@unform/core": "^2.1.6",
+    "@unform/web": "^2.1.6",
+    "axios": "^0.21.1",
+    "bootstrap": "^5.0.2",
+    "polished": "^4.1.3",
+    "react": "^17.0.2",
+    "react-data-table-component": "^7.0.0-rc2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-mobile-store-button": "^0.0.6",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-spinners": "^0.11.0",
+    "styled-components": "^5.3.0",
+    "swr": "^0.5.6",
+    "use-persisted-state": "^0.3.3",
+    "web-vitals": "^1.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.9",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "@types/use-persisted-state": "^0.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/parser": "^4.25.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-root-import": "^6.6.0",
+    "customize-cra": "^1.0.0",
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-import-resolver-babel-plugin-root-import": "^1.1.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4",
+    "react-app-rewired": "^2.1.8",
+    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.1.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
