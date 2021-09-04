@@ -2,14 +2,15 @@ import { DefaultTheme } from 'styled-components';
 
 const theme: DefaultTheme = {
   title: 'light',
-  font: '400 15px Roboto, Poppins, sans-serif',
+  font: '400 14px Roboto, Poppins, sans-serif',
 
   radius: {
     default: '8px',
+    small: '5px',
   },
 
   colors: {
-    primary: '#19A4D2',
+    primary: '#2BB6EE',
     secondary: '#888',
     success: '#1DA770',
     warning: '#C9970F',

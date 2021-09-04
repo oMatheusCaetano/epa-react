@@ -1,14 +1,19 @@
 import React from 'react';
 
+import * as Styled from './styles';
+
 interface IProps {
   className?: string;
   title: string;
 }
 
 const SectionSeparator: React.FC<IProps> = (props) => (
-  <div className={`${props.className} bg-primary text-white rounded px-2 py-1`}>
-    <h6>{props.title}</h6>
-  </div>
+  <Styled.Container className={`${props.className}`}>
+    <Styled.Left>
+      <Styled.Title>{props.title}</Styled.Title>
+    </Styled.Left>
+    <Styled.Right />
+  </Styled.Container>
 );
 
 export default SectionSeparator;

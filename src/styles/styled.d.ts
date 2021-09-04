@@ -5,7 +5,8 @@ declare module 'styled-components' {
     title: string;
     font: string;
     radius: {
-      default: string,
+      default: string;
+      small: string;
     },
     colors: {
       primary: string;
