@@ -1,12 +1,60 @@
 import styled, { css } from 'styled-components';
 import { FaSadTear, FaSmileBeam, FaLaughBeam, FaAngry } from 'react-icons/fa';
+import { darken } from 'polished';
 
 import PageContainer from '~/core/view/components/misc/PageContainer';
 import SectionContainer from '~/core/view/components/misc/SectionContainer';
 
 export const Container = styled(PageContainer)`
-  img {
-    border-radius: 5px;
+  p {
+    line-height: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+  }
+
+  tr {
+    th {
+      border-top: 1px solid lightgray;
+      border-bottom: 1px solid lightgray;
+      font-weight: bold;
+    }
+
+    th:first-of-type {
+      border-left: 1px solid lightgray;
+    }
+
+    th:last-of-type {
+      border-right: 1px solid lightgray;
+    }
+
+    td:last-of-type {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+
+    th, td {
+      padding: 5px 10px;
+      background: ${({ theme }) => theme.colors.light};
+    }
+
+    th:first-of-type, 
+    td:first-of-type {
+      width: 60%;
+      border-top-left-radius: ${({ theme }) => theme.radius.default};
+      border-bottom-left-radius: ${({ theme }) => theme.radius.default};
+    }
+
+    th:last-of-type, 
+    td:last-of-type {
+      border-top-right-radius: ${({ theme }) => theme.radius.default};
+      border-bottom-right-radius: ${({ theme }) => theme.radius.default};
+      text-align: center;
+    }
   }
 `;
 
@@ -111,13 +159,20 @@ export const UserHumor = styled.section`
           font-weight: 600;
         }
 
+        &__humors {
+          margin: 10px 0;
+        }
+
         footer {
           display: flex;
           align-items: center;
-          margin-top: 5px;
-
+          
           div {
             flex: 1;
+          }
+
+          label {
+            margin-right: 10px;
           }
         }
       }
@@ -155,6 +210,11 @@ export const UserHumorIdentification = styled.section`
       align-items: center;
       margin: 4px 5px 0 0;
       padding-left: 5px;
+      transition: .3s;
+
+      &:hover {
+        background: ${({ theme }) => darken(0.1, theme.colors.light)};
+      }
     }
   }
 
@@ -181,12 +241,12 @@ export const UserHumorIdentification = styled.section`
 `;
 
 export const UserSpace = styled(SectionContainer)`
-  p {
-    line-height: 20px;
-  }
+  text-align: center;
 `;
 
 export const UserGoal = styled(SectionContainer)`
+  margin-bottom: 10px;
+
   footer {
     display: flex;
     align-items: center;
@@ -212,11 +272,15 @@ export const RightFib = styled(SectionContainer)`
     max-width: 100%;
     margin-bottom: 10px;
   }
+
+  text-align: center;
 `;
 
 export const RightGoals = styled(SectionContainer)`
+  td:first-of-type {
+    width: 89% !important;
+  }
 `;
 
 export const RightAchievedGoals = styled(SectionContainer)`
-
 `;

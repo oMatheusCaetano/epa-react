@@ -1,12 +1,15 @@
 import React from 'react';
 
 import EpaThemeProvider from '~/core/view/components/misc/EpaThemeProvider';
-import Measure from './features/GrossInternalHappiness/pages/Measure';
+import Measure from './features/GrossInternalHappiness/view/pages/Measure';
 
-const App: React.FC = () => (
-  <EpaThemeProvider>
-    <Measure />
-  </EpaThemeProvider>
-);
+const App: React.FC = () => {
+  console.log(localStorage.getItem('item'));
 
+  return (
+    <EpaThemeProvider>
+      <Measure />
+    </EpaThemeProvider>
+  );
+};
 export default App;

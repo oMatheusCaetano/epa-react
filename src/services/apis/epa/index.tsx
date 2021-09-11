@@ -6,5 +6,5 @@ const headers = { Authorization: `Bearer ${token}` };
 
 export default axios.create({
   headers,
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: 'http://localhost/epa/api/',
 });

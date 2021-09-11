@@ -1,16 +1,29 @@
 import React from 'react';
 
-import * as Styled from './styles';
-
-interface Props {
+type Props = JSX.IntrinsicElements['button'] & {
   className?: string;
   size?: string;
+  loading?: boolean;
 }
 
-const Button: React.FC<Props & React.HTMLProps<HTMLButtonElement>> = ({ className, children, size = 'sm', onClick }) => (
-  <Styled.Button className={`btn btn-${size} ${className}`} onClick={onClick}>
-    {children}
-  </Styled.Button>
+const Button: React.FC<Props> = ({
+  className,
+  children,
+  size = 'sm',
+  title,
+  loading = false,
+  ...rest
+}) => (
+  (
+    <button
+      className={`btn btn-${size} ${className}`}
+      title={title}
+      disabled={loading}
+      {...rest}
+    >
+      {children}
+    </button>
+  )
 );
 
 export default Button;
