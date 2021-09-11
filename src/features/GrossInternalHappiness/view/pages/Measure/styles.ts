@@ -18,17 +18,17 @@ export const Container = styled(PageContainer)`
 
   tr {
     th {
-      border-top: 1px solid lightgray;
-      border-bottom: 1px solid lightgray;
+      border-top: 1px solid lightgrey;
+      border-bottom: 1px solid lightgrey;
       font-weight: bold;
     }
 
     th:first-of-type {
-      border-left: 1px solid lightgray;
+      border-left: 1px solid lightgrey;
     }
 
     th:last-of-type {
-      border-right: 1px solid lightgray;
+      border-right: 1px solid lightgrey;
     }
 
     td:last-of-type {

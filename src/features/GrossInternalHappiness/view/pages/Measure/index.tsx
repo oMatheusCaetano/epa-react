@@ -1,88 +1,58 @@
-/* eslint-disable no-console */
-/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { FaTrash, FaCheckCircle } from 'react-icons/fa';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
+import { RootState } from '~/core/domain/store';
+import { getFibEmotions } from '~/features/GrossInternalHappiness/domain/store/fib';
+import { getAuthenticatedUser } from '~/features/Auth/domain/store/auth/index';
+import {
+  getPersonalGoals,
+  deletePersonalGoal,
+  updatePersonalGoal,
+  createPersonalGoal,
+} from '~/features/PersonalGoals/domain/store/personal-goal';
+
 import { useHelpers } from '~/core/hooks';
 
-import IFibEmotion from '~/features/GrossInternalHappiness/domain/models/IFibEmotion';
-import IUser from '~/core/domain/models/IUser';
 import IPersonalGoal from '~/features/PersonalGoals/domain/models/IPersonalGoal';
 
-import GetPersonalGoals from '~/features/PersonalGoals/data/datasources/personal-goals/get-personal-goals';
-import GetAuthenticatedUser from '~/core/data/datasources/auth/get-authenticated-user';
-import UpdatePersonalGoal from '~/features/PersonalGoals/data/datasources/personal-goals/update-personal-goal';
-import DeletePersonalGoal from '~/features/PersonalGoals/data/datasources/personal-goals/delete-personal-goal';
-import GetFibEmotions from '~/features/GrossInternalHappiness/data/datasources/fib-emotions/get-fib-emotions';
+import { IPersonalGoalData } from '~/features/PersonalGoals/data/datasources/personal-goals/create-personal-goal';
 
 import Button from '~/core/view/components/button/Button';
 import Image from '~/core/view/components/img/Image';
 import Title from '~/core/view/components/text/Title';
+import Input from '~/core/view/components/input/Input';
 
 import * as Styled from './styles';
-import Input from '~/core/view/components/input/Input';
-import CreatePersonalGoal, { IPersonalGoalData } from '~/features/PersonalGoals/data/datasources/personal-goals/create-personal-goal';
 
 const Measure: React.FC = () => {
+  const dispatch = useDispatch();
+  const store: RootState = useSelector((state: RootState) => state);
+
   const helpers = useHelpers();
+
   const userGoalForm = useRef<FormHandles>(null);
-  const [user, setUser] = useState<IUser>({} as IUser);
-  const [userGoals, setUserGoals] = useState<IPersonalGoal[]>([]);
-  const [fibEmotions, setFibEmotions] = useState<IFibEmotion[]>([]);
+
   const [showGoals, setShowGoals] = useState(true);
 
   useEffect(() => {
-    loadAuthenticatedUserData();
-    loadFibEmotions();
+    dispatch(getAuthenticatedUser());
+    dispatch(getFibEmotions({}));
   }, []);
 
-  useEffect(() => { if (user.id) loadPersonalGoals(); }, [user.id]);
-
-  function loadAuthenticatedUserData() {
-    new GetAuthenticatedUser({
-      onSuccess: setUser,
-      onError: (error) => console.log('ERRO AO BUSCAR DADOS DO USUÁRIO AUTENTICADO', error.message),
-    }).exec();
-  }
-
-  function loadFibEmotions() {
-    new GetFibEmotions({
-      onSuccess: setFibEmotions,
-      onError: (error) => console.log('ERRO AO BUSCAR LISTA DE EMOÇÕES', error.message),
-      filters: { active: true },
-    }).exec();
-  }
-
-  function loadPersonalGoals() {
-    new GetPersonalGoals({
-      onSuccess: setUserGoals,
-      onError: (error) => console.log('ERRO AO BUSCAR LISTA DE METAS', error.message),
-      filters: { user_id: user.id },
-    }).exec();
-  }
+  useEffect(() => {
+    if (store.AUTH.authUser.id) {
+      dispatch(getPersonalGoals({ filters: { user_id: store.AUTH.authUser.id } }));
+    }
+  }, [store.AUTH.authUser.id]);
 
   function createUserGoal(data: IPersonalGoalData) {
-    helpers.DIALOG.await({ text: 'Criando meta...' });
-    new CreatePersonalGoal({
-      personalGoal: { ...data, user_id: user.id },
-      onError: (error) => {
-        switch (error.status) {
-          case 422:
-            userGoalForm.current?.setErrors({
-              description: error.data.data.meta.errors.descricao[0],
-            });
-            break;
-          default:
-            helpers.DIALOG.error({ text: 'Não possível criar esta meta. Tente novamente mais tarde.' });
-        }
-      },
-      onfinally: () => {
-        loadPersonalGoals();
-        helpers.DIALOG.close();
-      },
-    }).exec();
+    dispatch(createPersonalGoal(data, {
+      reload: true,
+      reloadFilters: { user_id: store.AUTH.authUser.id },
+    }));
   }
 
   async function deleteUserGoal(personalGoal: IPersonalGoal) {
@@ -93,40 +63,17 @@ const Measure: React.FC = () => {
 
     if (!wantsToDelete) return;
 
-    setUserGoals(userGoals.filter(((goal) => goal.id !== personalGoal.id)));
-
-    new DeletePersonalGoal({
-      personalGoalId: personalGoal.id,
-      onError: () => helpers.DIALOG.error({
-        text: `Não possível excluir a meta: '${personalGoal.description}'. Tente novamente mais tarde.`,
-      }),
-      onfinally: loadPersonalGoals,
-    }).exec();
+    dispatch(deletePersonalGoal(personalGoal.id, {
+      reload: true,
+      reloadFilters: { user_id: store.AUTH.authUser.id },
+    }));
   }
 
   function concludeUserGoal(personalGoal: IPersonalGoal) {
-    personalGoal.done = true;
-    personalGoal.finished_at = helpers.DATE.today();
-
-    setUserGoals(userGoals.map(((goal) => (goal.id === personalGoal.id ? personalGoal : goal))));
-
-    new UpdatePersonalGoal({
-      personalGoal,
-      onError: () => helpers.DIALOG.error({
-        text: `Não possível concluir a meta: '${personalGoal.description}'. Tente novamente mais tarde.`,
-      }),
-      onfinally: loadPersonalGoals,
-    }).exec();
-  }
-
-  function toggleGoals() {
-    if (showGoals) {
-      setShowGoals(false);
-      return;
-    }
-
-    setShowGoals(true);
-    window.scrollTo(0, 0);
+    dispatch(updatePersonalGoal({ ...personalGoal, done: true }, {
+      reload: true,
+      reloadFilters: { user_id: store.AUTH.authUser.id },
+    }));
   }
 
   return (
@@ -142,11 +89,11 @@ const Measure: React.FC = () => {
               <Styled.UserHumor>
                 <div className="user-humor__main">
                   <div className="user-humor__image">
-                    <Image src={user.image} />
+                    <Image src={store.AUTH.authUser.image} />
                   </div>
                   <div className="user-humor__measure-humor">
                     <span>Olá, </span>
-                    <span className="user-humor__measure-humor__name">{user.name}</span>
+                    <span className="user-humor__measure-humor__name">{store.AUTH.authUser.name}</span>
                     <div className="user-humor__measure-humor__selector">
                       <span>Como se sente?</span>
                       <div className="user-humor__measure-humor__selector__humors">
@@ -170,7 +117,7 @@ const Measure: React.FC = () => {
                   Com qual dessas emoções você mais se identifica neste momento?
                 </span>
                 <main className="user-other-humor">
-                  {fibEmotions.map((emotion) => (
+                  {store.FIB.fibEmotions.map((emotion) => (
                     <div key={emotion.id}>
                       <input type="radio" id={`fib-emotion-${emotion.id}`} />
                       <label htmlFor={`fib-emotion-${emotion.id}`}>{emotion.description}</label>
@@ -191,14 +138,15 @@ const Measure: React.FC = () => {
                   <Button className="btn-primary">Página inicial</Button>
                 </div>
                 <div className="goal-footer__right">
-                  <Button className="btn-success">Incluir meta</Button>
-                  <Button className="btn-info" onClick={toggleGoals}>
+                  <Button className="btn-success" loading={store.PERSONAL_GOAL.loading}>
+                    Incluir meta
+                  </Button>
+                  <Button className="btn-info" type="button" onClick={() => setShowGoals(!showGoals)}>
                     {showGoals ? 'Esconder metas' : 'Minhas metas'}
                   </Button>
                 </div>
               </footer>
             </Form>
-
           </Styled.UserGoal>
 
           <Styled.UserSpace title="Esse espaço é seu!">
@@ -224,14 +172,14 @@ const Measure: React.FC = () => {
               </thead>
 
               <tbody>
-                {userGoals.filter((goal) => !goal.done).map((goal) => (
+                {store.PERSONAL_GOAL.personalGoals.filter((goal) => !goal.done).map((goal) => (
                   <tr key={goal.id}>
                     <td>{goal.description}</td>
                     <td>
-                      <Button title="Concluir meta" onClick={() => concludeUserGoal(goal)}>
+                      <Button title="Concluir meta" onClick={() => concludeUserGoal(goal)} loading={store.PERSONAL_GOAL.loading}>
                         <FaCheckCircle style={{ fill: 'green' }} />
                       </Button>
-                      <Button title="Excluir meta" onClick={() => deleteUserGoal(goal)}>
+                      <Button title="Excluir meta" onClick={() => deleteUserGoal(goal)} loading={store.PERSONAL_GOAL.loading}>
                         <FaTrash style={{ fill: 'red' }} />
                       </Button>
                     </td>
@@ -252,7 +200,7 @@ const Measure: React.FC = () => {
               </thead>
 
               <tbody>
-                {userGoals.filter((goal) => goal.done).map((goal) => (
+                {store.PERSONAL_GOAL.personalGoals.filter((goal) => goal.done).map((goal) => (
                   <tr key={goal.id}>
                     <td>{goal.description}</td>
                     {
@@ -260,7 +208,10 @@ const Measure: React.FC = () => {
                       && <td>{helpers.DATE.formatToDisplay(goal.finished_at, false)}</td>
                     }
                     <td>
-                      <Button onClick={() => deleteUserGoal(goal)}>
+                      <Button
+                        onClick={() => deleteUserGoal(goal)}
+                        loading={store.PERSONAL_GOAL.loading}
+                      >
                         <FaTrash style={{ fill: 'red' }} title="Excluir meta" />
                       </Button>
                     </td>
@@ -279,7 +230,7 @@ const Measure: React.FC = () => {
               Desde então, o reino de Butão , com o apoio do PNUD começou a colocar esse
               conceito em prática, e atraiu a atenção do resto do mundo com sua nova
               fórmula para medir o progresso de uma comunidade ou nação.
-              Assim, o cálculo da 'riqueza' deve considerar outros aspectos
+              Assim, o cálculo da &apos;riqueza&apos; deve considerar outros aspectos
               além do desenvolvimento econômico, como a conservação do
               meio ambiente e qualidade da vida das pessoas.
             </p>

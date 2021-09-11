@@ -43,7 +43,7 @@ class GetFibEmotions {
   private params: IGetFibEmotionsParams;
 
   constructor(params: IGetFibEmotionsParams) {
-    this.endpoint = 'api/fib-emocoes';
+    this.endpoint = 'api/FibEmocoes';
     this.params = params;
     this.queryParams = '';
     this.queryParams = this.handleFilters(params.filters);
