@@ -7,7 +7,7 @@ type InputProps = JSX.IntrinsicElements['input'] & {
   errorMessage?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, label, errorMessage = '', ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, label, errorMessage = '', className, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { fieldName, defaultValue, registerField, error } = useField(name);
@@ -34,6 +34,7 @@ const Input: React.FC<InputProps> = ({ name, label, errorMessage = '', ...rest }
         id={fieldName}
         ref={inputRef}
         defaultValue={defaultValue}
+        className={`form-control ${className}`}
         {...rest}
       />
 

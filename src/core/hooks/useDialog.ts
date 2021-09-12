@@ -48,5 +48,7 @@ export function useDialog() {
         timer: 1500,
       });
     },
+
+    warning: async ({ text = '', title = 'Atenção!' }) => Swal.fire({ icon: SwalIcons.WARNING, title, text, confirmButtonColor: theme.colors.primary }),
   };
 }

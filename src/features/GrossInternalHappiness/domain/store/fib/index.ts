@@ -2,12 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, AppThunk } from '~/core/domain/store';
 import GetFibEmotions, { IGetFibEmotionsFilters } from '~/features/GrossInternalHappiness/data/datasources/fib-emotions/get-fib-emotions';
 import IFibEmotion from '~/features/GrossInternalHappiness/domain/models/IFibEmotion';
+import helpers from '~/core/helpers';
 
 const store = createSlice({
   name: 'Fib',
   initialState: {
     loading: false,
     error: '',
+    fibTodaysImage: `figuras/img_fib/dica_${helpers.MATH.random(1, 44)}.jpg`,
     fibEmotions: [] as IFibEmotion[],
   },
   reducers: {

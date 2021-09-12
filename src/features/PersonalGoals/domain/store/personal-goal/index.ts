@@ -4,8 +4,8 @@ import { AppDispatch, AppThunk } from '~/core/domain/store';
 import DeletePersonalGoal from '~/features/PersonalGoals/data/datasources/personal-goals/delete-personal-goal';
 import UpdatePersonalGoal from '~/features/PersonalGoals/data/datasources/personal-goals/update-personal-goal';
 import GetPersonalGoals, { IGetPersonalGoalFilters } from '~/features/PersonalGoals/data/datasources/personal-goals/get-personal-goals';
-import IPersonalGoal from '~/features/PersonalGoals/domain/models/IPersonalGoal';
-import CreatePersonalGoal, { IPersonalGoalData } from '~/features/PersonalGoals/data/datasources/personal-goals/create-personal-goal';
+import IPersonalGoal, { IPersonalGoalData } from '~/features/PersonalGoals/domain/models/IPersonalGoal';
+import CreatePersonalGoal from '~/features/PersonalGoals/data/datasources/personal-goals/create-personal-goal';
 
 const store = createSlice({
   name: 'PersonalGoal',
@@ -55,15 +55,15 @@ export const {
 export function getPersonalGoals({ filters = {} as IGetPersonalGoalFilters }): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    new GetPersonalGoals({
+    return new GetPersonalGoals({
       filters,
       onSuccess: (data) => {
         dispatch(setError(''));
         dispatch(setPersonalGoals(data));
       },
       onError: (error) => dispatch(setError(error.message)),
+      onFinally: () => dispatch(setLoading(false)),
     }).exec();
-    dispatch(setLoading(false));
   };
 }
 
@@ -73,14 +73,14 @@ export function deletePersonalGoal(
 ): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    new DeletePersonalGoal({
-      personalGoalId: id,
+    return new DeletePersonalGoal({
+      id,
       onSuccess: () => {
         dispatch(removePersonalGoal(id));
         dispatch(setError(''));
       },
       onError: (error) => dispatch(setError(error.message)),
-      onfinally: () => {
+      onFinally: () => {
         if (reload) {
           dispatch(getPersonalGoals({ filters: reloadFilters }));
         }
@@ -97,14 +97,15 @@ export function updatePersonalGoal(
 ): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    new UpdatePersonalGoal({
-      personalGoal,
+    return new UpdatePersonalGoal({
+      id: personalGoal.id,
+      data: personalGoal,
       onSuccess: (goal) => {
         dispatch(changePersonalGoal(goal));
         dispatch(setError(''));
       },
       onError: (error) => dispatch(setError(error.message)),
-      onfinally: () => {
+      onFinally: () => {
         if (reload) {
           dispatch(getPersonalGoals({ filters: reloadFilters }));
         }
@@ -121,14 +122,14 @@ export function createPersonalGoal(
 ): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    new CreatePersonalGoal({
-      personalGoal,
+    return new CreatePersonalGoal({
+      data: personalGoal,
       onSuccess: (goal) => {
         dispatch(addPersonalGoal(goal));
         dispatch(setError(''));
       },
       onError: (error) => dispatch(setError(error.message)),
-      onfinally: () => {
+      onFinally: () => {
         if (reload) {
           dispatch(getPersonalGoals({ filters: reloadFilters }));
         }

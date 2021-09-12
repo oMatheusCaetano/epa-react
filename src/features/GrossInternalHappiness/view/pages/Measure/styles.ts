@@ -1,9 +1,13 @@
 import styled, { css } from 'styled-components';
 import { FaSadTear, FaSmileBeam, FaLaughBeam, FaAngry } from 'react-icons/fa';
-import { darken } from 'polished';
+import { Form } from '@unform/web';
 
 import PageContainer from '~/core/view/components/misc/PageContainer';
 import SectionContainer from '~/core/view/components/misc/SectionContainer';
+
+export interface IUserHumor {
+  humor: number;
+}
 
 export const Container = styled(PageContainer)`
   p {
@@ -65,32 +69,37 @@ const iconsCss = css`
   margin: 8px 5px;
 `;
 
-export const HappyIcon = styled(FaLaughBeam)`
+export const HappyIcon = styled(FaLaughBeam)<IUserHumor>`
   ${iconsCss};
+  fill: ${(props) => (props.humor === 1 ? 'green' : '#999')};
+
 
   &:hover {
     fill: green;
   }
 `;
 
-export const NormalIcon = styled(FaSmileBeam)`
+export const NormalIcon = styled(FaSmileBeam)<IUserHumor>`
   ${iconsCss};
+  fill: ${(props) => (props.humor === 2 ? 'blue' : '#999')};
 
   &:hover {
     fill: blue;
   }
 `;
 
-export const SadIcon = styled(FaSadTear)`
+export const SadIcon = styled(FaSadTear)<IUserHumor>`
   ${iconsCss};
+  fill: ${(props) => (props.humor === 3 ? 'orange' : '#999')};
 
   &:hover {
     fill: orange;
   }
 `;
 
-export const AngryIcon = styled(FaAngry)`
+export const AngryIcon = styled(FaAngry)<IUserHumor>`
   ${iconsCss};
+  fill: ${(props) => (props.humor === 4 ? 'red' : '#999')};
 
   &:hover {
     fill: red;
@@ -134,7 +143,7 @@ export const UserHumor = styled.section`
       text-align: center;
 
       img {
-        max-height: 150px;
+        max-height: 200px;
       }
     }
 
@@ -190,7 +199,7 @@ export const UserHumor = styled.section`
   }
 `;
 
-export const UserHumorIdentification = styled.section`
+export const UserHumorIdentification = styled(Form)`
   padding-top: 30px;
 
   span {
@@ -200,22 +209,7 @@ export const UserHumorIdentification = styled.section`
   .user-other-humor {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 10px;
-
-    div {
-      background: ${({ theme }) => theme.colors.light};
-      border-radius: ${({ theme }) => theme.radius.small};
-      padding: 5px;
-      display: flex;
-      align-items: center;
-      margin: 4px 5px 0 0;
-      padding-left: 5px;
-      transition: .3s;
-
-      &:hover {
-        background: ${({ theme }) => darken(0.1, theme.colors.light)};
-      }
-    }
+    margin-top: 15px;
   }
 
   button {

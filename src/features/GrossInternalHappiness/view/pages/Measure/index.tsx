@@ -1,41 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { FaTrash, FaCheckCircle } from 'react-icons/fa';
 import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
+import { FormHandles, SubmitHandler } from '@unform/core';
 
-import { RootState } from '~/core/domain/store';
 import { getFibEmotions } from '~/features/GrossInternalHappiness/domain/store/fib';
 import { getAuthenticatedUser } from '~/features/Auth/domain/store/auth/index';
-import {
-  getPersonalGoals,
-  deletePersonalGoal,
-  updatePersonalGoal,
-  createPersonalGoal,
-} from '~/features/PersonalGoals/domain/store/personal-goal';
+import { getPersonalGoals, deletePersonalGoal, updatePersonalGoal, createPersonalGoal } from '~/features/PersonalGoals/domain/store/personal-goal';
 
-import { useHelpers } from '~/core/hooks';
+import helpers from '~/core/helpers';
 
-import IPersonalGoal from '~/features/PersonalGoals/domain/models/IPersonalGoal';
+import { useAppStore, useDialog } from '~/core/hooks';
 
-import { IPersonalGoalData } from '~/features/PersonalGoals/data/datasources/personal-goals/create-personal-goal';
+import IPersonalGoal, { IPersonalGoalData } from '~/features/PersonalGoals/domain/models/IPersonalGoal';
 
-import Button from '~/core/view/components/button/Button';
-import Image from '~/core/view/components/img/Image';
-import Title from '~/core/view/components/text/Title';
-import Input from '~/core/view/components/input/Input';
+import { Button, Image, Title, Input, Radio } from '~/core/view/components';
 
 import * as Styled from './styles';
 
 const Measure: React.FC = () => {
-  const dispatch = useDispatch();
-  const store: RootState = useSelector((state: RootState) => state);
-
-  const helpers = useHelpers();
+  const DIALOG = useDialog();
+  const { store, dispatch } = useAppStore();
 
   const userGoalForm = useRef<FormHandles>(null);
+  const userEmotionForm = useRef<FormHandles>(null);
 
-  const [showGoals, setShowGoals] = useState(true);
+  const [userHumor, setUserHumor] = useState(0);
+  const [makeUserHumorPublic, setMakeUserHumorPublic] = useState(false);
+  const [showGoals, setShowGoals] = useState(false);
 
   useEffect(() => {
     dispatch(getAuthenticatedUser());
@@ -48,15 +39,35 @@ const Measure: React.FC = () => {
     }
   }, [store.AUTH.authUser.id]);
 
-  function createUserGoal(data: IPersonalGoalData) {
-    dispatch(createPersonalGoal(data, {
+  const updateUserImage = (file: File) => {
+    // TODO: Implementa lógica para atualizar a imagem do usuário
+    console.log(file);
+  };
+
+  const saveUserHumor: SubmitHandler = async (data) => {
+    if (!userHumor) {
+      DIALOG.warning({ title: 'Informe como você se sente hoje.' });
+    }
+
+    // TODO: Implementa lógica para salvar o humor do usuário
+    console.log(data);
+    console.log(userHumor);
+    console.log(makeUserHumorPublic);
+  };
+
+  const createUserGoal: SubmitHandler<IPersonalGoalData> = async (data, event) => {
+    await dispatch(createPersonalGoal(data, {
       reload: true,
       reloadFilters: { user_id: store.AUTH.authUser.id },
     }));
-  }
 
-  async function deleteUserGoal(personalGoal: IPersonalGoal) {
-    const wantsToDelete = await helpers.DIALOG.confirm({
+    if (!store.PERSONAL_GOAL.error.length) {
+      event.reset();
+    }
+  };
+
+  const deleteUserGoal = async (personalGoal: IPersonalGoal) => {
+    const wantsToDelete = await DIALOG.confirm({
       title: 'Excluir meta?',
       text: `Tem certeza que deseja excluir a meta: '${personalGoal.description}'?`,
     });
@@ -67,14 +78,14 @@ const Measure: React.FC = () => {
       reload: true,
       reloadFilters: { user_id: store.AUTH.authUser.id },
     }));
-  }
+  };
 
-  function concludeUserGoal(personalGoal: IPersonalGoal) {
+  const concludeUserGoal = async (personalGoal: IPersonalGoal) => {
     dispatch(updatePersonalGoal({ ...personalGoal, done: true }, {
       reload: true,
       reloadFilters: { user_id: store.AUTH.authUser.id },
     }));
-  }
+  };
 
   return (
     <Styled.Container>
@@ -89,7 +100,11 @@ const Measure: React.FC = () => {
               <Styled.UserHumor>
                 <div className="user-humor__main">
                   <div className="user-humor__image">
-                    <Image src={store.AUTH.authUser.image} />
+                    <Image
+                      editable
+                      src={store.AUTH.authUser.image}
+                      onFileSelection={updateUserImage}
+                    />
                   </div>
                   <div className="user-humor__measure-humor">
                     <span>Olá, </span>
@@ -97,14 +112,14 @@ const Measure: React.FC = () => {
                     <div className="user-humor__measure-humor__selector">
                       <span>Como se sente?</span>
                       <div className="user-humor__measure-humor__selector__humors">
-                        <Styled.AngryIcon size={25} title="Com raiva" />
-                        <Styled.SadIcon size={25} title="Triste" />
-                        <Styled.NormalIcon size={25} title="Normal" />
-                        <Styled.HappyIcon size={25} title="Feliz" />
+                        <Styled.AngryIcon size={25} title="Com raiva" onClick={() => setUserHumor(4)} humor={userHumor} />
+                        <Styled.SadIcon size={25} title="Triste" onClick={() => setUserHumor(3)} humor={userHumor} />
+                        <Styled.NormalIcon size={25} title="Normal" onClick={() => setUserHumor(2)} humor={userHumor} />
+                        <Styled.HappyIcon size={25} title="Feliz" onClick={() => setUserHumor(1)} humor={userHumor} />
                       </div>
                       <footer>
                         <div />
-                        <input type="checkbox" id="make-humor-public" />
+                        <input type="checkbox" id="make-humor-public" onClick={() => setMakeUserHumorPublic(!makeUserHumorPublic)} />
                         <label htmlFor="make-humor-public">Tornar público</label>
                       </footer>
                     </div>
@@ -112,17 +127,15 @@ const Measure: React.FC = () => {
                 </div>
               </Styled.UserHumor>
 
-              <Styled.UserHumorIdentification>
-                <span>
-                  Com qual dessas emoções você mais se identifica neste momento?
-                </span>
+              <Styled.UserHumorIdentification onSubmit={saveUserHumor} ref={userEmotionForm}>
+                <span>Com qual dessas emoções você mais se identifica neste momento?</span>
                 <main className="user-other-humor">
-                  {store.FIB.fibEmotions.map((emotion) => (
-                    <div key={emotion.id}>
-                      <input type="radio" id={`fib-emotion-${emotion.id}`} />
-                      <label htmlFor={`fib-emotion-${emotion.id}`}>{emotion.description}</label>
-                    </div>
-                  ))}
+                  <Radio
+                    name="emotion"
+                    options={store.FIB.fibEmotions.map((emotion) => (
+                      { label: emotion.description, value: emotion.id }
+                    ))}
+                  />
                 </main>
                 <Button className="btn-success">Acessar o EPA</Button>
               </Styled.UserHumorIdentification>
@@ -131,7 +144,7 @@ const Measure: React.FC = () => {
 
           <Styled.UserGoal title={`Em ${helpers.DATE.currentYear()} eu VOU`}>
             <Form className="form-group" ref={userGoalForm} onSubmit={createUserGoal}>
-              <Input className="form-control" name="description" label="Meta" />
+              <Input name="description" label="Meta" />
 
               <footer className="goal-footer">
                 <div>
@@ -222,7 +235,7 @@ const Measure: React.FC = () => {
           </Styled.RightAchievedGoals>
 
           <Styled.RightFib title="Felicidade interna bruta">
-            <Image src={`figuras/img_fib/dica_${helpers.MATH.random(1, 44)}.jpg`} />
+            <Image src={store.FIB.fibTodaysImage} />
             <p>
               <strong>Felicidade Interna Bruta (FIB)</strong>
               {' '} É um indicador sistêmico desenvolvido no Butão, um pequeno país do Himalaia.

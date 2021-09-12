@@ -1,15 +1,12 @@
 import { useDialog } from './useDialog';
-import { useDate } from './useDate';
-import { useMath } from './useMath';
+import { useAppStore } from './useAppStore';
 
 export * from './useDialog';
-export * from './useDate';
-export * from './useMath';
+export * from './useAppStore';
 
-export function useHelpers() {
+export function useHooks() {
   return {
     DIALOG: useDialog(),
-    DATE: useDate(),
-    MATH: useMath(),
+    APP_STORE: useAppStore(),
   };
 }

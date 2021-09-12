@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AppDispatch, AppThunk } from '~/core/domain/store';
-import GetAuthenticatedUser from '~/core/data/datasources/auth/get-authenticated-user';
+import GetAuthenticatedUser from '~/features/Auth/data/datasources/get-authenticated-user';
 import IUser from '~/features/Auth/domain/models/IUser';
 
 const store = createSlice({
@@ -39,11 +39,10 @@ export function getAuthenticatedUser(): AppThunk {
     new GetAuthenticatedUser({
       onSuccess: (data) => {
         dispatch(setAuthUser(data));
+        dispatch(setError(''));
       },
-      onError: (error) => {
-        dispatch(setError(error.message));
-      },
+      onError: (error) => dispatch(setError(error.message)),
+      onFinally: () => dispatch(setLoading(false)),
     }).exec();
-    dispatch(setLoading(false));
   };
 }

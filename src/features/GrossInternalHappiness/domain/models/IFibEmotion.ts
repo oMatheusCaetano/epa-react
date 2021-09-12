@@ -1,13 +1,10 @@
-interface IFibEmotion {
+interface IFibEmotion extends IFibEmotionData {
   id: number;
+}
+
+export interface IFibEmotionData {
   description: string;
-  active: boolean;
-  created_at: string;
-  updated_at: string;
-  _permissions: {
-    edit: boolean;
-    delete: boolean;
-  }
+  active?: boolean;
 }
 
 export default IFibEmotion;
