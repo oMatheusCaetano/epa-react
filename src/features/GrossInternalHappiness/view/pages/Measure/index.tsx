@@ -47,6 +47,7 @@ const Measure: React.FC = () => {
   const updateUserImage = (file: File) => {
     // TODO: Implementa lógica para atualizar a imagem do usuário
     console.log(file);
+    alert('Tem que implementar zé.');
   };
 
   const handleUserHumor: SubmitHandler = async (data) => {
