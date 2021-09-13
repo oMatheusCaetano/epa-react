@@ -14,6 +14,8 @@ abstract class NonIdShowApiDataSource<Model, ApiData>
       .finally(this.whenFinally);
   }
 
+  protected convertToSend(): object { throw new Error('Method not implemented.'); }
+
   protected whenSucceed = (data: ApiData) => {
     if (this.params.onSuccess) {
       this.params.onSuccess(this.convert(data));

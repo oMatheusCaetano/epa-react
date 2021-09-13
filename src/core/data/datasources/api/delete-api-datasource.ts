@@ -15,6 +15,8 @@ export default abstract class DeleteApiDataSource
       .finally(this.whenFinally);
   }
 
+  protected convertToSend(): object { throw new Error('Method not implemented.'); }
+
   protected convert(): null { throw new Error('Method not implemented.'); }
 
   protected handleEndpoint() {

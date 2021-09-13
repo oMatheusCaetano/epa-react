@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AppDispatch, AppThunk } from '~/core/domain/store';
 import GetAuthenticatedUser from '~/features/Auth/data/datasources/get-authenticated-user';
-import IUser from '~/features/Auth/domain/models/IUser';
+import IUser from '~/features/Users/domain/models/IUser';
 
 const store = createSlice({
   name: 'Auth',

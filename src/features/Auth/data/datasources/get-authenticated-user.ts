@@ -1,5 +1,5 @@
 import NonIdShowApiDataSource from '~/core/data/datasources/api/non-id-show-api-datasource';
-import IUser from '~/features/Auth/domain/models/IUser';
+import IUser from '~/features/Users/domain/models/IUser';
 
 interface ApiData {
   login: string,

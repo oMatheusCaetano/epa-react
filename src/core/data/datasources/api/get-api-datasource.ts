@@ -14,6 +14,8 @@ abstract class GetApiDataSource<Model, ApiData, Params extends IGetApiDataSource
       .finally(this.whenFinally);
   }
 
+  protected convertToSend(): object { throw new Error('Method not implemented.'); }
+
   protected whenSucceed = (data: ApiData[]) => {
     if (this.params.onSuccess) {
       this.params.onSuccess(this.convertAll(data));

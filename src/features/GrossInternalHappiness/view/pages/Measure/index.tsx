@@ -3,7 +3,7 @@ import { FaTrash, FaCheckCircle } from 'react-icons/fa';
 import { Form } from '@unform/web';
 import { FormHandles, SubmitHandler } from '@unform/core';
 
-import { getFibEmotions } from '~/features/GrossInternalHappiness/domain/store/fib';
+import { getFibEmotions, saveUserHumor } from '~/features/GrossInternalHappiness/domain/store/fib';
 import { getAuthenticatedUser } from '~/features/Auth/domain/store/auth/index';
 import { getPersonalGoals, deletePersonalGoal, updatePersonalGoal, createPersonalGoal } from '~/features/PersonalGoals/domain/store/personal-goal';
 
@@ -39,20 +39,34 @@ const Measure: React.FC = () => {
     }
   }, [store.AUTH.authUser.id]);
 
+  const goToHome = () => {
+    // TODO: Implementa lógica para redirecionar para a página principal
+    alert('Tem que implementar zé.');
+  };
+
   const updateUserImage = (file: File) => {
     // TODO: Implementa lógica para atualizar a imagem do usuário
     console.log(file);
   };
 
-  const saveUserHumor: SubmitHandler = async (data) => {
+  const handleUserHumor: SubmitHandler = async (data) => {
     if (!userHumor) {
       DIALOG.warning({ title: 'Informe como você se sente hoje.' });
     }
 
-    // TODO: Implementa lógica para salvar o humor do usuário
-    console.log(data);
-    console.log(userHumor);
-    console.log(makeUserHumorPublic);
+    await dispatch(saveUserHumor({
+      humor: {
+        user_id: store.AUTH.authUser.id,
+        humor_id: userHumor,
+        emotion_id: data.emotion,
+      },
+    }));
+
+    if (store.FIB.error.length) {
+      DIALOG.error({ text: 'Erro ao salvar humor.' });
+    }
+
+    goToHome();
   };
 
   const createUserGoal: SubmitHandler<IPersonalGoalData> = async (data, event) => {
@@ -127,7 +141,7 @@ const Measure: React.FC = () => {
                 </div>
               </Styled.UserHumor>
 
-              <Styled.UserHumorIdentification onSubmit={saveUserHumor} ref={userEmotionForm}>
+              <Styled.UserHumorIdentification onSubmit={handleUserHumor} ref={userEmotionForm}>
                 <span>Com qual dessas emoções você mais se identifica neste momento?</span>
                 <main className="user-other-humor">
                   <Radio
@@ -148,7 +162,7 @@ const Measure: React.FC = () => {
 
               <footer className="goal-footer">
                 <div>
-                  <Button className="btn-primary">Página inicial</Button>
+                  <Button className="btn-primary" type="button" onClick={goToHome}>Página inicial</Button>
                 </div>
                 <div className="goal-footer__right">
                   <Button className="btn-success" loading={store.PERSONAL_GOAL.loading}>

@@ -32,6 +32,8 @@ abstract class ApiDataSource<Resource, ApiData, Params extends IApiDataSourceCla
     this.endpoint = '';
   }
 
+  protected abstract convertToSend(): object;
+
   protected abstract convert(data: ApiData): Resource;
 
   protected abstract whenSucceed(data: any): void;
