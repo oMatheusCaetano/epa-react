@@ -16,6 +16,7 @@ import IPersonalGoal, { IPersonalGoalData } from '~/features/PersonalGoals/domai
 import { Button, Image, Title, Input, Radio } from '~/core/view/components';
 
 import * as Styled from './styles';
+import Link from '~/core/view/components/link/Link';
 
 const Measure: React.FC = () => {
   const DIALOG = useDialog();
@@ -39,11 +40,6 @@ const Measure: React.FC = () => {
     }
   }, [store.AUTH.authUser.id]);
 
-  const goToHome = () => {
-    // TODO: Implementa lógica para redirecionar para a página principal
-    alert('Tem que implementar zé.');
-  };
-
   const updateUserImage = (file: File) => {
     // TODO: Implementa lógica para atualizar a imagem do usuário
     console.log(file);
@@ -53,9 +49,10 @@ const Measure: React.FC = () => {
   const handleUserHumor: SubmitHandler = async (data) => {
     if (!userHumor) {
       DIALOG.warning({ title: 'Informe como você se sente hoje.' });
+      return;
     }
 
-    await dispatch(saveUserHumor({
+    dispatch(saveUserHumor({
       humor: {
         user_id: store.AUTH.authUser.id,
         humor_id: userHumor,
@@ -63,21 +60,17 @@ const Measure: React.FC = () => {
       },
     }));
 
-    if (store.FIB.error.length) {
-      DIALOG.error({ text: 'Erro ao salvar humor.' });
-    }
-
-    goToHome();
+    window.location.href = 'principal.php';
   };
 
-  const createUserGoal: SubmitHandler<IPersonalGoalData> = async (data, event) => {
+  const createUserGoal: SubmitHandler<IPersonalGoalData> = async (data, form) => {
     await dispatch(createPersonalGoal(data, {
       reload: true,
       reloadFilters: { user_id: store.AUTH.authUser.id },
     }));
 
     if (!store.PERSONAL_GOAL.error.length) {
-      event.reset();
+      form.reset();
     }
   };
 
@@ -116,7 +109,7 @@ const Measure: React.FC = () => {
                 <div className="user-humor__main">
                   <div className="user-humor__image">
                     <Image
-                      editable
+                      // editable
                       src={store.AUTH.authUser.image}
                       onFileSelection={updateUserImage}
                     />
@@ -163,7 +156,7 @@ const Measure: React.FC = () => {
 
               <footer className="goal-footer">
                 <div>
-                  <Button className="btn-primary" type="button" onClick={goToHome}>Página inicial</Button>
+                  <Link href="principal.php">Página Inicial</Link>
                 </div>
                 <div className="goal-footer__right">
                   <Button className="btn-success" loading={store.PERSONAL_GOAL.loading}>

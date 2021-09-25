@@ -16,7 +16,7 @@ const theme: DefaultTheme = {
     warning: '#C9970F',
     danger: '#CB2540',
     light: '#F3F3FF',
-    dark: '#BEBFC0',
+    dark: '#444',
     text: '#333',
   },
 
