@@ -3,7 +3,7 @@ import { Form } from '@unform/web';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { FaFilter, FaPlus } from 'react-icons/fa';
 
-import { PageContainer, TitleWithActions, SectionContainer, Input, Button } from '~/core/view/components';
+import { PageContainer, TitleWithActions, SectionContainer, Input, Button, ManagementUnitSelect } from '~/core/view/components';
 
 const CorporateWall: React.FC = () => {
   const filterForm = useRef<FormHandles>(null);
@@ -23,6 +23,7 @@ const CorporateWall: React.FC = () => {
       />
       <SectionContainer title="Filtros" className="mt-2">
         <Form ref={filterForm} onSubmit={handleFilter}>
+          <ManagementUnitSelect />
           <Input name="codigo" label="Código" type="number" />
           <Input name="hasText" label="Contendo o texto" />
           <Input name="initialDate" label="Data inicial" type="date" />

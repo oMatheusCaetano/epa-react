@@ -8,6 +8,8 @@ export { default as Image } from './img/Image';
 //! input
 export { default as Input } from './input/Input';
 export { default as Radio } from './input/Radio';
+export { default as Select } from './input/Select';
+export { default as ManagementUnitSelect } from './input/ManagementUnitSelect';
 
 //! misc
 export { default as EpaThemeProvider } from './misc/EpaThemeProvider';
