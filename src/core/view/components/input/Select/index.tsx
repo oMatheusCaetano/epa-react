@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useRef, useEffect } from 'react';
 import { useField } from '@unform/core';
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa';
@@ -22,17 +20,8 @@ export interface IProps {
 
 const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, multiple }) => {
   const { fieldName, registerField } = useField(name);
-
-  const listRef = useRef<HTMLUListElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
-
-  const [hiddenSelectValue, setHiddenSelectValue] = useState<string[] | number | string>(multiple ? [] : '0');
-
-  /**
-   * Updates the selected items whenever the options prop changes.
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
-   */
-  useEffect(() => { setHiddenSelectValue(extractHiddenSelectInitialValue(options)); }, [options]);
+  const [hiddenSelectValue, setHiddenSelectValue] = useState<string[]>([]);
 
   /**
    * Register the field so a <Form> can get the <select> value.
@@ -56,29 +45,31 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   }, [fieldName, registerField]);
 
   /**
+   * Updates the selected items whenever the options prop changes.
+   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
+   */
+  useEffect(() => { setHiddenSelectValue(extractHiddenSelectInitialValue(options)); }, [options]);
+
+  /**
    * Extract the values of selected items.
    * @recursive
    * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
-  const extractHiddenSelectInitialValue = (items: ISelectOption[], first = true) => {
+  const extractHiddenSelectInitialValue = (items: ISelectOption[]) => {
     let values: string[] = [];
 
     for (const option of items) {
       if (option.selected && !option.hide) values.push(String(option.value));
 
       if (option.children && option.children.length) {
-        values = values.concat(extractHiddenSelectInitialValue(option.children, false) as string[]);
+        values = values.concat(extractHiddenSelectInitialValue(option.children) as string[]);
       }
-    }
-
-    if (first && !multiple) {
-      return values.length ? values[0] : 0;
     }
 
     return values;
   };
 
-  let alreadySelected = false; //! Do not use, Do not remove. only used in renderListItems().
+  let alreadySelected = false; //! Do not use, Do not remove. Only used in renderListItems().
   /**
    * Creates the list of <li> elements that will be rendered inside the list.
    * @recursive
@@ -146,6 +137,11 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
     return optionsList;
   };
 
+  /**
+   * Expandes or collapses the item children
+   * @recursive
+   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
+   */
   const onListItemButtonClick = (item: ISelectOption, expand: boolean, first = true) => {
     item.expanded = expand;
 
@@ -163,6 +159,7 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
 
   /**
    * Select or unselect a item from the list. also updates the hidden select
+   * @recursive
    * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const onListItemClick = (item?: ISelectOption, list?: ISelectOption[]): void => {
@@ -189,10 +186,14 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
     if (!newValue) liElement?.classList.remove('bg-info');
     else liElement?.classList.add('bg-info');
     if (item) item.selected = newValue;
-    const value = newValue && item ? item.value : 0;
-    setHiddenSelectValue(value);
+    setHiddenSelectValue(extractHiddenSelectInitialValue(options));
   };
 
+  /**
+   * Sets all displayed options as selected or not
+   * @recursive
+   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
+   */
   const selectAllDisplayed = (list: ISelectOption[], value: boolean) => {
     list.forEach((option) => {
       if (!option.hide) {
@@ -207,17 +208,17 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
     setHiddenSelectValue(extractHiddenSelectInitialValue(options));
   };
 
-  const search = (list: ISelectOption[], inputValue: string) => {
+  /**
+   * Search a specific text in a list of options
+   * @recursive
+   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
+   */
+  const liveSearch = (list: ISelectOption[], inputValue: string) => {
     list.forEach((option) => {
-      if (option.label.includes(inputValue)) {
-        option.hide = false;
-      } else {
-        option.hide = true;
-      }
+      if (option.label.includes(inputValue)) option.hide = false;
+      else option.hide = true;
 
-      if (option.children?.length) {
-        search(option.children, inputValue);
-      }
+      if (option.children?.length) liveSearch(option.children, inputValue);
     });
 
     setHiddenSelectValue(extractHiddenSelectInitialValue(options));
@@ -225,8 +226,9 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
 
   return (
     <div>
-      <input type="search" onChange={({ target }) => search(options, target.value)} />
+      <input type="search" onChange={({ target }) => liveSearch(options, target.value)} />
 
+      {multiple && (
       <div>
         <button type="button" onClick={() => selectAllDisplayed(options, true)}>
           Marcar todos
@@ -235,14 +237,15 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
           Desmarcar todos
         </button>
       </div>
+      )}
 
-      <ul ref={listRef}>
+      <ul>
         {renderListItems(options).map((option) => option)}
       </ul>
 
       <select
-        multiple={multiple}
-        value={multiple ? hiddenSelectValue as string : hiddenSelectValue as string | number}
+        multiple
+        value={hiddenSelectValue}
         ref={selectRef}
         onChange={() => ''}
       >
