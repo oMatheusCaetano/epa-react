@@ -1,90 +1,128 @@
-/* eslint-disable no-restricted-syntax */
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable no-nested-ternary */
+import React, { useState, useEffect } from 'react';
 
-import * as Styled from './styles';
+import { useAppStore } from '~/core/hooks';
 
-export interface ISelectData {
-  value?: string | number | number;
-  label?: string;
-  selected?: boolean;
-  children?: ISelectData[];
+import Select, { IProps as ISelectProps, ISelectOption } from '~/core/view/components/input/Select';
+import IManagementUnitHierarchy from '~/features/ManagementUnities/domain/models/IManagementUnitHierarchy';
+import {
+  getManagementUnitiesHierarchy,
+  getManagementUnitiesHierarchyUen,
+  getManagementUnitiesHierarchyManages,
+  getManagementUnitiesHierarchyStrategy,
+  getManagementUnitiesHierarchyCommunicates,
+
+} from '~/features/ManagementUnities/domain/store';
+
+export enum ManagementUnitSelectTypes {
+  ALL = 'ALL',
+  MANAGES = 'MANAGES',
+  COMMUNICATES = 'COMMUNICATES',
+  STRATEGY = 'STRATEGY',
+  UEN = 'UEN',
 }
 
-export interface IProps {
-  label?: string;
-  multiple?: boolean;
-  hideSearch?: boolean;
-  expandable?: boolean;
-  data?: ISelectData[];
+export interface IProps extends ISelectProps {
+  type: string | ManagementUnitSelectTypes;
 }
 
-const ManagementUnitSelect: React.FC<IProps> = ({
-  label,
-  multiple,
-  data = [] as ISelectData[],
-}) => {
-  const selectRef = useRef<HTMLSelectElement>(null);
-  const [hideList, setHideList] = useState(false);
-  const [displayedData, setDisplayedData] = useState([] as ISelectData[]);
-  const [filterData, setFilterData] = useState([] as ISelectData[]);
+const ManagementUnitSelect: React.FC<IProps> = (props) => {
+  const { store, dispatch } = useAppStore();
+  const [managementUnities, setManagementUnities] = useState([] as ISelectOption[]);
 
   useEffect(() => {
-    setDisplayedData(data);
-    setFilterData(data);
+    switch (props.type.toUpperCase()) {
+      case ManagementUnitSelectTypes.UEN:
+        dispatch(getManagementUnitiesHierarchyUen());
+        break;
+
+      case ManagementUnitSelectTypes.MANAGES:
+        dispatch(getManagementUnitiesHierarchyManages());
+        break;
+
+      case ManagementUnitSelectTypes.COMMUNICATES:
+        dispatch(getManagementUnitiesHierarchyStrategy());
+        break;
+
+      case ManagementUnitSelectTypes.STRATEGY:
+        dispatch(getManagementUnitiesHierarchyCommunicates());
+        break;
+
+      default:
+        dispatch(getManagementUnitiesHierarchy());
+    }
   }, []);
 
-  const filterDisplayedData = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (!target.value?.length) {
-      setDisplayedData(filterData);
-      return;
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.ALL) {
+      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitiesHierarchy,
+      ));
     }
+  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchy]);
 
-    setDisplayedData(filterData.filter((item) => item.label?.toLowerCase().includes(
-      target.value?.toLowerCase(),
-    )));
-  };
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.UEN) {
+      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen,
+      ));
+    }
+  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen]);
 
-  const displaySelectedItems = () => {
-    setDisplayedData(displayedData.map((item) => {
-      if (item.value?.toString() === selectRef.current?.value.toString()) {
-        item.selected = !item.selected;
-      } else {
-        item.selected = false;
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.MANAGES) {
+      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages,
+      ));
+    }
+  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages]);
+
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.STRATEGY) {
+      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy,
+      ));
+    }
+  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy]);
+
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.COMMUNICATES) {
+      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates,
+      ));
+    }
+  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates]);
+
+  const convertManagementUnitiesHierarchyToSelectOptions = (
+    items: IManagementUnitHierarchy[],
+  ) => {
+    const data = [] as ISelectOption[];
+
+    items.forEach((unit) => {
+      const item = {
+        value: unit.id,
+        label: unit.name,
+        bolded: unit.uen,
+      } as ISelectOption;
+
+      if (unit.children?.length) {
+        item.children = convertManagementUnitiesHierarchyToSelectOptions(unit.children);
       }
 
-      return item;
-    }));
+      data.push(item);
+    });
+
+    return data;
   };
 
   return (
-    <Styled.Container>
-      {label && <label className="form-label">{label}</label>}
-
-      <Styled.SelectButton type="button" onClick={() => setHideList(!hideList)}>
-        {data[0]?.label}
-      </Styled.SelectButton>
-
-      <Styled.SubContainer hidden={hideList}>
-        <Styled.SearchInput
-          type="search"
-          className="form-control"
-          onChange={filterDisplayedData}
-        />
-
-        <Styled.Actions hidden={!multiple}>
-          <Styled.ActionsLeftButton>Marcar Todos</Styled.ActionsLeftButton>
-          <Styled.ActionsRightButton>Desmarcar Todos</Styled.ActionsRightButton>
-        </Styled.Actions>
-
-        <Styled.List>
-          {displayedData.map((item, index) => <Styled.ListItem className={item.selected ? 'bg-danger' : ''} key={index}>{item.label ?? ''}</Styled.ListItem>)}
-        </Styled.List>
-      </Styled.SubContainer>
-
-      <select ref={selectRef} onChange={displaySelectedItems}>
-        {data.map((item, index) => <option key={index} value={item.value ?? ''}>{item.label ?? ''}</option>)}
-      </select>
-    </Styled.Container>
+    <Select
+      label={props.label === undefined
+        ? (props.multiple ? 'Unidades Gerenciais' : 'Unidade Gerencial')
+        : props.label}
+      options={props.options ?? managementUnities}
+      {...props}
+    />
   );
 };
 

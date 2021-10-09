@@ -12,6 +12,7 @@ export interface ISelectOption {
   selected?: boolean;
   hide?: boolean;
   expanded?: boolean;
+  bolded?: boolean;
   children?: ISelectOption[];
 }
 
@@ -21,7 +22,9 @@ export interface IProps {
   collapsible?: boolean;
   label?: string;
   errorMessage?: string;
+  hideSearchInput?: boolean;
   options?: ISelectOption[];
+  defaultValue?: string[];
 }
 
 /**
@@ -33,7 +36,9 @@ const Select: React.FC<IProps> = ({
   collapsible = false,
   multiple,
   label,
+  hideSearchInput,
   errorMessage,
+  defaultValue,
 }) => {
   const { fieldName, registerField } = useField(name);
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -74,9 +79,34 @@ const Select: React.FC<IProps> = ({
    * Updates the selected items whenever the options prop changes.
    */
   useEffect(() => {
-    setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+    if (defaultValue?.length) {
+      setHiddenSelectValue(defaultValue);
+      options = handleListDefaultValues(options);
+      defaultValue = [];
+    } else {
+      setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+    }
     handleSelectedLabel();
-  }, [options, multiple, collapsible]);
+  }, [options, multiple, collapsible, defaultValue]);
+
+  const handleListDefaultValues = (items: ISelectOption[]) => {
+    const data = items.map((item) => {
+      if (item.selected) return item;
+
+      if (defaultValue?.includes(String(item.value))) {
+        item.selected = true;
+        item.hide = false;
+      }
+
+      if (item.children?.length) {
+        item.children = handleListDefaultValues(item.children);
+      }
+
+      return item;
+    });
+
+    return data;
+  };
 
   /**
    * Defines the label that appear on the select button.
@@ -141,7 +171,7 @@ const Select: React.FC<IProps> = ({
     for (const option of items) {
       let className = '';
 
-      if (!option.hide && !hide) {
+      if ((defaultValue?.includes(String(option.value))) || (!option.hide && !hide)) {
         if (multiple && option.selected) className = 'bg-info';
 
         if (!multiple && !alreadySelected && option.selected) {
@@ -164,7 +194,9 @@ const Select: React.FC<IProps> = ({
               tabIndex={tabIndex}
               className={className.length ? 'text-white' : ''}
             >
-              {option.label}
+              {option.bolded
+                ? <strong className={className.length ? 'text-white' : ''}>{option.label}</strong>
+                : option.label }
             </Styled.ListItemLabel>
           </Styled.ListItem>
         ));
@@ -301,7 +333,9 @@ const Select: React.FC<IProps> = ({
       </Styled.SelectButton>
 
       <Styled.ListContainer className={showList ? 'list_container--active' : 'list_container--inactive'}>
-        <Styled.ListContainerInput type="search" className="form-control" onChange={({ target }) => liveSearch(options, target.value)} />
+        {!hideSearchInput && (
+          <Styled.ListContainerInput type="search" className="form-control" onChange={({ target }) => liveSearch(options, target.value)} />
+        )}
 
         {multiple && (
         <Styled.ButtonsContainer>
@@ -324,8 +358,8 @@ const Select: React.FC<IProps> = ({
       </div>
 
       <select
-        hidden
         multiple
+        hidden
         value={hiddenSelectValue}
         ref={selectRef}
         onChange={() => ''}
