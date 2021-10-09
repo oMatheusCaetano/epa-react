@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+export const ListItemLabel = styled.button``;
+
 export interface IOptionProps {
   tabSpace?: number;
 }

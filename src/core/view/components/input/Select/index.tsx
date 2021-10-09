@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useField } from '@unform/core';
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa';
 
+import * as Styled from './styles';
+
+// TODO: Create outside click functionally
+
 export interface ISelectOption {
   label: string;
   value: string | number;
@@ -15,17 +19,39 @@ export interface IProps {
   name: string;
   multiple?: boolean;
   collapsible?: boolean;
+  label?: string;
+  errorMessage?: string;
   options?: ISelectOption[];
 }
 
-const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, multiple }) => {
+/**
+ * @author Matheus Caetano <devmatheuscaetano@gmail.com>
+ */
+const Select: React.FC<IProps> = ({
+  name,
+  options = [],
+  collapsible = false,
+  multiple,
+  label,
+  errorMessage,
+}) => {
   const { fieldName, registerField } = useField(name);
   const selectRef = useRef<HTMLSelectElement>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string>('Nada selecionado...');
   const [hiddenSelectValue, setHiddenSelectValue] = useState<string[]>([]);
+  const [showList, setShowList] = useState<boolean>(false);
+
+  /**
+   * Closes the list if esc key is presses on keyboard.
+   */
+  useEffect(() => {
+    document.addEventListener('keydown', ({ key }) => {
+      if (key === 'Escape') setShowList(false);
+    });
+  }, []);
 
   /**
    * Register the field so a <Form> can get the <select> value.
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   useEffect(() => {
     registerField({
@@ -46,14 +72,45 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
 
   /**
    * Updates the selected items whenever the options prop changes.
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
-  useEffect(() => { setHiddenSelectValue(extractHiddenSelectInitialValue(options)); }, [options]);
+  useEffect(() => {
+    setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+    handleSelectedLabel();
+  }, [options, multiple, collapsible]);
+
+  /**
+   * Defines the label that appear on the select button.
+   * @recursive
+   */
+  const handleSelectedLabel = () => {
+    if (!multiple) {
+      for (const option of options ?? []) {
+        if (option.selected) {
+          setSelectedLabel(option.label);
+          break;
+        }
+      }
+
+      return;
+    }
+
+    const quantity = countSelectedItems(options);
+    if (quantity > 0) setSelectedLabel(`${quantity} itens selecionados`);
+    else setSelectedLabel('Nada selecionado...');
+  };
+
+  const countSelectedItems = (items: ISelectOption[], counter = 0) => {
+    items.forEach((item) => {
+      if (item.selected && !item.hide) counter++;
+      if (item.children?.length) counter += countSelectedItems(item.children);
+    });
+
+    return counter;
+  };
 
   /**
    * Extract the values of selected items.
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const extractHiddenSelectInitialValue = (items: ISelectOption[]) => {
     let values: string[] = [];
@@ -66,6 +123,10 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
       }
     }
 
+    if (!multiple && values.length) {
+      return [values[0]];
+    }
+
     return values;
   };
 
@@ -73,9 +134,8 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   /**
    * Creates the list of <li> elements that will be rendered inside the list.
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
-  const renderListItems = (items: ISelectOption[], hide = false) => {
+  const renderListItems = (items: ISelectOption[], hide = false, tabIndex = 0) => {
     let listItems: JSX.Element[] = [];
 
     for (const option of items) {
@@ -90,16 +150,23 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
         }
 
         listItems.push((
-          <li key={option.value} id={`${name}__list_item__${option.value}`} className={className}>
+          <Styled.ListItem key={option.value} id={`${name}__list_item__${option.value}`} className={className}>
             {collapsible && (
-              <button type="button" onClick={() => { onListItemButtonClick(option, !option.expanded); }} disabled={!option.children?.length}>
-                {option.expanded ? <FaAngleDown /> : <FaAngleRight />}
-              </button>
+              <Styled.ListItemButton type="button" onClick={() => { onListItemButtonClick(option, !option.expanded); }} disabled={!option.children?.length}>
+                {option.expanded
+                  ? <FaAngleDown fill={!option.children?.length ? 'lightgrey' : '#333'} />
+                  : <FaAngleRight fill={!option.children?.length ? 'lightgrey' : '#333'} />}
+              </Styled.ListItemButton>
             )}
-            <button type="button" onClick={() => onListItemClick(option)}>
+            <Styled.ListItemLabel
+              type="button"
+              onClick={() => onListItemClick(option)}
+              tabIndex={tabIndex}
+              className={className.length ? 'text-white' : ''}
+            >
               {option.label}
-            </button>
-          </li>
+            </Styled.ListItemLabel>
+          </Styled.ListItem>
         ));
       } else {
         option.hide = true;
@@ -109,6 +176,7 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
         listItems = listItems.concat(renderListItems(
           option.children,
           collapsible && !option.expanded,
+          tabIndex + 1,
         ));
       }
     }
@@ -119,7 +187,6 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   /**
    * Creates the list of <option> elements that will be rendered inside the hidden select.
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const renderHiddenSelectOptions = (items: ISelectOption[]) => {
     let optionsList: HTMLOptionElement[] = [];
@@ -140,7 +207,6 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   /**
    * Expandes or collapses the item children
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const onListItemButtonClick = (item: ISelectOption, expand: boolean, first = true) => {
     item.expanded = expand;
@@ -160,7 +226,6 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   /**
    * Select or unselect a item from the list. also updates the hidden select
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const onListItemClick = (item?: ISelectOption, list?: ISelectOption[]): void => {
     const newValue = !item?.selected;
@@ -170,6 +235,7 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
       else liElement?.classList.add('bg-info');
       item.selected = newValue;
       setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+      handleSelectedLabel();
       return;
     }
 
@@ -187,12 +253,13 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
     else liElement?.classList.add('bg-info');
     if (item) item.selected = newValue;
     setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+    handleSelectedLabel();
+    setShowList(false);
   };
 
   /**
    * Sets all displayed options as selected or not
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const selectAllDisplayed = (list: ISelectOption[], value: boolean) => {
     list.forEach((option) => {
@@ -206,12 +273,12 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
     });
 
     setHiddenSelectValue(extractHiddenSelectInitialValue(options));
+    handleSelectedLabel();
   };
 
   /**
    * Search a specific text in a list of options
    * @recursive
-   * @author Matheus Caetano <devmatheuscaetano@gmail.com>
    */
   const liveSearch = (list: ISelectOption[], inputValue: string) => {
     list.forEach((option) => {
@@ -225,25 +292,39 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
   };
 
   return (
-    <div>
-      <input type="search" onChange={({ target }) => liveSearch(options, target.value)} />
+    <Styled.Container className="form-group">
+      {label && <label className="form-label" htmlFor={fieldName}>{label}</label>}
 
-      {multiple && (
-      <div>
-        <button type="button" onClick={() => selectAllDisplayed(options, true)}>
-          Marcar todos
-        </button>
-        <button type="button" onClick={() => selectAllDisplayed(options, false)}>
-          Desmarcar todos
-        </button>
+      <Styled.SelectButton type="button" onClick={() => setShowList(!showList)}>
+        {selectedLabel}
+        <FaAngleDown className={showList ? 'upside-arrow--up' : 'upside-arrow--down'} />
+      </Styled.SelectButton>
+
+      <Styled.ListContainer className={showList ? 'list_container--active' : 'list_container--inactive'}>
+        <Styled.ListContainerInput type="search" className="form-control" onChange={({ target }) => liveSearch(options, target.value)} />
+
+        {multiple && (
+        <Styled.ButtonsContainer>
+          <Styled.LeftButton type="button" onClick={() => selectAllDisplayed(options, true)}>
+            Marcar todos
+          </Styled.LeftButton>
+          <Styled.RightButton type="button" onClick={() => selectAllDisplayed(options, false)}>
+            Desmarcar todos
+          </Styled.RightButton>
+        </Styled.ButtonsContainer>
+        )}
+
+        <Styled.List>
+          {renderListItems(options).map((option) => option)}
+        </Styled.List>
+      </Styled.ListContainer>
+
+      <div className="ms-2 mt-1 mb-2">
+        <small className="text-danger">{errorMessage}</small>
       </div>
-      )}
-
-      <ul>
-        {renderListItems(options).map((option) => option)}
-      </ul>
 
       <select
+        hidden
         multiple
         value={hiddenSelectValue}
         ref={selectRef}
@@ -251,7 +332,7 @@ const Select: React.FC<IProps> = ({ name, options = [], collapsible = false, mul
       >
         {renderHiddenSelectOptions(options).map((option) => option)}
       </select>
-    </div>
+    </Styled.Container>
   );
 };
 
