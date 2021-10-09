@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const token = window.localStorage.getItem('@EPA:api-token');
+const token = window.localStorage.getItem('token');
 
 const headers = { Authorization: `Bearer ${token}` };
 

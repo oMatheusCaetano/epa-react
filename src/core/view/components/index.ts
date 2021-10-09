@@ -20,3 +20,6 @@ export { default as TitleWithActions } from './misc/TitleWithActions';
 
 //! text
 export { default as Title } from './text/Title';
+
+//! table
+export { default as DataTable } from './table/DataTable';

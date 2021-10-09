@@ -24,6 +24,7 @@ class SaveUserHumor extends ApiDataSource<IUserHumor, ApiData, ISaveUserHumorPar
 
   protected convertToSend(): object { throw new Error('Method not implemented.'); }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected convert(data: ApiData): IUserHumor { throw new Error('Method not implemented.'); }
 
   protected whenSucceed = (data: ApiData) => {

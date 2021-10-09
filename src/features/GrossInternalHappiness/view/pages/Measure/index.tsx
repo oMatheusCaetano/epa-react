@@ -42,7 +42,9 @@ const Measure: React.FC = () => {
 
   const updateUserImage = (file: File) => {
     // TODO: Implementa lógica para atualizar a imagem do usuário
+    // eslint-disable-next-line no-console
     console.log(file);
+    // eslint-disable-next-line no-alert
     alert('Tem que implementar zé.');
   };
 

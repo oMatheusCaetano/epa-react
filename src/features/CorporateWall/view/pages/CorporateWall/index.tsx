@@ -1,38 +1,55 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form } from '@unform/web';
-import { FormHandles, SubmitHandler } from '@unform/core';
-import { FaFilter, FaPlus } from 'react-icons/fa';
+import { SubmitHandler } from '@unform/core';
 
-import { PageContainer, TitleWithActions, SectionContainer, Input, Button, ManagementUnitSelect } from '~/core/view/components';
+import { ISelectOption } from '~/core/view/components/input/Select';
+import { PageContainer, SectionContainer, Select } from '~/core/view/components';
 
 const CorporateWall: React.FC = () => {
-  const filterForm = useRef<FormHandles>(null);
+  const [selectData, setSelectData] = useState<ISelectOption[]>([] as ISelectOption[]);
 
-  const handleFilter: SubmitHandler = async (data) => {
+  useEffect(() => {
+    // setSelectData([
+    //   { value: 1,
+    //     label: 'Option 1',
+    //     selected: false,
+    //   },
+    //   { value: 2, label: 'Option 2', selected: true },
+    //   { value: 3, label: 'Option 3', selected: false },
+    // ]);
+
+    // setTimeout(() => {
+    setSelectData([
+      { value: 1,
+        label: 'Option 1',
+        selected: false,
+        children: [
+          { value: 4, label: 'Option 4', selected: false },
+          { value: 5, label: 'Option 5', selected: false, children: [{ value: 6, label: 'Option 6', selected: false }] },
+        ] },
+      { value: 2, label: 'Option 2', selected: false },
+      { value: 3, label: 'Option 3', selected: false },
+    ]);
+    // }, 1500);
+  }, []);
+
+  const onFormSubmit: SubmitHandler<FormData> = (data) => {
+    // eslint-disable-next-line no-console
     console.log(data);
   };
 
   return (
     <PageContainer>
-      <TitleWithActions
-        title="Mural Corporativo"
-        actions={[
-          { icon: FaFilter, className: 'btn-light' },
-          { icon: FaPlus, className: 'btn-info', href: 'comunicacao_mural.php', target: '_blank' },
-        ]}
-      />
-      <SectionContainer title="Filtros" className="mt-2">
-        <Form ref={filterForm} onSubmit={handleFilter}>
-          <ManagementUnitSelect />
-          <Input name="codigo" label="Código" type="number" />
-          <Input name="hasText" label="Contendo o texto" />
-          <Input name="initialDate" label="Data inicial" type="date" />
-          <Input name="finalDate" label="Data final" type="date" />
-          <Button className="btn-success">Pesquisar</Button>
-        </Form>
-      </SectionContainer>
       <SectionContainer title="Lista de Mensagens" className="mt-2">
-        Datatable aqui
+        <Form onSubmit={onFormSubmit}>
+          <Select
+            name="select"
+            multiple
+            collapsible
+            options={selectData}
+          />
+          <button>Submit</button>
+        </Form>
       </SectionContainer>
     </PageContainer>
   );

@@ -19,4 +19,8 @@ export default createGlobalStyle`
     cursor: pointer;
     margin-left: 5px;
   }
+
+  ul {
+    list-style: none;
+  }
 `;

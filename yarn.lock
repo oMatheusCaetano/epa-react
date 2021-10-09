@@ -9368,10 +9368,10 @@ react-app-rewired@^2.1.8:
   dependencies:
     semver "^5.6.0"
 
-react-data-table-component@^7.0.0-rc2:
-  version "7.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/react-data-table-component/-/react-data-table-component-7.0.0-rc2.tgz#74dcc327e5423243e5b3614e305d82360b85c7a2"
-  integrity sha512-MN2cyAbVvHU/76JK3QlhDMjFA4bmptJcoZodLaDR5brmcJkTDDZbxxFaYbP+FQ6v4Tp69a3H1kcqsXIvX/ZC1Q==
+react-data-table-component@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/react-data-table-component/-/react-data-table-component-7.3.1.tgz#e37efc1db26a70c1c4bf2bd1c5b8af1592380783"
+  integrity sha512-wy0A/URVausHRJdPvWBjxn5e9fCNg1LAiuoi7mmcfm/DLC+gBtCc4/L5T5CBaFsJ1D/5E/SpmnQFMlrQZ6KrAw==
   dependencies:
     deepmerge "^4.2.2"
     lodash.orderby "^4.6.0"
