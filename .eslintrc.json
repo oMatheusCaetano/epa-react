@@ -19,6 +19,7 @@
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
+    "react/jsx-no-bind": "off",
     "no-restricted-syntax": "off",
     "no-plusplus": "off",
     "class-methods-use-this": "off",

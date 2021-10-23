@@ -15,7 +15,13 @@ const CorporateWall: React.FC = () => {
     <PageContainer>
       <SectionContainer title="Lista de Mensagens" className="mt-2">
         <Form onSubmit={onFormSubmit}>
-          <ManagementUnitSelect name="managementUnit" collapsible multiple type={ManagementUnitSelectTypes.COMMUNICATES} defaultValue={['661', '848', '6']} />
+          <ManagementUnitSelect
+            name="managementUnit"
+            collapsible
+            multiple
+            type={ManagementUnitSelectTypes.COMMUNICATES}
+            defaultValue={['661', '848', '6']}
+          />
           <button>Submit</button>
         </Form>
       </SectionContainer>

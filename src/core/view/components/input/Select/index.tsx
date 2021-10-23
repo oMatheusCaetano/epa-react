@@ -314,8 +314,10 @@ const Select: React.FC<IProps> = ({
    */
   const liveSearch = (list: ISelectOption[], inputValue: string) => {
     list.forEach((option) => {
-      if (option.label.includes(inputValue)) option.hide = false;
-      else option.hide = true;
+      label = option.label.toLocaleLowerCase();
+      if (label.includes(inputValue.toLocaleLowerCase())) {
+        option.hide = false;
+      } else option.hide = true;
 
       if (option.children?.length) liveSearch(option.children, inputValue);
     });
