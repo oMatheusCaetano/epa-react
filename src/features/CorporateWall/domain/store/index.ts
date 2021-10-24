@@ -32,16 +32,16 @@ export const {
   setError,
 } = store.actions;
 
-export function getPosts(): AppThunk {
-  return async function exec(dispatch: AppDispatch) {
-    dispatch(setLoading(true));
-    return new GetPosts({
-      onSuccess: (data) => {
-        dispatch(setError(''));
-        dispatch(setPosts(data));
-      },
-      onError: (error) => dispatch(setError(error.message)),
-      onFinally: () => dispatch(setLoading(false)),
-    }).exec();
-  };
-}
+// export function getPosts(): AppThunk {
+//   return async function exec(dispatch: AppDispatch) {
+//     dispatch(setLoading(true));
+//     return new GetPosts({
+//       onSuccess: (data) => {
+//         dispatch(setError(''));
+//         dispatch(setPosts(data));
+//       },
+//       onError: (error) => dispatch(setError(error.message)),
+//       onFinally: () => dispatch(setLoading(false)),
+//     }).exec();
+//   };
+// }

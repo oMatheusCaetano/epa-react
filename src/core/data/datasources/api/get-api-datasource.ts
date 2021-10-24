@@ -3,6 +3,7 @@ import ApiDataSource, { IApiDataSourceClassParams } from '~/core/data/datasource
 
 export interface IGetApiDataSourceParams<Model> extends IApiDataSourceClassParams {
   onSuccess?: ((data: Model[]) => void);
+  pagination?: { perPage: number, page: number };
 }
 
 abstract class GetApiDataSource<Model, ApiData, Params extends IGetApiDataSourceParams<Model>>

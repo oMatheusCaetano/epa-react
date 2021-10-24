@@ -1,32 +1,43 @@
-import React from 'react';
-import { Form } from '@unform/web';
-import { SubmitHandler } from '@unform/core';
+import React, { useEffect } from 'react';
 
-import { ManagementUnitSelect, PageContainer, SectionContainer } from '~/core/view/components';
-import { ManagementUnitSelectTypes } from '~/core/view/components/input/ManagementUnitSelect';
+import Datatable from '~/core/view/components/table/Datatable';
+import GetPosts, { GetPostsWithes } from '~/features/CorporateWall/data/datasources/post/get-posts';
+import IPost from '~/features/CorporateWall/domain/models/IPost';
 
-const CorporateWall: React.FC = () => {
-  const onFormSubmit: SubmitHandler<FormData> = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-  };
-
-  return (
-    <PageContainer>
-      <SectionContainer title="Lista de Mensagens" className="mt-2">
-        <Form onSubmit={onFormSubmit}>
-          <ManagementUnitSelect
-            name="managementUnit"
-            collapsible
-            multiple
-            type={ManagementUnitSelectTypes.COMMUNICATES}
-            defaultValue={['661', '848', '6']}
-          />
-          <button>Submit</button>
-        </Form>
-      </SectionContainer>
-    </PageContainer>
-  );
-};
+const CorporateWall: React.FC = () => (
+  <>
+    <h1>asad</h1>
+    <Datatable
+      datasource={new GetPosts()}
+      datasourceParams={{ with: { value: [GetPostsWithes.CREATED_BY] } }}
+      columns={[
+        {
+          name: 'Id',
+          width: '50px',
+          selector: (post: IPost) => post.id,
+        },
+        {
+          name: 'Descrição',
+          width: '200px',
+          selector: (post: IPost) => post.description,
+        },
+        {
+          name: 'Data de Inclusão',
+          width: '170px',
+          selector: (post: IPost) => <Datatable.Date date={post.createdAt} withTime />,
+        },
+        {
+          name: 'Data de Publicação',
+          width: '170px',
+          selector: (post: IPost) => <Datatable.Date date={post.publishedAt} />,
+        },
+        {
+          name: 'Criado por',
+          selector: (post: IPost) => <Datatable.User user={post.createdBy} />,
+        },
+      ]}
+    />
+  </>
+);
 
 export default CorporateWall;

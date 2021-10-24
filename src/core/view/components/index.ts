@@ -22,4 +22,4 @@ export { default as TitleWithActions } from './misc/TitleWithActions';
 export { default as Title } from './text/Title';
 
 //! table
-export { default as DataTable } from './table/DataTable';
+// export { default as DataTable } from './table/DataTable';
