@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState, useRef } from 'react';
-import ReactDataTable from 'react-data-table-component';
+import React, { useEffect, useState } from 'react';
+import ReactDataTable, { TableStyles } from 'react-data-table-component';
+import { DefaultTheme, useTheme } from 'styled-components';
 import GetPosts, { IPaginatedResponse, IGetPostsParams } from '~/features/CorporateWall/data/datasources/post/get-posts';
 import DateMoment, { IProps as DateMomentProps } from './subComponents/DateMoment';
 import User, { IProps as UserProps } from './subComponents/User';
 
 import * as Styled from './styles';
+import PerPageSelector from './components/PerPageSelector';
+import Pagination from './components/Pagination';
 
 interface DatatableSubComponents {
   Date: React.FC<DateMomentProps>;
@@ -32,11 +35,56 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
   columns,
   datasourceParams,
 }) => {
-  const perPageRef = useRef<HTMLSelectElement>(null);
-
+  const theme = useTheme();
   const [pagination, setPagination] = useState({} as IPaginatedResponse<any>);
   const [data, setData] = useState([] as any[]);
   const [loading, setLoading] = useState(false);
+
+  const customStyles: TableStyles = {
+    headRow: {
+      style: {
+        background: theme.colors.light,
+        border: 'none',
+        borderRadius: 7,
+        marginBottom: 4,
+      },
+    },
+    cells: {
+      style: {
+        border: 'none',
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+    rows: {
+      style: {
+        border: 'none',
+        '&:not(:last-of-type)': {
+          border: 'none',
+        },
+      },
+      selectedHighlightStyle: {
+        style: {
+          border: 'none',
+        },
+      },
+      denseStyle: {
+        style: {
+          border: 'none',
+        },
+      },
+      highlightOnHoverStyle: {
+        style: {
+          border: 'none',
+        },
+      },
+      stripedStyle: {
+        style: {
+          border: 'none',
+        },
+      },
+    },
+  };
 
   const send = (itemsPerPage?: number, page = 1) => {
     setLoading(true);
@@ -53,48 +101,19 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
     });
   };
 
-  const changePage = (targetPage : number) => {
-    send(undefined, targetPage);
-  };
-
-  useEffect(() => {
-    send();
-    perPageRef.current?.addEventListener('change', () => send(Number(perPageRef.current?.value), 1));
-  }, []);
+  useEffect(send, []);
 
   return (
     <div>
       <Styled.Header>
-        <section>
-          <Styled.PerPageSelector className="form-control" ref={perPageRef} disabled={loading}>
-            <option>10</option>
-            <option>20</option>
-            <option>30</option>
-          </Styled.PerPageSelector>
-          <label>Resultados por página</label>
-        </section>
-
-        <Styled.HeaderRight>
-          <section>
-            <label>Pesquisar</label>
-            <input type="search" />
-          </section>
-
-          <section>
-            <button>Ocultar Colunas</button>
-            <button>PDF</button>
-            <button>Excel</button>
-          </section>
-        </Styled.HeaderRight>
+        <PerPageSelector loading={loading} onChange={send} />
       </Styled.Header>
 
       <ReactDataTable
+        dense
         columns={columns}
         data={data}
-        striped
-        highlightOnHover
-        pointerOnHover
-        dense
+        customStyles={customStyles}
       />
 
       <Styled.Footer>
@@ -102,127 +121,12 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
           Mostrando de {pagination.from} até {pagination.to} de {pagination.total} registros
         </span>
 
-        <section>
-          <Styled.PaginationButton
-            disabled={loading || pagination.currentPage <= 1}
-            onClick={() => changePage(pagination.currentPage - 1)}
-          >
-            Anterior
-          </Styled.PaginationButton>
-
-          {
-            pagination.currentPage > 1
-            && (
-              <Styled.PaginationButton disabled={loading} onClick={() => changePage(1)}>
-                1
-              </Styled.PaginationButton>
-            )
-          }
-
-          {pagination.currentPage > 5 && <Styled.PaginationEllipsis>...</Styled.PaginationEllipsis>}
-
-          {
-            (pagination.currentPage - 3 > 1)
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage - 3)}
-              >
-                {pagination.currentPage - 3}
-              </Styled.PaginationButton>
-            )
-          }
-          {
-            (pagination.currentPage - 2 > 1)
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage - 2)}
-              >
-                {pagination.currentPage - 2}
-              </Styled.PaginationButton>
-            )
-          }
-          {
-            (pagination.currentPage - 1 > 1)
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage - 1)}
-              >
-                {pagination.currentPage - 1}
-              </Styled.PaginationButton>
-            )
-          }
-
-          <Styled.PaginationActiveButton disabled>
-            {pagination.currentPage}
-          </Styled.PaginationActiveButton>
-
-          {
-            pagination.currentPage + 1 < pagination.lastPage
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage + 1)}
-              >
-                {pagination.currentPage + 1}
-              </Styled.PaginationButton>
-            )
-          }
-
-          {
-            pagination.currentPage + 2 < pagination.lastPage
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage + 2)}
-              >
-                {pagination.currentPage + 2}
-              </Styled.PaginationButton>
-            )
-          }
-
-          {
-            pagination.currentPage + 3 < pagination.lastPage
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.currentPage + 3)}
-              >
-                {pagination.currentPage + 3}
-              </Styled.PaginationButton>
-            )
-          }
-
-          {
-          pagination.currentPage < (pagination.lastPage - 4)
-          && (
-            <Styled.PaginationEllipsis>
-              ...
-            </Styled.PaginationEllipsis>
-          )
-}
-
-          {
-            pagination.currentPage < pagination.lastPage
-            && (
-              <Styled.PaginationButton
-                disabled={loading}
-                onClick={() => changePage(pagination.lastPage)}
-              >
-                {pagination.lastPage}
-              </Styled.PaginationButton>
-            )
-          }
-
-          <Styled.PaginationButton
-            disabled={loading || pagination.currentPage >= pagination.lastPage}
-            onClick={() => changePage(pagination.currentPage + 1)}
-          >
-            Próxima
-          </Styled.PaginationButton>
-        </section>
+        <Pagination
+          disabled={loading}
+          lastPage={pagination.lastPage}
+          currentPage={pagination.currentPage}
+          onPageChange={(targetPage) => send(undefined, targetPage)}
+        />
       </Styled.Footer>
     </div>
   );

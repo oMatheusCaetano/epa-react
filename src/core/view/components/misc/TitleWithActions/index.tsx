@@ -7,12 +7,13 @@ import * as Styled from './styles';
 type IAction = ActionButtonProps
 
 interface IProps {
+  className?: string;
   title?: string;
   actions?: IAction[]
 }
 
-const TitleWithActions: React.FC<IProps> = ({ title, actions }) => (
-  <Styled.Container>
+const TitleWithActions: React.FC<IProps> = ({ className, title, actions }) => (
+  <Styled.Container className={className}>
     <div>
       <Title>{title}</Title>
     </div>

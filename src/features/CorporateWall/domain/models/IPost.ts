@@ -1,4 +1,5 @@
 import IUser from '~/features/Users/domain/models/IUser';
+import IPostCategory from './IPostCategory';
 
 interface IPost extends IPostData {
   id: number;
@@ -9,6 +10,7 @@ interface IPost extends IPostData {
 export interface IPostData {
   description: string;
   publishedAt?: string;
+  category?: IPostCategory;
 }
 
 export default IPost;

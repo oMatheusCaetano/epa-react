@@ -4,6 +4,7 @@ import { ApiData, fromJson } from '.';
 
 export enum GetPostsWithes {
   CREATED_BY = 'usuarioInclusao',
+  CATEGORY = 'categoria'
 }
 
 export interface IPaginatedResponse<Model> {

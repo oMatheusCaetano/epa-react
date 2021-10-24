@@ -15,6 +15,10 @@ export interface ApiData {
       email: string;
       foto: string;
     }
+  },
+  categoria: {
+    codigo: number,
+    descricao: string,
   }
 }
 
@@ -26,13 +30,21 @@ export function toJson(data: IPost | IPostData) {
 }
 
 export function fromJson(data: ApiData): IPost {
-  const createdBy = data.usuario_inclusao && typeof data.usuario_inclusao !== 'number'
+  const createdBy = data.usuario_inclusao && typeof data.usuario_inclusao === 'object'
     ? {
       ...data.usuario_inclusao,
       id: data.usuario_inclusao.cliente.codigo,
       name: data.usuario_inclusao.cliente.nome,
       email: data.usuario_inclusao.cliente.email,
       image: data.usuario_inclusao.cliente.foto,
+    }
+    : undefined;
+
+  const category = data.categoria && typeof data.categoria === 'object'
+    ? {
+      ...data.categoria,
+      id: data.categoria.codigo,
+      description: data.categoria.descricao,
     }
     : undefined;
 
@@ -43,5 +55,6 @@ export function fromJson(data: ApiData): IPost {
     createdAt: data.data_inclusao,
     publishedAt: data.data_publicacao,
     createdBy,
+    category,
   };
 }
