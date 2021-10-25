@@ -1,6 +1,14 @@
-import IPost, { IPostData } from '~/features/CorporateWall/domain/models/IPost';
+import { IPost, IPostCategory, IPostData } from '~/features/CorporateWall/domain/models';
+import IUser from '~/features/Users/domain/models/IUser';
+
+export { default as GetPosts } from '~/features/CorporateWall/data/datasources/post/get-posts';
 
 export const endpoint = 'api/comunicacao-mural';
+
+export enum Withes {
+  CREATED_BY = 'usuarioInclusao',
+  CATEGORY = 'categoria'
+}
 
 export interface ApiData {
   codigo: number,
@@ -30,7 +38,7 @@ export function toJson(data: IPost | IPostData) {
 }
 
 export function fromJson(data: ApiData): IPost {
-  const createdBy = data.usuario_inclusao && typeof data.usuario_inclusao === 'object'
+  const createdBy: IUser | undefined = data.usuario_inclusao && typeof data.usuario_inclusao === 'object'
     ? {
       ...data.usuario_inclusao,
       id: data.usuario_inclusao.cliente.codigo,
@@ -40,7 +48,7 @@ export function fromJson(data: ApiData): IPost {
     }
     : undefined;
 
-  const category = data.categoria && typeof data.categoria === 'object'
+  const category : IPostCategory | undefined = data.categoria && typeof data.categoria === 'object'
     ? {
       ...data.categoria,
       id: data.categoria.codigo,

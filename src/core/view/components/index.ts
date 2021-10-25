@@ -17,6 +17,7 @@ export { default as PageContainer } from './misc/PageContainer';
 export { default as SectionContainer } from './misc/SectionContainer';
 export { default as SectionSeparator } from './misc/SectionSeparator';
 export { default as TitleWithActions } from './misc/TitleWithActions';
+export { default as FiltersContainer } from './misc/FiltersContainer';
 
 //! text
 export { default as Title } from './text/Title';

@@ -19,6 +19,8 @@
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
+    "no-case-declarations": "off",
+    "no-continue": "off",
     "react/jsx-no-bind": "off",
     "no-restricted-syntax": "off",
     "no-plusplus": "off",

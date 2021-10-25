@@ -4,12 +4,10 @@ import ActionButton, { IProps as ActionButtonProps } from '~/core/view/component
 
 import * as Styled from './styles';
 
-type IAction = ActionButtonProps
-
 interface IProps {
   className?: string;
   title?: string;
-  actions?: IAction[]
+  actions?: ActionButtonProps[]
 }
 
 const TitleWithActions: React.FC<IProps> = ({ className, title, actions }) => (

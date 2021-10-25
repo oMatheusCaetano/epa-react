@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import ReactDataTable, { TableStyles } from 'react-data-table-component';
 import { DefaultTheme, useTheme } from 'styled-components';
-import GetPosts, { IPaginatedResponse, IGetPostsParams } from '~/features/CorporateWall/data/datasources/post/get-posts';
 import DateMoment, { IProps as DateMomentProps } from './subComponents/DateMoment';
 import User, { IProps as UserProps } from './subComponents/User';
 
 import * as Styled from './styles';
 import PerPageSelector from './components/PerPageSelector';
 import Pagination from './components/Pagination';
+import ListApiDatasource, { IListApiDatasourceParams, IPaginatedResponse } from '~/core/data/datasources/api/list-api-datasource';
 
 interface DatatableSubComponents {
   Date: React.FC<DateMomentProps>;
@@ -22,9 +22,9 @@ export interface IPropsColumn {
 }
 
 export interface IProps {
-  datasource: GetPosts;
+  datasource: ListApiDatasource<any, any, any>;
   columns: IPropsColumn[];
-  datasourceParams?: IGetPostsParams;
+  datasourceParams?: IListApiDatasourceParams<any, any>;
 }
 
 /**
