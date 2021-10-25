@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { SubmitHandler } from '@unform/core';
-import { Form } from '@unform/web';
+import React, { useState, useEffect, useRef } from 'react';
+import { SubmitHandler, FormHandles } from '@unform/core';
+
 import { IListApiDatasourceFilters } from '~/core/data/datasources/api/list-api-datasource';
 import { DATE } from '~/core/helpers';
 import { PageContainer, TitleWithActions, SectionSeparator, Datatable, FiltersContainer, Input, Button, Select, ManagementUnitSelect } from '~/core/view/components';
@@ -9,9 +9,20 @@ import { ManagementUnitSelectTypes } from '~/core/view/components/input/Manageme
 import { GetPosts, Withes } from '~/features/CorporateWall/data/datasources/post';
 import { IPost } from '~/features/CorporateWall/domain/models';
 
+import * as Styled from './styles';
+import { ButtonType } from '~/core/view/components/button/Button';
+
 const CorporateWall: React.FC = () => {
-  const [showFilters, setShowFilters] = useState(false);
+  const filtersFormRef = useRef<FormHandles>(null);
+  const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState(initialFilters(true));
+
+  function fillInitialFiltersForm() {
+    filtersFormRef.current?.setData({
+      startDate: DATE.firstDayOfMonth(),
+      endDate: DATE.today(),
+    });
+  }
 
   function initialFilters(firstTime = false): IListApiDatasourceFilters[] {
     const filters = [{
@@ -51,6 +62,8 @@ const CorporateWall: React.FC = () => {
     setFilters(newFilters);
   };
 
+  useEffect(fillInitialFiltersForm, []);
+
   return (
     <PageContainer>
       <TitleWithActions
@@ -65,41 +78,53 @@ const CorporateWall: React.FC = () => {
       />
 
       <FiltersContainer show={showFilters}>
-        <Form onSubmit={onFilter}>
-          <Input name="id" label="Código" type="number" />
-          <Input name="hasText" label="Contendo o Texto" />
-          <ManagementUnitSelect name="managementUnit" type={ManagementUnitSelectTypes.COMMUNICATES} />
-          <Select
-            name="category"
-            label="Categoria"
-            options={[
-              {
-                selected: true,
-                label: 'Geral',
-                value: '1',
-              },
-            ]}
-          />
-          <Select
-            hideSearchInput
-            name="dateType"
-            label="Tipo de Data"
-            options={[
-              {
-                selected: true,
-                label: 'Data de Inclusão',
-                value: 'CREATED',
-              },
-              {
-                label: 'Data de Publicação',
-                value: 'PUBLISH',
-              },
-            ]}
-          />
-          <Input name="startDate" label="Data Inicial" type="date" />
-          <Input name="endDate" label="Data Final" type="date" />
-          <Button type="submit" className="btn-primary">asdas</Button>
-        </Form>
+        <Styled.Form onSubmit={onFilter} ref={filtersFormRef}>
+          <div className="d-lg-flex justify-content-between mb-3">
+            <Input name="hasText" label="Contendo o Texto" className="col-lg-4" />
+            <Input name="id" label="Código" type="number" className="col-lg-1" />
+            <ManagementUnitSelect
+              className="col-lg-3"
+              name="managementUnit"
+              type={ManagementUnitSelectTypes.COMMUNICATES}
+            />
+            <Select
+              className="col-lg-3"
+              name="category"
+              label="Categoria"
+              options={[
+                {
+                  selected: true,
+                  label: 'Geral',
+                  value: '1',
+                },
+              ]}
+            />
+          </div>
+
+          <div className="d-lg-flex">
+            <Select
+              hideSearchInput
+              className="col-lg-2 me-4"
+              name="dateType"
+              label="Tipo de Data"
+              options={[
+                {
+                  selected: true,
+                  label: 'Data de Inclusão',
+                  value: 'CREATED',
+                },
+                {
+                  label: 'Data de Publicação',
+                  value: 'PUBLISH',
+                },
+              ]}
+            />
+            <Input className="col-lg-2 me-4" name="startDate" label="Data Inicial" type="date" />
+            <Input className="col-lg-2 me-4" name="endDate" label="Data Final" type="date" />
+
+            <Button buttonType={ButtonType.SEARCH} className="ms-auto h-25 align-self-center" />
+          </div>
+        </Styled.Form>
       </FiltersContainer>
 
       <SectionSeparator title="Lista de Postagens" className="my-2" />

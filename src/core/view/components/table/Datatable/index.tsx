@@ -101,7 +101,7 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
     });
   };
 
-  useEffect(send, []);
+  useEffect(send, [datasourceParams?.filters]);
 
   return (
     <div>

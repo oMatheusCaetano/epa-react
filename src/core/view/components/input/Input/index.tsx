@@ -27,21 +27,21 @@ const Input: React.FC<InputProps> = ({ name, label, errorMessage = '', className
   }, [fieldName, registerField]);
 
   return (
-    <>
+    <div className={`form-group ${className}`}>
       {label && <label className="form-label" htmlFor={fieldName}>{label}</label>}
 
       <input
         id={fieldName}
         ref={inputRef}
         defaultValue={defaultValue}
-        className={`form-control ${className}`}
+        className="form-control"
         {...rest}
       />
 
       <div className="ms-2 mt-1 mb-2">
         <small className="text-danger">{error ?? errorMessage}</small>
       </div>
-    </>
+    </div>
   );
 };
 

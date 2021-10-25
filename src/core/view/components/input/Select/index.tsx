@@ -25,6 +25,7 @@ export interface IProps {
   hideSearchInput?: boolean;
   options?: ISelectOption[];
   defaultValue?: string[];
+  className?: string;
 }
 
 /**
@@ -39,6 +40,7 @@ const Select: React.FC<IProps> = ({
   hideSearchInput,
   errorMessage,
   defaultValue,
+  className,
 }) => {
   const { fieldName, registerField } = useField(name);
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -326,7 +328,7 @@ const Select: React.FC<IProps> = ({
   };
 
   return (
-    <Styled.Container className="form-group">
+    <Styled.Container className={`form-group ${className}`}>
       {label && <label className="form-label" htmlFor={fieldName}>{label}</label>}
 
       <Styled.SelectButton type="button" onClick={() => setShowList(!showList)}>
