@@ -20,7 +20,17 @@ export { default as TitleWithActions } from './misc/TitleWithActions';
 export { default as FiltersContainer } from './misc/FiltersContainer';
 
 //! text
+export * from './text/SmallText';
+export { default as SmallText } from './text/SmallText';
+
+export * from './text/Label';
+export { default as Label } from './text/Label';
+
 export { default as Title } from './text/Title';
 
 //! table
 export { default as Datatable } from './table/Datatable';
+
+//! form
+export * from './form/Form';
+export { default as Form } from './form/Form';
