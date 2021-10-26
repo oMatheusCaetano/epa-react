@@ -12,12 +12,19 @@ const theme: DefaultTheme = {
   colors: {
     primary: '#2BB6EE',
     secondary: '#888',
-    success: '#1DA770',
+    success: '#2DA770',
     warning: '#C9970F',
     danger: '#ff1111DD',
     light: '#F3F3F4',
     dark: '#444',
     text: '#333',
+    textInPrimary: '#FFF',
+    textInSecondary: '#FFF',
+    textInSuccess: '#FFF',
+    textInWarning: '#FFF',
+    textInDanger: '#FFF',
+    textInLight: '#333',
+    textInDark: '#FFF',
   },
 
   breakpoints: {

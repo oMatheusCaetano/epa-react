@@ -3,6 +3,7 @@ import { Form as UnForm } from '@unform/web';
 import { SubmitHandler, FormHandles } from '@unform/core';
 import FormInput, { IFormInputProps } from './subComponents/Input';
 import FormDate, { IFormDateProps } from './subComponents/Date';
+import FormSelect, { IFormSelectProps } from './subComponents/Select';
 
 export type FormRef = FormHandles;
 export type FormSubmit = SubmitHandler;
@@ -10,6 +11,7 @@ export type FormSubmit = SubmitHandler;
 interface IFormSubComponents {
   Input: React.FC<IFormInputProps>;
   Date: React.FC<IFormDateProps>;
+  Select: React.FC<IFormSelectProps>;
 }
 
 export interface IFormProps {
@@ -31,4 +33,5 @@ const Form: React.FC<IFormProps> & IFormSubComponents = ({ children, onSubmit, .
 
 Form.Input = FormInput;
 Form.Date = FormDate;
+Form.Select = FormSelect;
 export default Form;

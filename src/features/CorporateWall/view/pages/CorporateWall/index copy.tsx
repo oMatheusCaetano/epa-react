@@ -10,7 +10,6 @@ import { GetPosts, Withes } from '~/features/CorporateWall/data/datasources/post
 import { IPost } from '~/features/CorporateWall/domain/models';
 
 import * as Styled from './styles copy';
-import { ButtonType } from '~/core/view/components/button/Button';
 
 const CorporateWall: React.FC = () => {
   const filtersFormRef = useRef<FormHandles>(null);
@@ -122,7 +121,6 @@ const CorporateWall: React.FC = () => {
             <Input className="col-lg-2 me-4" name="startDate" label="Data Inicial" type="date" />
             <Input className="col-lg-2 me-4" name="endDate" label="Data Final" type="date" />
 
-            <Button buttonType={ButtonType.SEARCH} className="ms-auto h-25 align-self-center" />
           </div>
         </Styled.Form>
       </FiltersContainer>

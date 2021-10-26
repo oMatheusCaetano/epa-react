@@ -17,6 +17,13 @@ declare module 'styled-components' {
       light: string;
       dark: string;
       text: string;
+      textInPrimary: string,
+      textInSecondary: string,
+      textInSuccess: string,
+      textInWarning: string,
+      textInDanger: string,
+      textInLight: string,
+      textInDark: string,
     },
     breakpoints: {
       xSmall: {
