@@ -4,15 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '~/core/hooks';
 
 import Select, { IProps as ISelectProps, ISelectOption } from '~/core/view/components/input/Select';
-import IManagementUnitHierarchy from '~/features/ManagementUnities/domain/models/IManagementUnitHierarchy';
+import IManagementUnitHierarchy from '~/features/ManagementUnits/domain/models/IManagementUnitHierarchy';
 import {
-  getManagementUnitiesHierarchy,
-  getManagementUnitiesHierarchyUen,
-  getManagementUnitiesHierarchyManages,
-  getManagementUnitiesHierarchyStrategy,
-  getManagementUnitiesHierarchyCommunicates,
+  getManagementUnitsHierarchy,
+  getManagementUnitsHierarchyUen,
+  getManagementUnitsHierarchyManages,
+  getManagementUnitsHierarchyStrategy,
+  getManagementUnitsHierarchyCommunicates,
 
-} from '~/features/ManagementUnities/domain/store';
+} from '~/features/ManagementUnits/domain/store';
 
 export enum ManagementUnitSelectType {
   ALL = 'ALL',
@@ -28,72 +28,72 @@ export interface IManagementUnitSelectProps extends ISelectProps {
 
 const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   const { store, dispatch } = useAppStore();
-  const [managementUnities, setManagementUnities] = useState([] as ISelectOption[]);
+  const [managementUnits, setManagementUnits] = useState([] as ISelectOption[]);
 
   useEffect(() => {
     switch (props.type.toUpperCase()) {
       case ManagementUnitSelectType.UEN:
-        dispatch(getManagementUnitiesHierarchyUen());
+        dispatch(getManagementUnitsHierarchyUen());
         break;
 
       case ManagementUnitSelectType.MANAGES:
-        dispatch(getManagementUnitiesHierarchyManages());
+        dispatch(getManagementUnitsHierarchyManages());
         break;
 
       case ManagementUnitSelectType.COMMUNICATES:
-        dispatch(getManagementUnitiesHierarchyStrategy());
+        dispatch(getManagementUnitsHierarchyStrategy());
         break;
 
       case ManagementUnitSelectType.STRATEGY:
-        dispatch(getManagementUnitiesHierarchyCommunicates());
+        dispatch(getManagementUnitsHierarchyCommunicates());
         break;
 
       default:
-        dispatch(getManagementUnitiesHierarchy());
+        dispatch(getManagementUnitsHierarchy());
     }
   }, []);
 
   useEffect(() => {
     if (ManagementUnitSelectType.ALL) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchy,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchy,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchy]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchy]);
 
   useEffect(() => {
     if (ManagementUnitSelectType.UEN) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyUen,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyUen]);
 
   useEffect(() => {
     if (ManagementUnitSelectType.MANAGES) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyManages,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyManages]);
 
   useEffect(() => {
     if (ManagementUnitSelectType.STRATEGY) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyStrategy,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyStrategy]);
 
   useEffect(() => {
     if (ManagementUnitSelectType.COMMUNICATES) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyCommunicates,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyCommunicates]);
 
-  const convertManagementUnitiesHierarchyToSelectOptions = (
+  const convertManagementUnitsHierarchyToSelectOptions = (
     items: IManagementUnitHierarchy[],
   ) => {
     const data = [] as ISelectOption[];
@@ -106,7 +106,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
       } as ISelectOption;
 
       if (unit.children?.length) {
-        item.children = convertManagementUnitiesHierarchyToSelectOptions(unit.children);
+        item.children = convertManagementUnitsHierarchyToSelectOptions(unit.children);
       }
 
       data.push(item);
@@ -120,7 +120,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
       label={props.label === undefined
         ? (props.multiple ? 'Unidades Gerenciais' : 'Unidade Gerencial')
         : props.label}
-      options={props.options ?? managementUnities}
+      options={props.options ?? managementUnits}
       {...props}
     />
   );

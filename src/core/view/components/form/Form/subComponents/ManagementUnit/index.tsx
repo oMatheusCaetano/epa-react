@@ -4,15 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '~/core/hooks';
 
 import Select, { IFormSelectProps, ISelectOption } from '../Select';
-import IManagementUnitHierarchy from '~/features/ManagementUnities/domain/models/IManagementUnitHierarchy';
+import IManagementUnitHierarchy from '~/features/ManagementUnits/domain/models/IManagementUnitHierarchy';
 import {
-  getManagementUnitiesHierarchy,
-  getManagementUnitiesHierarchyUen,
-  getManagementUnitiesHierarchyManages,
-  getManagementUnitiesHierarchyStrategy,
-  getManagementUnitiesHierarchyCommunicates,
-
-} from '~/features/ManagementUnities/domain/store';
+  getManagementUnitsHierarchy,
+  getManagementUnitsHierarchyUen,
+  getManagementUnitsHierarchyManages,
+  getManagementUnitsHierarchyStrategy,
+  getManagementUnitsHierarchyCommunicates,
+  getManagementUnitsHierarchyBelongs,
+} from '~/features/ManagementUnits/domain/store';
 
 export enum ManagementUnitSelectTypes {
   ALL = 'ALL',
@@ -20,6 +20,7 @@ export enum ManagementUnitSelectTypes {
   COMMUNICATES = 'COMMUNICATES',
   STRATEGY = 'STRATEGY',
   UEN = 'UEN',
+  BELONGS = 'BELONGS',
 }
 
 export interface IFormManagementUnitProps extends IFormSelectProps {
@@ -28,77 +29,89 @@ export interface IFormManagementUnitProps extends IFormSelectProps {
 
 const ManagementUnitSelect: React.FC<IFormManagementUnitProps> = (props) => {
   const { store, dispatch } = useAppStore();
-  const [managementUnities, setManagementUnities] = useState([] as ISelectOption[]);
+  const [managementUnits, setManagementUnits] = useState([] as ISelectOption[]);
 
   useEffect(() => {
     switch (props.type.toUpperCase()) {
       case ManagementUnitSelectTypes.UEN:
-        dispatch(getManagementUnitiesHierarchyUen());
+        dispatch(getManagementUnitsHierarchyUen());
         break;
 
       case ManagementUnitSelectTypes.MANAGES:
-        dispatch(getManagementUnitiesHierarchyManages());
+        dispatch(getManagementUnitsHierarchyManages());
         break;
 
       case ManagementUnitSelectTypes.COMMUNICATES:
-        dispatch(getManagementUnitiesHierarchyStrategy());
+        dispatch(getManagementUnitsHierarchyCommunicates());
         break;
 
       case ManagementUnitSelectTypes.STRATEGY:
-        dispatch(getManagementUnitiesHierarchyCommunicates());
+        dispatch(getManagementUnitsHierarchyStrategy());
+        break;
+
+      case ManagementUnitSelectTypes.BELONGS:
+        dispatch(getManagementUnitsHierarchyBelongs());
         break;
 
       default:
-        dispatch(getManagementUnitiesHierarchy());
+        dispatch(getManagementUnitsHierarchy());
     }
   }, []);
 
   useEffect(() => {
     if (ManagementUnitSelectTypes.ALL) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchy,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchy,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchy]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchy]);
 
   useEffect(() => {
     if (ManagementUnitSelectTypes.UEN) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyUen,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyUen]);
 
   useEffect(() => {
     if (ManagementUnitSelectTypes.MANAGES) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyManages,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyManages]);
 
   useEffect(() => {
     if (ManagementUnitSelectTypes.STRATEGY) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyStrategy,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyStrategy]);
 
   useEffect(() => {
     if (ManagementUnitSelectTypes.COMMUNICATES) {
-      setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
-        store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates,
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyCommunicates,
       ));
     }
-  }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates]);
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyCommunicates]);
 
-  const convertManagementUnitiesHierarchyToSelectOptions = (
+  useEffect(() => {
+    if (ManagementUnitSelectTypes.BELONGS) {
+      setManagementUnits(convertManagementUnitsHierarchyToSelectOptions(
+        store.MANAGEMENT_UNIT.managementUnitsHierarchyBelongs,
+      ));
+    }
+  }, [store.MANAGEMENT_UNIT.managementUnitsHierarchyBelongs]);
+
+  const convertManagementUnitsHierarchyToSelectOptions = (
     items: IManagementUnitHierarchy[],
   ) => {
     const data = [] as ISelectOption[];
 
-    items.forEach((unit) => {
+    items?.forEach((unit) => {
       const item = {
         value: unit.id,
         label: unit.name,
@@ -106,7 +119,7 @@ const ManagementUnitSelect: React.FC<IFormManagementUnitProps> = (props) => {
       } as ISelectOption;
 
       if (unit.children?.length) {
-        item.children = convertManagementUnitiesHierarchyToSelectOptions(unit.children);
+        item.children = convertManagementUnitsHierarchyToSelectOptions(unit.children);
       }
 
       data.push(item);
@@ -120,7 +133,7 @@ const ManagementUnitSelect: React.FC<IFormManagementUnitProps> = (props) => {
       label={props.label === undefined
         ? (props.multiple ? 'Unidades Gerenciais' : 'Unidade Gerencial')
         : props.label}
-      options={props.options ?? managementUnities}
+      options={props.options ?? managementUnits}
       {...props}
     />
   );
