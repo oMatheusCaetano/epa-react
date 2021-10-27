@@ -27,11 +27,13 @@ const Label: React.FC<ILabelProps> = ({
       <section>
         {Icon && <Icon className="mb-1" fill="#9e9ea7" />}
 
-        <Styled.Label htmlFor={htmlFor}>
-          {label} {required && <Styled.RequiredStar>*</Styled.RequiredStar>}
-        </Styled.Label>
+        {label && (
+          <Styled.Label htmlFor={htmlFor}>
+            {label} {required && <Styled.RequiredStar>*</Styled.RequiredStar>}
+          </Styled.Label>
+        )}
 
-        <Styled.SubLabel htmlFor={htmlFor}>{subLabel}</Styled.SubLabel>
+        {subLabel && <Styled.SubLabel htmlFor={htmlFor}>{subLabel}</Styled.SubLabel>}
       </section>
 
       <aside>{headerAside}</aside>

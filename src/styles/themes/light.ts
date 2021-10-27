@@ -5,7 +5,7 @@ const theme: DefaultTheme = {
   font: '400 14px Roboto, Poppins, sans-serif',
 
   radius: {
-    default: '8px',
+    default: '7px',
     small: '5px',
   },
 

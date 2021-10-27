@@ -1,13 +1,13 @@
 import React from 'react';
-import Title from '~/core/view/components/text/Title';
-import ActionButton, { IProps as ActionButtonProps } from '~/core/view/components/button/ActionButton';
+
+import { Title, ActionButton, IActionButtonProps } from '~/core/view/components';
 
 import * as Styled from './styles';
 
 interface IProps {
   className?: string;
   title?: string;
-  actions?: ActionButtonProps[]
+  actions?: IActionButtonProps[]
 }
 
 const TitleWithActions: React.FC<IProps> = ({ className, title, actions }) => (

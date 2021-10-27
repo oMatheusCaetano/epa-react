@@ -13,8 +13,7 @@ export default createGlobalStyle`
 
     &::-webkit-scrollbar {
       width: 10px;
-      background: ${({ theme }) => theme.colors.light};
-      border-radius: ${({ theme }) => theme.radius.small};
+      background: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -38,7 +37,7 @@ export default createGlobalStyle`
 
   .form-input-style {
     width: 100%;
-    height: 38px;
+    height: 32px;
     padding: 5px 10px;
     border-radius: ${({ theme }) => theme.radius.default};
     outline: none;
@@ -74,5 +73,30 @@ export default createGlobalStyle`
       box-shadow: 0 0 0 4px ${({ theme }) => transparentize(0.9, theme.colors.primary)};
     }
 
+  }
+
+  .default-button {
+    height: 32px;
+    padding: 0 16px;
+    transition: .2s;
+    border: none;
+    border-radius: ${({ theme }) => theme.radius.default};
+    outline: none;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    & .button-icon {
+      margin-right: 10px;
+      margin-bottom: 1px;
+    }
   }
 `;

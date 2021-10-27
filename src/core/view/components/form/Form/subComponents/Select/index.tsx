@@ -177,18 +177,18 @@ const FormSelect: React.FC<IFormSelectProps> = ({
     let listItems: JSX.Element[] = [];
 
     for (const option of items) {
-      let className = '';
+      let itemSelected = false;
 
       if ((defaultValue?.includes(String(option.value))) || (!option.hide && !hide)) {
-        if (multiple && option.selected) className = 'bg-info';
+        if (multiple && option.selected) itemSelected = true;
 
         if (!multiple && !alreadySelected && option.selected) {
-          className = 'bg-info';
+          itemSelected = true;
           alreadySelected = true;
         }
 
         listItems.push((
-          <Styled.ListItem key={option.value} id={`${name}__list_item__${option.value}`} className={className}>
+          <Styled.ListItem key={option.value} id={`${name}__list_item__${option.value}`} selected={itemSelected}>
             {collapsible && (
               <Styled.ListItemButton type="button" onClick={() => { onListItemButtonClick(option, !option.expanded); }} disabled={!option.children?.length}>
                 {option.expanded
@@ -200,10 +200,10 @@ const FormSelect: React.FC<IFormSelectProps> = ({
               type="button"
               onClick={() => onListItemClick(option)}
               tabIndex={tabIndex}
-              className={className.length ? 'text-white' : ''}
+              className={itemSelected ? 'text-white' : ''}
             >
               {option.bolded
-                ? <strong className={className.length ? 'text-white' : ''}>{option.label}</strong>
+                ? <strong className={itemSelected ? 'text-white' : ''}>{option.label}</strong>
                 : option.label }
             </Styled.ListItemLabel>
           </Styled.ListItem>
@@ -351,7 +351,11 @@ const FormSelect: React.FC<IFormSelectProps> = ({
 
       <Styled.ListContainer className={showList ? 'list_container--active' : 'list_container--inactive'}>
         {!hideSearchInput && (
-          <Styled.ListContainerInput type="search" className="form-control" onChange={({ target }) => liveSearch(options, target.value)} />
+          <Styled.ListContainerInput
+            type="search"
+            placeholder="Pesquisar por..."
+            onChange={({ target }) => liveSearch(options, target.value)}
+          />
         )}
 
         {multiple && (

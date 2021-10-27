@@ -8,7 +8,7 @@ interface IProps {
 }
 
 const SectionSeparator: React.FC<IProps> = (props) => (
-  <Styled.Container className={`${props.className}`}>
+  <Styled.Container className={`my-2 ${props.className}`}>
     <Styled.Left>
       <Styled.Title>{props.title}</Styled.Title>
     </Styled.Left>

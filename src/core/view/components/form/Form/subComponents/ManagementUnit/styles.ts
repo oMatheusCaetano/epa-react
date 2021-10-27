@@ -105,7 +105,7 @@ export const ListItem = styled.li<IListItemProps>`
   background: ${({ selected, theme }) => (selected ? theme.colors.primary : 'transparent')};
   
   &:hover {
-    background: ${({ selected, theme }) => (selected ? theme.colors.primary : theme.colors.light)};
+    background: ${({ selected, theme }) => (selected ? theme.colors.primary : darken(0.05, theme.colors.light))};
   }
 `;
 

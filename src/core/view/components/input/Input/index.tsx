@@ -1,46 +1,69 @@
-import React, { useEffect, useRef } from 'react';
-import { useField } from '@unform/core';
+import React, { LegacyRef, useState } from 'react';
+import InputMask, { ReactInputMask } from 'react-input-mask';
 
-type InputProps = JSX.IntrinsicElements['input'] & {
-  name: string;
-  label?: string;
-  errorMessage?: string;
+import { SmallText, ISmallTextProps, Label, ILabelProps } from '~/core/view/components';
+
+type ComponentsTypes = ISmallTextProps & ILabelProps;
+export interface IInputProps extends ComponentsTypes {
+  placeholder?: string;
+  mask?: string;
+  className?: string;
+  type?: string;
+  id?: string;
+  name?: string;
+  ref?: LegacyRef<ReactInputMask>;
+  defaultValue?: string|number;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({ name, label, errorMessage = '', className, ...rest }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+const Input: React.FC<IInputProps> = ({
+  headerAside,
+  className,
+  placeholder = '',
+  mask = '',
+  label,
+  subLabel,
+  error,
+  message,
+  required,
+  icon,
+  type = 'text',
+  id,
+  onChange,
+  ...rest
+}) => {
+  const [notEmpty, setNotEmpty] = useState(false);
 
-  const { fieldName, defaultValue, registerField, error } = useField(name);
-
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      ref: inputRef,
-      getValue: (ref) => ref.current.value,
-      setValue: (ref, value) => {
-        ref.current.value = value;
-      },
-      clearValue: (ref) => {
-        ref.current.value = '';
-      },
-    });
-  }, [fieldName, registerField]);
+  function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNotEmpty(!!event.target.value.length);
+    if (onChange) onChange(event);
+  }
 
   return (
-    <div className={`form-group ${className}`}>
-      {label && <label className="form-label" htmlFor={fieldName}>{label}</label>}
-
-      <input
-        id={fieldName}
-        ref={inputRef}
-        defaultValue={defaultValue}
-        className="form-control"
-        {...rest}
+    <div className={className}>
+      <Label
+        icon={icon}
+        htmlFor={id}
+        label={label}
+        required={required}
+        subLabel={subLabel}
+        headerAside={headerAside}
       />
 
-      <div className="ms-2 mt-1 mb-2">
-        <small className="text-danger">{error ?? errorMessage}</small>
-      </div>
+      <InputMask
+        type={type}
+        mask={mask}
+        placeholder={placeholder}
+        id={id}
+        {...rest}
+        className={`form-input-style ${notEmpty ? 'not-empty' : ''}`}
+        onChange={onInputChange}
+      />
+
+      <SmallText
+        error={error}
+        message={message}
+      />
     </div>
   );
 };

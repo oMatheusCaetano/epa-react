@@ -20,8 +20,10 @@ const FormDate: React.FC<IFormDateProps> = ({
   error,
   message,
   required,
+  className,
   icon,
   name,
+  ...rest
 }) => {
   const datePickerRef = useRef(null);
   const { fieldName, registerField, defaultValue } = useField(name);
@@ -31,14 +33,17 @@ const FormDate: React.FC<IFormDateProps> = ({
     registerField({
       name: fieldName,
       ref: datePickerRef.current,
-      path: 'props.selected',
-      clearValue: (ref: any) => {
+      clearValue: (ref) => {
         ref.clear();
       },
+      setValue: (_, value) => {
+        setDate(new Date(String(value)));
+      },
+      getValue: (ref) => ref.props.value,
     });
   }, [fieldName, registerField]);
   return (
-    <div>
+    <div className={className}>
       <Label
         icon={icon}
         htmlFor={fieldName}
@@ -50,14 +55,13 @@ const FormDate: React.FC<IFormDateProps> = ({
 
       <ReactDatePicker
         className="form-input-style"
-        scrollableMonthYearDropdown
-        scrollableYearDropdown
-        dateFormat="Pp"
         locale="pt-BR"
         ref={datePickerRef}
-        selected={date}
-        showTimeSelect
+        value={date}
         onChange={setDate}
+        dateFormat="dd/MM/yyyy"
+        placeholderText="dd/mm/aaaa"
+        {...rest}
       />
 
       <SmallText

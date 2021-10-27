@@ -3,8 +3,6 @@ import { IconType } from 'react-icons';
 import { FaSearch } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
-import * as Styled from './styles';
-
 export enum ButtonType {
   SEARCH,
   DELETE,
@@ -31,15 +29,15 @@ const Button: React.FC<IButtonProps> = ({ children,
     const Icon = buttonIcon;
 
     return (
-      <Styled.Button
+      <button
         onClick={onClick}
         disabled={disabled}
-        className={className}
+        className={`default-button ${className}`}
         style={{ backgroundColor: background, color }}
       >
         {Icon && <Icon className="button-icon" fill={color} />}
         {children ?? text}
-      </Styled.Button>
+      </button>
     );
   }
 

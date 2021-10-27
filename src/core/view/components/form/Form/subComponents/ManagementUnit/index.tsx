@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppStore } from '~/core/hooks';
 
-import Select, { IProps as ISelectProps, ISelectOption } from '~/core/view/components/input/Select';
+import Select, { IFormSelectProps, ISelectOption } from '../Select';
 import IManagementUnitHierarchy from '~/features/ManagementUnities/domain/models/IManagementUnitHierarchy';
 import {
   getManagementUnitiesHierarchy,
@@ -14,7 +14,7 @@ import {
 
 } from '~/features/ManagementUnities/domain/store';
 
-export enum ManagementUnitSelectType {
+export enum ManagementUnitSelectTypes {
   ALL = 'ALL',
   MANAGES = 'MANAGES',
   COMMUNICATES = 'COMMUNICATES',
@@ -22,29 +22,29 @@ export enum ManagementUnitSelectType {
   UEN = 'UEN',
 }
 
-export interface IManagementUnitSelectProps extends ISelectProps {
-  type: string | ManagementUnitSelectType;
+export interface IFormManagementUnitProps extends IFormSelectProps {
+  type: string | ManagementUnitSelectTypes;
 }
 
-const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
+const ManagementUnitSelect: React.FC<IFormManagementUnitProps> = (props) => {
   const { store, dispatch } = useAppStore();
   const [managementUnities, setManagementUnities] = useState([] as ISelectOption[]);
 
   useEffect(() => {
     switch (props.type.toUpperCase()) {
-      case ManagementUnitSelectType.UEN:
+      case ManagementUnitSelectTypes.UEN:
         dispatch(getManagementUnitiesHierarchyUen());
         break;
 
-      case ManagementUnitSelectType.MANAGES:
+      case ManagementUnitSelectTypes.MANAGES:
         dispatch(getManagementUnitiesHierarchyManages());
         break;
 
-      case ManagementUnitSelectType.COMMUNICATES:
+      case ManagementUnitSelectTypes.COMMUNICATES:
         dispatch(getManagementUnitiesHierarchyStrategy());
         break;
 
-      case ManagementUnitSelectType.STRATEGY:
+      case ManagementUnitSelectTypes.STRATEGY:
         dispatch(getManagementUnitiesHierarchyCommunicates());
         break;
 
@@ -54,7 +54,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (ManagementUnitSelectType.ALL) {
+    if (ManagementUnitSelectTypes.ALL) {
       setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
         store.MANAGEMENT_UNIT.managementUnitiesHierarchy,
       ));
@@ -62,7 +62,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchy]);
 
   useEffect(() => {
-    if (ManagementUnitSelectType.UEN) {
+    if (ManagementUnitSelectTypes.UEN) {
       setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
         store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen,
       ));
@@ -70,7 +70,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyUen]);
 
   useEffect(() => {
-    if (ManagementUnitSelectType.MANAGES) {
+    if (ManagementUnitSelectTypes.MANAGES) {
       setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
         store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages,
       ));
@@ -78,7 +78,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyManages]);
 
   useEffect(() => {
-    if (ManagementUnitSelectType.STRATEGY) {
+    if (ManagementUnitSelectTypes.STRATEGY) {
       setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
         store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy,
       ));
@@ -86,7 +86,7 @@ const ManagementUnitSelect: React.FC<IManagementUnitSelectProps> = (props) => {
   }, [store.MANAGEMENT_UNIT.managementUnitiesHierarchyStrategy]);
 
   useEffect(() => {
-    if (ManagementUnitSelectType.COMMUNICATES) {
+    if (ManagementUnitSelectTypes.COMMUNICATES) {
       setManagementUnities(convertManagementUnitiesHierarchyToSelectOptions(
         store.MANAGEMENT_UNIT.managementUnitiesHierarchyCommunicates,
       ));
