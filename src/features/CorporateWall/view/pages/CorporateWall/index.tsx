@@ -128,10 +128,10 @@ const CorporateWall: React.FC = () => {
       <SectionSeparator title="Lista de postagens" />
       <Datatable
         datasource={new GetPosts()}
-        datasourceParams={{
-          filters,
-          with: { value: [Withes.CREATED_BY, Withes.CATEGORY] },
-        }}
+        // datasourceParams={{
+        //   filters,
+        //   with: { value: [Withes.CREATED_BY, Withes.CATEGORY] },
+        // }}
         columns={[
           {
             name: 'Ações',

@@ -11,7 +11,7 @@ export interface IInputProps extends ComponentsTypes {
   type?: string;
   id?: string;
   name?: string;
-  ref?: LegacyRef<ReactInputMask>;
+  innerRef?: LegacyRef<ReactInputMask>;
   defaultValue?: string|number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -29,6 +29,7 @@ const Input: React.FC<IInputProps> = ({
   icon,
   type = 'text',
   id,
+  innerRef,
   onChange,
   ...rest
 }) => {
@@ -55,6 +56,7 @@ const Input: React.FC<IInputProps> = ({
         mask={mask}
         placeholder={placeholder}
         id={id}
+        ref={innerRef}
         {...rest}
         className={`form-input-style ${notEmpty ? 'not-empty' : ''}`}
         onChange={onInputChange}

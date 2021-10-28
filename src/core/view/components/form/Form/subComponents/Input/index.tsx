@@ -31,7 +31,7 @@ const FormInput: React.FC<IFormInputProps> = ({ placeholder = '', mask = '', nam
       mask={mask}
       name={name}
       id={fieldName}
-      ref={inputRef}
+      innerRef={inputRef}
       defaultValue={defaultValue}
       placeholder={placeholder}
       {...rest}
