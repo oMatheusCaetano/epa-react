@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Button as ButtonComp } from '~/core/view/components';
-import { IDatatableColumn } from '../..';
+import { IDatatableColumn } from '../Table';
 
 interface ListItemProps {
   column: IDatatableColumn;

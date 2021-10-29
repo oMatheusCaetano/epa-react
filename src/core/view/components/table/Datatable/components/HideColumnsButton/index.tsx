@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IDatatableColumn } from '../..';
+import { IDatatableColumn } from '../Table';
 
 import * as Styled from './styles';
 
@@ -12,8 +12,9 @@ const HideColumnsButton: React.FC<IHideColumnsButtonProps> = ({ columns, onSelec
   const [isVisible, setIsVisible] = useState(false);
   const elRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: any) => {
-    if (elRef.current && !elRef.current.contains(event.target)) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClickOutside = ({ target }: any) => {
+    if (elRef.current && !elRef.current.contains(target)) {
       setIsVisible(false);
     }
   };
@@ -34,9 +35,9 @@ const HideColumnsButton: React.FC<IHideColumnsButtonProps> = ({ columns, onSelec
       <Styled.List hidden={!isVisible}>
         {columns.map((column, index) => (
           <Styled.ListItem
-            key={`datatable-column--${index}--${column.name}`}
+            key={index}
             column={column}
-            onClick={() => (onSelect ? onSelect(column) : () => { /**  */ })}
+            onClick={onSelect ? () => onSelect(column) : undefined}
           >
             {column.name}
           </Styled.ListItem>
