@@ -50,6 +50,7 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
   const [csvHeaders, setCsvHeaders] = useState([] as ICsvHeadersData[]);
   const [csvData, setCsvData] = useState([] as any[]);
   const [data, setData] = useState([] as any[]);
+  const [cColumns, setCColumn] = useState([] as IDatatableColumn[]);
   const [loading, setLoading] = useState(false);
 
   const componentRef = useRef(null);
@@ -118,7 +119,25 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
     });
   };
 
-  useEffect(send, [datasourceParams?.filters]);
+  const COLUMNS = {
+    toggleColumnsVisibility: (column: IDatatableColumn) => {
+      const columnsVisibility = columns.map((item) => {
+        if (item.name === column.name) item.hide = !item.hide;
+        return item;
+      });
+
+      setCColumn(columnsVisibility);
+    },
+
+    init: () => {
+      setCColumn(columns);
+    },
+  };
+
+  useEffect(() => {
+    send();
+    COLUMNS.init();
+  }, [datasourceParams?.filters]);
 
   return (
     <SectionContainer title={title}>
@@ -137,7 +156,7 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
           <Styled.TableHeaderSearch type="search" placeholder="Procurar por..." />
 
           <div>
-            <HideColumnsButton columns={columns} />
+            <HideColumnsButton columns={cColumns} onSelect={COLUMNS.toggleColumnsVisibility} />
 
             <Styled.TableHeaderExportButton onClick={handlePrint} styleAs={ButtonType.PDF}>
               PDF
@@ -152,13 +171,15 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
       <Styled.Table ref={componentRef}>
         <Styled.THead>
           <tr>
-            {columns.map((column, index) => <th key={`th--${column.name}--${index}`}>{column.name}</th>)}
+            {cColumns.filter((column) => !column.hide).map((column, index) => (
+              <th key={`th--${column.name}--${index}`}>{column.name}</th>
+            ))}
           </tr>
         </Styled.THead>
         <Styled.TBody>
           {data?.map((data, index) => (
             <tr key={`tr--${index}`}>
-              {columns?.map((column, index) => (
+              {cColumns?.filter((column) => !column.hide).map((column, index) => (
                 <td
                   style={{ width: column.width }}
                   key={`td--${column.name}--${index}`}

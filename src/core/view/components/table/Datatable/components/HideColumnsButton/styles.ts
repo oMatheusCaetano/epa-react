@@ -9,6 +9,14 @@ interface ListItemProps {
 export const Container = styled.div`
   position: relative;
   display: inline-block;
+
+  ._react-datatable-HideColumnsButton-component_ {
+    display: none;
+
+    &--open {
+      display: block;
+    }
+  }
 `;
 
 export const Button = styled(ButtonComp)`

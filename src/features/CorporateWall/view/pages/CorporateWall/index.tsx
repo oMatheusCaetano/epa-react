@@ -137,6 +137,7 @@ const CorporateWall: React.FC = () => {
             name: 'Ações',
             data: 'id',
             width: '100px',
+            hide: true,
             selector: (post: IPost) => <button className="btn btn-primary btn-sm">Ações</button>,
           },
           {
@@ -149,6 +150,7 @@ const CorporateWall: React.FC = () => {
             name: 'Título',
             data: 'description',
             width: '300px',
+            hide: true,
             selector: (post: IPost) => post.description,
           },
           {
