@@ -1,11 +1,13 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaFilePdf, FaFileCsv } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
 export enum ButtonType {
   SEARCH,
   DELETE,
+  PDF,
+  CSV,
 }
 
 export interface IButtonProps {
@@ -47,6 +49,12 @@ const Button: React.FC<IButtonProps> = ({ children,
 
     case ButtonType.DELETE:
       return render(theme.colors.textInDanger, theme.colors.danger, 'Pesquisar', icon ?? FaSearch);
+
+    case ButtonType.PDF:
+      return render('white', '#C90000DD', 'PDF', icon ?? FaFilePdf);
+
+    case ButtonType.CSV:
+      return render('white', '#005225CC', 'Pesquisar', icon ?? FaFileCsv);
 
     default:
       return render(theme.colors.textInLight, theme.colors.light, '');

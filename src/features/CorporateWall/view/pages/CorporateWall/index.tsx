@@ -18,7 +18,7 @@ import {
 } from '~/core/view/components';
 
 const CorporateWall: React.FC = () => {
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState(initialFilters(true));
 
   function initialFilters(fromUseState = false): IListApiDatasourceFilters[] {
@@ -125,8 +125,8 @@ const CorporateWall: React.FC = () => {
         </Form>
       </FiltersContainer>
 
-      <SectionSeparator title="Lista de postagens" />
       <Datatable
+        title="Lista de postagens"
         datasource={new GetPosts()}
         // datasourceParams={{
         //   filters,
@@ -135,36 +135,43 @@ const CorporateWall: React.FC = () => {
         columns={[
           {
             name: 'Ações',
+            data: 'id',
             width: '100px',
             selector: (post: IPost) => <button className="btn btn-primary btn-sm">Ações</button>,
           },
           {
             name: 'Código',
+            data: 'id',
             width: '80px',
             selector: (post: IPost) => post.id,
           },
           {
             name: 'Título',
+            data: 'description',
             width: '300px',
             selector: (post: IPost) => post.description,
           },
           {
             name: 'Categoria',
+            data: 'category.description',
             width: '200px',
             selector: (post: IPost) => post.category?.description,
           },
           {
             name: 'Data de Inclusão',
+            data: 'createdAt',
             width: '170px',
             selector: (post: IPost) => <Datatable.Date date={post.createdAt} withTime />,
           },
           {
             name: 'Data de Publicação',
+            data: 'publishedAt',
             width: '170px',
             selector: (post: IPost) => <Datatable.Date date={post.publishedAt} />,
           },
           {
             name: 'Criada Por',
+            data: 'createdBy.name',
             width: '250px',
             selector: (post: IPost) => <Datatable.User user={post.createdBy} />,
           },

@@ -4,5 +4,5 @@ export const SectionContainer = styled.div`
 `;
 
 export const ChildrenContainer = styled.div`
-  padding: 10px;
+  padding: 5px;
 `;
