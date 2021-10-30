@@ -1,25 +1,60 @@
-import React from 'react';
-import { useReactToPrint } from 'react-to-print';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from 'react';
+import { CSVLink } from 'react-csv';
 import * as Styled from './styles';
 import { ButtonType } from '~/core/view/components';
+import { ListDatasource, IListDatasourceParams } from '~/core/data/datasources/api';
+import { IDatatableColumn } from '../Table';
 
-const ExportCSVButton: React.FC = () => {
-  const handlePrint = useReactToPrint({ content: () => null });
+interface ICsvHeadersData {
+  label: string;
+  key: string;
+}
 
-  // function handleCsvHeaders() {
-  //   const csvHeadersData = [];
+export interface IExportCSVButtonProps {
+  columns: IDatatableColumn[];
+  datasource: ListDatasource<any, any, any>;
+  datasourceParams?: IListDatasourceParams<any, any>;
+}
 
-  //   for (const column of columns) {
-  //     if (column.name === 'Ações') continue;
-  //     csvHeadersData.push({ label: column.name, key: column.data });
-  //   }
+const ExportCSVButton: React.FC<IExportCSVButtonProps> = ({
+  columns,
+  datasource,
+  datasourceParams,
+}) => {
+  const [loading, setLoading] = useState(false);
+  const [csvHeaders, setCsvHeaders] = useState([] as ICsvHeadersData[]);
+  const [csvData, setCsvData] = useState([] as any[]);
 
-  //   setCsvHeaders(csvHeadersData);
-  //   return csvHeadersData;
-  // }
+  async function handleData(done: any): Promise<void> {
+    setLoading(true);
+    const dsParams = datasourceParams ?? {};
+    return datasource.exec({
+      ...dsParams,
+      onSuccess: async (data) => {
+        await setCsvData(data as any[]);
+      },
+      onFinally: () => {
+        done();
+        setLoading(false);
+      },
+    });
+  }
 
-  // function handleCsvData(headers: any[], itemsData: any[]) {
+  function handleCsvHeaders() {
+    const csvHeadersData = [];
+
+    for (const column of columns) {
+      if (column.name === 'Ações') continue;
+      csvHeadersData.push({ label: column.name, key: column.data });
+    }
+
+    setCsvHeaders(csvHeadersData);
+  }
+
+  useEffect(handleCsvHeaders, [columns]);
+
+  // async function handleCsvData(headers: any[], itemsData: any[]) {
   //   const csvDataData = [];
 
   //   for (const item of itemsData) {
@@ -32,29 +67,44 @@ const ExportCSVButton: React.FC = () => {
   //     csvDataData.push(obj);
   //   }
 
-  //   setCsvData(csvDataData);
-  //   return csvDataData;
+  //   await setCsvData(csvDataData);
   // }
 
-  function getPropertyValue(object: any, propertyPath: string): any {
-    const parts = propertyPath.split('.');
-    let property = object;
+  // function getPropertyValue(object: any, propertyPath: string): any {
+  //   const parts = propertyPath.split('.');
+  //   let property = object;
 
-    for (let i = 0; i < parts.length; i++) {
-      if (!property || !Object.prototype.hasOwnProperty.call(property, parts[i])) {
-        return '';
-      }
+  //   for (let i = 0; i < parts.length; i++) {
+  //     if (!property || !Object.prototype.hasOwnProperty.call(property, parts[i])) {
+  //       return '';
+  //     }
 
-      property = property[parts[i]];
-    }
+  //     property = property[parts[i]];
+  //   }
 
-    return property;
+  //   return property;
+  // }
+
+  if (loading) {
+    return (
+      <Styled.Button styleAs={ButtonType.CSV} disabled>
+        Excel
+      </Styled.Button>
+    );
   }
 
   return (
-    <Styled.Button styleAs={ButtonType.CSV}>
-      Excel
-    </Styled.Button>
+    <CSVLink
+      data={csvData}
+      headers={csvHeaders}
+      asyncOnClick
+      onClick={(_, done) => handleData(done)}
+    >
+      <Styled.Button styleAs={ButtonType.CSV} disabled={loading}>
+        Excel
+      </Styled.Button>
+    </CSVLink>
+
   );
 };
 

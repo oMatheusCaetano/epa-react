@@ -1,6 +1,6 @@
 import { IManagementUnitHierarchy } from '~/features/ManagementUnits/domain/models';
 
-export * from '~/core/data/datasources/api/list-api-datasource';
+export * from '~/core/data/datasources/api/list-datasource';
 
 export interface ApiData {
   codigo: number,

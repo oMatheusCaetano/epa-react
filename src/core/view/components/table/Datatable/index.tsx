@@ -1,27 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState, useRef } from 'react';
-import ReactDataTable, { TableStyles } from 'react-data-table-component';
-import { DefaultTheme, useTheme } from 'styled-components';
-import { useReactToPrint } from 'react-to-print';
-import { CSVLink } from 'react-csv';
-import JsxPdf from 'jsx-pdf';
+import React, { useEffect, useState } from 'react';
 import DateMoment, { IProps as DateMomentProps } from './subComponents/DateMoment';
 import User, { IProps as UserProps } from './subComponents/User';
 
-import * as Styled from './styles';
-import PerPageSelector from './components/PerPageSelector';
-import Pagination from './components/Pagination';
-import ListApiDatasource, { IListApiDatasourceParams, IPaginatedResponse } from '~/core/data/datasources/api/list-api-datasource';
-import { Button, ButtonType, Input, SectionContainer } from '~/core/view/components';
+import { ListDatasource, IListDatasourceParams, IPaginatedResponse } from '~/core/data/datasources/api';
+import { SectionContainer } from '~/core/view/components';
 import HideColumnsButton from './components/HideColumnsButton';
 import ExportPDFButton from './components/ExportPDFButton';
 import ExportCSVButton from './components/ExportCSVButton';
 import Table, { IDatatableColumn } from './components/Table';
 
-interface ICsvHeadersData {
-  label: string;
-  key: string;
-}
+import * as Styled from './styles';
 
 interface DatatableSubComponents {
   Date: React.FC<DateMomentProps>;
@@ -30,9 +19,9 @@ interface DatatableSubComponents {
 
 export interface IProps {
   title?: string;
-  datasource: ListApiDatasource<any, any, any>;
+  datasource: ListDatasource<any, any, any>;
   columns: IDatatableColumn[];
-  datasourceParams?: IListApiDatasourceParams<any, any>;
+  datasourceParams?: IListDatasourceParams<any, any>;
 }
 
 const Datatable: React.FC<IProps> & DatatableSubComponents = ({
@@ -44,9 +33,6 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
   const [pagination, setPagination] = useState({} as IPaginatedResponse<any>);
   const [cColumns, setCColumn] = useState([] as IDatatableColumn[]);
   const [data, setData] = useState([] as any[]);
-
-  const [csvHeaders, setCsvHeaders] = useState([] as ICsvHeadersData[]);
-  const [csvData, setCsvData] = useState([] as any[]);
   const [loading, setLoading] = useState(false);
 
   const send = (itemsPerPage?: number, page = 1) => {
@@ -100,16 +86,28 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
         </aside>
 
         <Styled.TableHeaderRight>
-          <Styled.TableHeaderSearch type="search" placeholder="Procurar por..." />
+          <Styled.TableHeaderSearch
+            type="search"
+            placeholder="Procurar por..."
+          />
 
           <div>
-            <HideColumnsButton columns={cColumns} onSelect={COLUMNS.toggleColumnsVisibility} />
+            <HideColumnsButton
+              columns={cColumns}
+              onSelect={COLUMNS.toggleColumnsVisibility}
+            />
+
             <ExportPDFButton
+              columns={cColumns}
               datasource={datasource}
               datasourceParams={datasourceParams}
-              columns={cColumns}
             />
-            <ExportCSVButton />
+
+            <ExportCSVButton
+              columns={cColumns}
+              datasource={datasource}
+              datasourceParams={datasourceParams}
+            />
           </div>
         </Styled.TableHeaderRight>
       </Styled.TableHeader>
@@ -122,5 +120,3 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
 Datatable.Date = DateMoment;
 Datatable.User = User;
 export default Datatable;
-// eslint-disable-next-line no-lone-blocks
-{ /* <CSVLink data={csvData} headers={csvHeaders}>Download me</CSVLink>; */ }

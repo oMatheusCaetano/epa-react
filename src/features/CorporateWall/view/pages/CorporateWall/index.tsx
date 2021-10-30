@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { GetPosts, Withes, IListApiDatasourceFilters } from '~/features/CorporateWall/data/datasources/post';
+import { IReadDatasourceFilters } from '~/core/data/datasources/api';
+import { GetPosts, Withes } from '~/features/CorporateWall/data/datasources/post';
 import { IPost } from '~/features/CorporateWall/domain/models';
 import { DATE } from '~/core/helpers';
 import {
@@ -11,7 +12,6 @@ import {
   FormSubmit,
   ManagementUnitSelectType,
   PageContainer,
-  SectionSeparator,
   TitleWithActions,
   ActionButtonType,
   ButtonType,
@@ -21,7 +21,7 @@ const CorporateWall: React.FC = () => {
   const [showFilters, setShowFilters] = useState(true);
   const [filters, setFilters] = useState(initialFilters(true));
 
-  function initialFilters(fromUseState = false): IListApiDatasourceFilters[] {
+  function initialFilters(fromUseState = false): IReadDatasourceFilters[] {
     const filters = [{
       column: 'orderBy',
       value: 'createdAt:desc',
@@ -36,7 +36,7 @@ const CorporateWall: React.FC = () => {
   }
 
   const onFilter: FormSubmit = (data) => {
-    const newFilters: IListApiDatasourceFilters[] = initialFilters();
+    const newFilters: IReadDatasourceFilters[] = initialFilters();
 
     for (const [column, value] of Object.entries(data)) {
       switch (column) {
@@ -128,16 +128,15 @@ const CorporateWall: React.FC = () => {
       <Datatable
         title="Lista de postagens"
         datasource={new GetPosts()}
-        // datasourceParams={{
-        //   filters,
-        //   with: { value: [Withes.CREATED_BY, Withes.CATEGORY] },
-        // }}
+        datasourceParams={{
+          // filters,
+          with: { value: [Withes.CREATED_BY, Withes.CATEGORY] },
+        }}
         columns={[
           {
             name: 'Ações',
             data: 'id',
             width: '100px',
-            hide: true,
             selector: (post: IPost) => <button className="btn btn-primary btn-sm">Ações</button>,
           },
           {
@@ -150,7 +149,6 @@ const CorporateWall: React.FC = () => {
             name: 'Título',
             data: 'description',
             width: '300px',
-            hide: true,
             selector: (post: IPost) => post.description,
           },
           {

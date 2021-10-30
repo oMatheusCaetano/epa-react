@@ -4,13 +4,13 @@ import { useReactToPrint } from 'react-to-print';
 
 import * as Styled from './styles';
 import { ButtonType } from '~/core/view/components';
-import ListApiDatasource, { IListApiDatasourceParams } from '~/core/data/datasources/api/list-api-datasource';
+import { ListDatasource, IListDatasourceParams } from '~/core/data/datasources/api';
 import Table, { IDatatableColumn } from '../Table';
 
 export interface IExportPDFButtonProps {
   columns: IDatatableColumn[];
-  datasource: ListApiDatasource<any, any, any>;
-  datasourceParams?: IListApiDatasourceParams<any, any>;
+  datasource: ListDatasource<any, any, any>;
+  datasourceParams?: IListDatasourceParams<any, any>;
 }
 
 const ExportPDFButton: React.FC<IExportPDFButtonProps> = ({
@@ -23,16 +23,7 @@ const ExportPDFButton: React.FC<IExportPDFButtonProps> = ({
   const [data, setData] = useState([] as any[]);
   const handlePrint = useReactToPrint({
     onBeforeGetContent: handleData,
-    content: () => {
-      if (componentRef.current) {
-        const component = componentRef.current as HTMLDivElement;
-        const clone = component.cloneNode(true) as HTMLDivElement;
-        clone.hidden = false;
-        return clone;
-      }
-
-      return componentRef.current;
-    },
+    content: () => componentRef.current,
   });
 
   async function handleData(): Promise<void> {
@@ -51,8 +42,10 @@ const ExportPDFButton: React.FC<IExportPDFButtonProps> = ({
         PDF
       </Styled.Button>
 
-      <div ref={componentRef} hidden>
-        <Table columns={columns} data={data} hideColumns={['Ações']} />
+      <div hidden>
+        <div ref={componentRef}>
+          <Table columns={columns} data={data} hideColumns={['Ações']} />
+        </div>
       </div>
     </>
   );

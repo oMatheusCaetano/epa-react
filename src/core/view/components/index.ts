@@ -38,3 +38,7 @@ export { default as Datatable } from './table/Datatable';
 //! form
 export * from './form/Form';
 export { default as Form } from './form/Form';
+
+//! nav
+export * from './nav/Navbar';
+export { default as Navbar } from './nav/Navbar';

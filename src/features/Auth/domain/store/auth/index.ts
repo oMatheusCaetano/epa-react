@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AppDispatch, AppThunk } from '~/core/domain/store';
-import GetAuthenticatedUser from '~/features/Auth/data/datasources/get-authenticated-user';
+import { GetAuthenticated, Withes } from '~/features/Auth/data/datasources/user';
+// import GetAuthenticatedUser from '~/features/Auth/data/datasources/get-authenticated-user';
 import IUser from '~/features/Users/domain/models/IUser';
 
 const store = createSlice({
@@ -36,13 +37,15 @@ export const {
 export function getAuthenticatedUser(): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    new GetAuthenticatedUser({
-      onSuccess: (data) => {
-        dispatch(setAuthUser(data));
+    return new GetAuthenticated().exec({
+      with: { value: [Withes.CUSTOMER] },
+      onSuccess: (user) => {
         dispatch(setError(''));
+        dispatch(setAuthUser(user));
       },
-      onError: (error) => dispatch(setError(error.message)),
-      onFinally: () => dispatch(setLoading(false)),
-    }).exec();
+      onFinally: () => {
+        dispatch(setLoading(false));
+      },
+    });
   };
 }

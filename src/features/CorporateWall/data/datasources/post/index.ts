@@ -1,7 +1,6 @@
 import { IPost, IPostCategory, IPostData } from '~/features/CorporateWall/domain/models';
 import IUser from '~/features/Users/domain/models/IUser';
 
-export * from '~/core/data/datasources/api/list-api-datasource';
 export { default as GetPosts } from '~/features/CorporateWall/data/datasources/post/get-posts';
 
 export const endpoint = 'api/comunicacao-mural';
