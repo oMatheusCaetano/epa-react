@@ -5,7 +5,17 @@ export * from './button/Button';
 export { default as Button } from './button/Button';
 
 //! img
+export * from './img/Image';
 export { default as Image } from './img/Image';
+
+export * from './img/CompanyLogo';
+export { default as CompanyLogo } from './img/CompanyLogo';
+
+export * from './img/EpaLogo';
+export { default as EpaLogo } from './img/EpaLogo';
+
+export * from './img/WikiLogo';
+export { default as WikiLogo } from './img/WikiLogo';
 
 //! input
 export * from './input/Input';
@@ -42,3 +52,7 @@ export { default as Form } from './form/Form';
 //! nav
 export * from './nav/Navbar';
 export { default as Navbar } from './nav/Navbar';
+
+//! dropdown
+export * from './dropdown/Dropdown';
+export { default as Dropdown } from './dropdown/Dropdown';

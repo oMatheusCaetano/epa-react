@@ -2,20 +2,22 @@ import React, { useRef } from 'react';
 
 import * as Styled from './styles';
 
-interface Props {
+export interface IImageProps {
   className?: string;
   fromEpa?: boolean;
   editable?: boolean;
   onFileSelection?: ((file: File) => void);
 }
 
-const Image: React.FC<Props & React.HTMLProps<HTMLImageElement>> = ({
+const Image: React.FC<IImageProps & React.HTMLProps<HTMLImageElement>> = ({
   className,
   src,
   alt,
   editable,
   fromEpa = true,
   onFileSelection,
+  style,
+  title,
 }) => {
   const ref = useRef<HTMLInputElement>({} as HTMLInputElement);
   const placeholderImage = 'https://via.placeholder.com/500';
@@ -44,7 +46,7 @@ const Image: React.FC<Props & React.HTMLProps<HTMLImageElement>> = ({
 
   return (
     <Styled.Container>
-      <Styled.Image className={className} src={targetSrc} alt={alt} />
+      <Styled.Image className={className} src={targetSrc} alt={alt} style={style} title={title} />
       {
         editable && (
         <>

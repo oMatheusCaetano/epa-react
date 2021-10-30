@@ -56,7 +56,7 @@ export default createGlobalStyle`
       background-color: #fff;
       border: 1px solid rgba(0,0,0,0.1);
     }
-    
+
     &:hover {
       transition: background-color 200ms ease, outline 200ms ease, color 200ms ease, box-shadow 200ms ease, -webkit-box-shadow 200ms ease;
       border: 1px solid transparent;

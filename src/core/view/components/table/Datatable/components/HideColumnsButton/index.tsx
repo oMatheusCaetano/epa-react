@@ -19,10 +19,19 @@ const HideColumnsButton: React.FC<IHideColumnsButtonProps> = ({ columns, onSelec
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEscKeyPressed = ({ key }: any) => {
+    if (key === 'Escape') {
+      setIsVisible(false);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);
+    document.addEventListener('keydown', handleEscKeyPressed, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
+      document.removeEventListener('keydown', handleEscKeyPressed, true);
     };
   });
 
