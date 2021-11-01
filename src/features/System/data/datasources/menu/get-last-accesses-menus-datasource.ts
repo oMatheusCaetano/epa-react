@@ -1,10 +1,20 @@
 import { ListDatasource } from '~/core/data/datasources/api';
-import { IMenuItem, ApiData, fromApi } from '.';
+import { IMenuItem } from '.';
 
-class GetLastAccessedMenus extends ListDatasource<IMenuItem, ApiData, null> {
+export interface GetLastAccessedMenusApiData {
+  link: string,
+  nome_menu: string,
+}
+
+class GetLastAccessedMenus extends ListDatasource<IMenuItem, GetLastAccessedMenusApiData, null> {
   getEndpoint() { return 'api/home/last-accessed-menus'; }
 
-  fromApi(data: ApiData) { return fromApi(data); }
+  fromApi(data: GetLastAccessedMenusApiData) {
+    return {
+      ...data,
+      label: data.nome_menu,
+    };
+  }
 }
 
 export default GetLastAccessedMenus;

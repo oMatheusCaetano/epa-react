@@ -59,10 +59,9 @@ export const ListItem = styled.li`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 10px 20px;
-  width: max-content;
+  padding: 7px 20px;
   cursor: pointer;
-  width: 100%;
+  min-width: max-content;
 
   &:hover {
     background: ${({ theme }) => theme.colors.light};

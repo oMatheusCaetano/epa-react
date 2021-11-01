@@ -9,7 +9,7 @@ export interface IDropdownProps {
   items: IMenuItem[];
 }
 
-const Dropdown: React.FC<IDropdownProps> = ({ items }) => {
+const Dropdown: React.FC<IDropdownProps> = ({ children, items }) => {
   const elRef = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState(false);
 
@@ -20,8 +20,8 @@ const Dropdown: React.FC<IDropdownProps> = ({ items }) => {
           <Styled.ListItem key={`${item.label}--${index}`}>
             {item.label}
 
-            {item.children && <FaAngleRight />}
-            {item.children && (
+            {!!item.children?.length && <FaAngleRight />}
+            {!!item.children?.length && (
               <Styled.SubList>
                 {renderItems(item.children)}
               </Styled.SubList>
@@ -58,7 +58,7 @@ const Dropdown: React.FC<IDropdownProps> = ({ items }) => {
   return (
     <Styled.Container ref={elRef}>
       <Styled.Button type="button" onClick={() => setShow(!show)}>
-        <span>label</span>
+        <span>{children}</span>
 
         <FaAngleDown />
       </Styled.Button>

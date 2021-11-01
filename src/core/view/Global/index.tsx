@@ -5,10 +5,10 @@ import { getAuthenticatedUser } from '~/features/Auth/domain/store/auth';
 import { getSystemInfo } from '~/features/System/domain/store/system';
 
 const Global: React.FC = () => {
-  const { store, dispatch } = useAppStore();
+  const { dispatch } = useAppStore();
 
-  useEffect(() => { dispatch(getAuthenticatedUser()); }, [store.AUTH.authUser]);
-  useEffect(() => { dispatch(getSystemInfo()); }, [store.SYSTEM.systemInfo]);
+  useEffect(() => { dispatch(getAuthenticatedUser()); }, []);
+  useEffect(() => { dispatch(getSystemInfo()); }, []);
 
   return <></>;
 };

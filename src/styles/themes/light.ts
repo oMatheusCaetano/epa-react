@@ -2,7 +2,7 @@ import { DefaultTheme } from 'styled-components';
 
 const theme: DefaultTheme = {
   title: 'light',
-  font: '400 14px Roboto, Poppins, sans-serif',
+  font: '400 13px Roboto, Poppins, sans-serif',
 
   radius: {
     default: '7px',

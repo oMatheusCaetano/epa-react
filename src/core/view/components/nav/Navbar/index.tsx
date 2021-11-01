@@ -1,52 +1,22 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react';
-import { FaSearch, FaPlus, FaRegTimesCircle, FaMobileAlt } from 'react-icons/fa';
+import { FaSearch, FaPlus, FaMobileAlt, FaCog } from 'react-icons/fa';
 import { useAppStore } from '~/core/hooks';
 
 import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image } from '~/core/view/components';
-import { IMenuItem } from '~/features/System/domain/models';
-import { getLastAccessedMenus } from '~/features/System/domain/store/menu';
+import { getLastAccessedMenus, getMenusList } from '~/features/System/domain/store/menu';
 
 import * as Styled from './styles';
-
-const mitems: IMenuItem[] = [
-  {
-    label: 'Item 1',
-    children: [
-      {
-        label: 'Item 1.1',
-        children: [
-          {
-            label: 'Item 1.1.1',
-            children: [
-              { label: 'Item 1.1.1.1' },
-              { label: 'Item 1.1.1.2' },
-            ],
-          },
-          { label: 'Item 1.1.2' },
-        ],
-      },
-    ],
-  },
-
-  {
-    label: 'Item 2',
-  },
-
-  {
-    label: 'Item 3',
-    children: [
-      {
-        label: 'Item 3.1',
-      },
-    ],
-  },
-];
 
 const Navbar: React.FC = () => {
   const { store, dispatch } = useAppStore();
 
-  useEffect(() => { dispatch(getLastAccessedMenus()); }, []);
+  useEffect(() => {
+    dispatch(getMenusList());
+    dispatch(getLastAccessedMenus());
+  }, []);
+
+  useEffect(() => { console.log(store.MENU.menusList); }, [store.MENU.menusList]);
 
   return (
     <Styled.Container className="navbar navbar-expand-lg navbar-light bg-white">
@@ -68,9 +38,13 @@ const Navbar: React.FC = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <section className="mx-auto">
             <Styled.MiddleTop className="navbar-nav  mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Dropdown items={mitems} />
-              </li>
+              {store.MENU.menusList.map((menu, index) => (
+                <li className="nav-item" key={index}>
+                  <Dropdown items={menu.children ?? []}>
+                    {menu.label !== 'Parametrização' ? menu.label : <FaCog />}
+                  </Dropdown>
+                </li>
+              ))}
 
               <li className="nav-item">
                 <Styled.NewOs>
@@ -110,8 +84,8 @@ const Navbar: React.FC = () => {
 
             <Styled.MiddleBottom className="navbar-nav  mb-2 mb-lg-0">
               <Image fromEpa src="figuras/maisAcessados.png" alt="+ Acessados" />
-              {store.MENU.lastAccessedMenus.map((menu) => (
-                <Styled.LastAccessedMenuItem className="nav-item">
+              {store.MENU.lastAccessedMenus.map((menu, index) => (
+                <Styled.LastAccessedMenuItem className="nav-item" key={index}>
                   <a>
                     {menu.label}
                   </a>
