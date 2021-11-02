@@ -1,6 +1,7 @@
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState, useRef } from 'react';
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa';
+
 import { IMenuItem } from '~/features/System/domain/models';
 
 import * as Styled from './styles';
@@ -16,18 +17,43 @@ const Dropdown: React.FC<IDropdownProps> = ({ children, items }) => {
   function renderItems(items: IMenuItem[]) {
     return (
       <>
-        {items.map((item, index) => (
-          <Styled.ListItem key={`${item.label}--${index}`}>
-            {item.label}
+        {items.map((item, index) => {
+          if (!item.children?.length && item.link?.length) {
+            return (
+              <Styled.ListItem key={`${item.label}--${index}`}>
+                <Styled.ListItemLink href={item.link} toLegacyEpa>
+                  {item.label}
 
-            {!!item.children?.length && <FaAngleRight />}
-            {!!item.children?.length && (
-              <Styled.SubList>
-                {renderItems(item.children)}
-              </Styled.SubList>
-            )}
-          </Styled.ListItem>
-        ))}
+                  {!!item.children?.length && <FaAngleRight />}
+                </Styled.ListItemLink>
+
+                {!!item.children?.length && (
+                  <Styled.SubList>
+                    {renderItems(item.children)}
+                  </Styled.SubList>
+                )}
+
+              </Styled.ListItem>
+            );
+          }
+
+          return (
+            <Styled.ListItem key={`${item.label}--${index}`}>
+              <Styled.ListItemNotLink>
+                {item.label}
+
+                {!!item.children?.length && <FaAngleRight />}
+              </Styled.ListItemNotLink>
+
+              {!!item.children?.length && (
+                <Styled.SubList>
+                  {renderItems(item.children)}
+                </Styled.SubList>
+              )}
+
+            </Styled.ListItem>
+          );
+        })}
       </>
     );
   }

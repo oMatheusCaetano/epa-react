@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import Link from '~/core/view/components/link/Link';
 
 export const Container = styled.div`
   position: relative;
@@ -55,12 +56,7 @@ export const SubList = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: relative;
-  padding: 7px 20px;
-  cursor: pointer;
   min-width: max-content;
 
   &:hover {
@@ -70,4 +66,22 @@ export const ListItem = styled.li`
       display: block;
     }
   }
+`;
+
+export const ListItemNotLink = styled.div`
+  cursor: initial;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 20px;
+  width: 100%;
+`;
+
+export const ListItemLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 20px;
+  width: 100%;
+  cursor: pointer;
 `;
