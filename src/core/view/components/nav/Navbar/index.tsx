@@ -3,8 +3,9 @@ import React, { useEffect } from 'react';
 import { FaSearch, FaPlus, FaMobileAlt, FaCog } from 'react-icons/fa';
 import { useAppStore } from '~/core/hooks';
 
-import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image } from '~/core/view/components';
+import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image, Link } from '~/core/view/components';
 import { getLastAccessedMenus, getMenusList } from '~/features/System/domain/store/menu';
+// import Todo from './components/Todo';
 
 import * as Styled from './styles';
 
@@ -54,10 +55,7 @@ const Navbar: React.FC = () => {
               </li>
 
               <li className="nav-item">
-                <Styled.Todo>
-                  To-do
-                  <span>5</span>
-                </Styled.Todo>
+                {/* <Todo /> */}
               </li>
 
               <li className="nav-item">
@@ -84,11 +82,10 @@ const Navbar: React.FC = () => {
 
             <Styled.MiddleBottom className="navbar-nav  mb-2 mb-lg-0">
               <Image fromEpa src="figuras/maisAcessados.png" alt="+ Acessados" />
+
               {store.MENU.lastAccessedMenus.map((menu, index) => (
                 <Styled.LastAccessedMenuItem className="nav-item" key={index}>
-                  <a>
-                    {menu.label}
-                  </a>
+                  <Link href={menu.link} toLegacyEpa>{menu.label}</Link>
                 </Styled.LastAccessedMenuItem>
               ))}
             </Styled.MiddleBottom>

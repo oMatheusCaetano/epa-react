@@ -56,3 +56,7 @@ export { default as Navbar } from './nav/Navbar';
 //! dropdown
 export * from './dropdown/Dropdown';
 export { default as Dropdown } from './dropdown/Dropdown';
+
+//! link
+export * from './link/Link';
+export { default as Link } from './link/Link';

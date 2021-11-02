@@ -11,32 +11,6 @@ export const MiddleTop = styled.ul`
   justify-content: center;
 `;
 
-export const Todo = styled.button`
-  position: relative;
-  border: none;
-  background: transparent;
-  border-radius: 40px;
-  padding: 5px 7px;
-  transition: .3s;
-  margin-left: 5px;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.light};
-  }
-
-  & > span:last-of-type {
-    top: 40%;
-    position: absolute;
-    background: red;
-    color: white;
-    font-weight: 500;
-    padding: 2px 4px;
-    border-radius: 50%;
-    font-size: 10px;
-    background: #2D6987;
-  }
-`;
-
 export const SearchUser = styled.button`
   margin-left: 5px;
   border-radius: 50%;

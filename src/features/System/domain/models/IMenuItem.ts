@@ -1,6 +1,7 @@
 interface IMenuItem {
-  label: string,
-  children?: IMenuItem[],
+  label: string;
+  link?: string;
+  children?: IMenuItem[];
 }
 
 export default IMenuItem;
