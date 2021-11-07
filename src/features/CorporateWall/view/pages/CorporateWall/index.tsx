@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { IReadDatasourceFilters } from '~/core/data/datasources/api';
 import { GetPosts, Withes } from '~/features/CorporateWall/data/datasources/post';
 import { IPost } from '~/features/CorporateWall/domain/models';
-import { DATE } from '~/core/helpers';
+import { DATE, DateFormat, DT_FILTER, IFilterItem } from '~/core/helpers';
+import { useAppStore } from '~/core/hooks';
+import { getPostsCategories } from '~/features/CorporateWall/domain/store';
 import {
   Button,
   Datatable,
@@ -18,46 +20,48 @@ import {
 } from '~/core/view/components';
 
 const CorporateWall: React.FC = () => {
+  const { store, dispatch } = useAppStore();
   const [showFilters, setShowFilters] = useState(true);
-  const [filters, setFilters] = useState(initialFilters(true));
+  const [filters, setFilters] = useState(initialFilters());
 
-  function initialFilters(fromUseState = false): IReadDatasourceFilters[] {
-    const filters = [{
-      column: 'orderBy',
-      value: 'createdAt:desc',
-    }];
+  function initialFilters() {
+    // return handleFixedFilters().concat([DT_FILTER.currentMonthPeriod('createdAt')]);
+    return handleFixedFilters().concat([]);
+  }
 
-    return !fromUseState
-      ? filters
-      : filters.concat([{
-        column: 'createdAt',
-        value: `${DATE.firstDayOfMonth()}to${DATE.today()}`,
-      }]);
+  function handleFixedFilters() {
+    return [DT_FILTER.orderBy('createdAt:desc')];
   }
 
   const onFilter: FormSubmit = (data) => {
-    const newFilters: IReadDatasourceFilters[] = initialFilters();
+    console.clear(); console.log(data);
+    const newFilters = handleFixedFilters();
 
     for (const [column, value] of Object.entries(data)) {
       switch (column) {
+        case 'dateType':
+          newFilters.push(DT_FILTER.datePeriod(
+            value === 'CREATED' ? 'createdAt' : 'publishedAt',
+            data.startDate,
+            data.endDate,
+          ));
+          break;
+
         case 'startDate':
         case 'endDate':
           break;
 
-        case 'dateType':
-          newFilters.push({
-            column: value === 'CREATED' ? 'createdAt' : 'publishedAt',
-            value: `${data.startDate}to${data.endDate}`,
-          });
-          break;
-
         default:
-          newFilters.push({ column, value });
+          newFilters.push({ column, value: String(value) });
       }
     }
 
     setFilters(newFilters);
   };
+
+  useEffect(() => {
+    dispatch(getPostsCategories());
+  }, []);
 
   return (
     <PageContainer>
@@ -81,21 +85,21 @@ const CorporateWall: React.FC = () => {
           className="p-2"
           onSubmit={onFilter}
           initialData={{
-            startDate: DATE.firstDayOfMonth(),
-            endDate: DATE.today(),
+            // startDate: DATE.firstDateOfMonth(DateFormat.PT_BR),
+            // endDate: DATE.today(DateFormat.PT_BR),
           }}
         >
           <div className="d-flex justify-content-between mb-4">
-            <Form.Input name="ids" label="Código" type="number" className="col-1" />
-            <Form.Input name="hasText" label="Contendo o texto" className="col-4" />
+            <Form.Input name="id" label="Código" type="number" className="col-1" />
+            <Form.Input name="text" label="Contendo o texto" className="col-4" />
             <Form.Select
               className="col-3"
               name="category"
               label="Categoria"
               hideSearchInput
-              options={[
-                { value: 5, label: 'Geral' },
-              ]}
+              options={store.CORPORATE_WALL.postsCategories.map(({ id, title }) => (
+                { value: id, label: title }
+              ))}
             />
             <Form.ManagementUnit
               className="col-3"
@@ -106,7 +110,7 @@ const CorporateWall: React.FC = () => {
           </div>
 
           <div className="d-flex justify-content-between align-items-end">
-            <div className="d-flex">
+            {/* <div className="d-flex">
               <Form.Select
                 className="col-4"
                 name="dateType"
@@ -118,7 +122,7 @@ const CorporateWall: React.FC = () => {
               />
               <Form.Date name="startDate" label="Data inicial" className="mx-4" />
               <Form.Date name="endDate" label="Data final" />
-            </div>
+            </div> */}
 
             <Button styleAs={ButtonType.SEARCH} />
           </div>
@@ -128,16 +132,13 @@ const CorporateWall: React.FC = () => {
       <Datatable
         title="Lista de postagens"
         datasource={new GetPosts()}
-        datasourceParams={{
-          // filters,
-          with: { value: [Withes.CREATED_BY, Withes.CATEGORY] },
-        }}
+        datasourceParams={{ filters, with: { value: [Withes.CREATED_BY, Withes.CATEGORY] } }}
         columns={[
           {
             name: 'Ações',
             data: 'id',
             width: '100px',
-            selector: (post: IPost) => <button className="btn btn-primary btn-sm">Ações</button>,
+            selector: (post: IPost) => <Datatable.Actions />,
           },
           {
             name: 'Código',
@@ -147,15 +148,15 @@ const CorporateWall: React.FC = () => {
           },
           {
             name: 'Título',
-            data: 'description',
+            data: 'title',
             width: '300px',
-            selector: (post: IPost) => post.description,
+            selector: (post: IPost) => post.title,
           },
           {
             name: 'Categoria',
             data: 'category.description',
             width: '200px',
-            selector: (post: IPost) => post.category?.description,
+            selector: (post: IPost) => post.category?.title,
           },
           {
             name: 'Data de Inclusão',

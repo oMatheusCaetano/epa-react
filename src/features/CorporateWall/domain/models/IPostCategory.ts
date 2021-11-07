@@ -3,7 +3,7 @@ interface IPostCategory extends IPostCategoryData {
 }
 
 export interface IPostCategoryData {
-  description: string;
+  title: string;
 }
 
 export default IPostCategory;

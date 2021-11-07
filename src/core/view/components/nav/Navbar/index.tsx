@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { FaSearch, FaPlus, FaMobileAlt, FaCog } from 'react-icons/fa';
 import { useAppStore } from '~/core/hooks';
 
-import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image, Link } from '~/core/view/components';
+import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image, Link, IFrame } from '~/core/view/components';
 import { getLastAccessedMenus, getMenusList } from '~/features/System/domain/store/menu';
 // import Todo from './components/Todo';
 
@@ -65,7 +65,11 @@ const Navbar: React.FC = () => {
               </li>
 
               <li className="nav-item">
-                <Styled.QrCode>
+                <Styled.QrCode
+                  fromLegacyEpa
+                  href="qr-code-app.php"
+                  id="iframe-qrcode"
+                >
                   <FaMobileAlt size={15} />
                 </Styled.QrCode>
               </li>

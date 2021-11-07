@@ -8,7 +8,8 @@ interface IPost extends IPostData {
 }
 
 export interface IPostData {
-  description: string;
+  title?: string;
+  description?: string;
   publishedAt?: string;
   category?: IPostCategory;
 }

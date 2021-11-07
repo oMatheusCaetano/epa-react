@@ -12,6 +12,7 @@ export enum Withes {
 
 export interface ApiData {
   codigo: number,
+  titulo: string,
   descricao: string,
   data_inclusao: string,
   data_publicacao: string,
@@ -52,13 +53,14 @@ export function fromJson(data: ApiData): IPost {
     ? {
       ...data.categoria,
       id: data.categoria.codigo,
-      description: data.categoria.descricao,
+      title: data.categoria.descricao,
     }
     : undefined;
 
   return {
     ...data,
     id: data.codigo,
+    title: data.titulo,
     description: data.descricao,
     createdAt: data.data_inclusao,
     publishedAt: data.data_publicacao,

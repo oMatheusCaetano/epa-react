@@ -6,4 +6,13 @@ export default class GetPosts extends ListDatasource<IPost, ApiData, Withes> {
   fromApi(data: ApiData) { return fromJson(data); }
 
   getEndpoint() { return endpoint; }
+
+  protected convertFieldName(fieldName: string) {
+    switch (fieldName.toLocaleUpperCase()) {
+      case 'ID':
+        return 'codigo';
+      default:
+        return super.convertFieldName(fieldName);
+    }
+  }
 }

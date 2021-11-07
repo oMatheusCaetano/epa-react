@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import IFrame from '~/core/view/components/iframe/IFrame';
 
 export const Container = styled.nav`
   box-shadow: 0px 5px 15px rgb(0 0 0 / 5%);
@@ -42,7 +43,7 @@ export const NewOs = styled.button`
   }
 `;
 
-export const QrCode = styled.button`
+export const QrCode = styled(IFrame)`
   margin: 0 10px;
   margin-left: 0;
   border-radius: 50%;

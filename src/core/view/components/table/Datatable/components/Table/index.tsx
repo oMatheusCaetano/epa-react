@@ -6,6 +6,7 @@ import * as Styled from './styles';
 export interface IDatatableColumn {
   name: string;
   width?: string;
+  className?: string;
   data: string;
   hide?: boolean;
   selector: (row: any) => any;
@@ -37,6 +38,7 @@ const Table: React.FC<ITableProps> = ({ data, columns, hideColumns }) => (
             .map((column, index) => (
               <td
                 style={{ width: column.width }}
+                className={column.className}
                 key={`td--${column.name}--${index}`}
                 data-label={column.name}
               >

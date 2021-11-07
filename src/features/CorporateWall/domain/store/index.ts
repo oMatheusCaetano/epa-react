@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, AppThunk } from '~/core/domain/store';
-import IPost from '~/features/CorporateWall/domain/models/IPost';
-import GetPosts from '~/features/CorporateWall/data/datasources/post/get-posts';
+import { IPostCategory } from '~/features/CorporateWall/domain/models';
+import { GetPostsCategories } from '~/features/CorporateWall/data/datasources/post-category';
 
 const store = createSlice({
   name: 'CorporateWall',
   initialState: {
+    postsCategories: [] as IPostCategory[],
     loading: false,
     error: '',
-    posts: [] as IPost[],
   },
   reducers: {
-    setPosts: (state, { payload }: PayloadAction<IPost[]>) => {
-      state.posts = payload;
+    setPostsCategories: (state, { payload }: PayloadAction<IPostCategory[]>) => {
+      state.postsCategories = payload;
     },
 
     setLoading: (state, { payload }: PayloadAction<boolean>) => {
@@ -27,21 +27,20 @@ const store = createSlice({
 
 export default store.reducer;
 export const {
-  setPosts,
+  setPostsCategories,
   setLoading,
   setError,
 } = store.actions;
 
-// export function getPosts(): AppThunk {
-//   return async function exec(dispatch: AppDispatch) {
-//     dispatch(setLoading(true));
-//     return new GetPosts({
-//       onSuccess: (data) => {
-//         dispatch(setError(''));
-//         dispatch(setPosts(data));
-//       },
-//       onError: (error) => dispatch(setError(error.message)),
-//       onFinally: () => dispatch(setLoading(false)),
-//     }).exec();
-//   };
-// }
+export function getPostsCategories(): AppThunk {
+  return async function exec(dispatch: AppDispatch) {
+    dispatch(setLoading(true));
+    return new GetPostsCategories().exec({
+      onSuccess: (data) => {
+        dispatch(setError(''));
+        dispatch(setPostsCategories(data as IPostCategory[]));
+      },
+      onFinally: () => dispatch(setLoading(false)),
+    });
+  };
+}

@@ -19,16 +19,21 @@ interface IFormSubComponents {
 export interface IFormProps {
   initialData: object;
   onSubmit?: SubmitHandler<FormData>;
-  ref?: React.Ref<FormHandles>;
+  innerRef?: React.Ref<FormRef>;
   className?: string;
 }
 
-const Form: React.FC<IFormProps> & IFormSubComponents = ({ children, onSubmit, ...rest }) => {
+const Form: React.FC<IFormProps> & IFormSubComponents = ({
+  children,
+  innerRef,
+  onSubmit,
+  ...rest
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const mockedOnSubmit: SubmitHandler = () => {};
+  const mockedOnSubmit: FormSubmit = () => {};
 
   return (
-    <UnForm onSubmit={onSubmit ?? mockedOnSubmit} {...rest}>
+    <UnForm onSubmit={onSubmit ?? mockedOnSubmit} ref={innerRef} {...rest}>
       {children}
     </UnForm>
   );

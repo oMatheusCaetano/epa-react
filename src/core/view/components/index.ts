@@ -60,3 +60,7 @@ export { default as Dropdown } from './dropdown/Dropdown';
 //! link
 export * from './link/Link';
 export { default as Link } from './link/Link';
+
+//! iframe
+export * from './iframe/IFrame';
+export { default as IFrame } from './iframe/IFrame';

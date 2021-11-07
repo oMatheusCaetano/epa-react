@@ -19,6 +19,7 @@
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
+    "jsx-a11y/anchor-is-valid": "off",
     "no-case-declarations": "off",
     "no-continue": "off",
     "react/jsx-no-bind": "off",

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import DateMoment, { IProps as DateMomentProps } from './subComponents/DateMoment';
 import User, { IProps as UserProps } from './subComponents/User';
+import Actions from './subComponents/Actions';
 
 import { ListDatasource, IListDatasourceParams, IPaginatedResponse } from '~/core/data/datasources/api';
 import { SectionContainer } from '~/core/view/components';
@@ -15,6 +16,7 @@ import * as Styled from './styles';
 interface DatatableSubComponents {
   Date: React.FC<DateMomentProps>;
   User: React.FC<UserProps>;
+  Actions: React.FC;
 }
 
 export interface IProps {
@@ -119,4 +121,5 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
 
 Datatable.Date = DateMoment;
 Datatable.User = User;
+Datatable.Actions = Actions;
 export default Datatable;
