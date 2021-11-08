@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AppDispatch, AppThunk } from '~/core/domain/store';
+import { STORAGE } from '~/core/helpers';
 import { GetLastAccessedMenus, GetMenusList } from '~/features/System/data/datasources/menu';
 import { IMenuItem } from '~/features/System/domain/models';
 
@@ -56,11 +57,18 @@ export function getLastAccessedMenus(): AppThunk {
 
 export function getMenusList(): AppThunk {
   return async function exec(dispatch: AppDispatch) {
+    const menus = STORAGE.getMenus();
+
+    if (menus.length) {
+      dispatch(setMenusList(menus));
+    }
+
     dispatch(setLoading(true));
     return new GetMenusList().exec({
       onSuccess: (menus) => {
         dispatch(setError(''));
         dispatch(setMenusList(menus as IMenuItem[]));
+        STORAGE.setMenus(menus as IMenuItem[]);
       },
       onFinally: () => {
         dispatch(setLoading(false));
