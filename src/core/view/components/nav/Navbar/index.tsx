@@ -59,8 +59,12 @@ const Navbar: React.FC = () => {
               ))}
 
               <li className="nav-item">
-                <Styled.NewOs>
-                  <FaPlus size={10} fill="white" />
+                <Styled.NewOs
+                  fromLegacyEpa
+                  href="incluir_solicitacao.php"
+                  id="iframe-new-os"
+                >
+                  <FaPlus size={7} fill="white" />
                   <span>SOL</span>
                 </Styled.NewOs>
               </li>

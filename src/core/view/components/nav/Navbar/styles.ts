@@ -25,20 +25,20 @@ export const SearchUser = styled.button`
   }
 `;
 
-export const NewOs = styled.button`
+export const NewOs = styled(IFrame)`
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 40px;
   background: #2D6987;
   border: none;
-  padding: 5px 7px;
+  padding: 4px 6px;
   transition: .3s;
   margin-left: 10px;
 
   span {
     color: white;
-    font-size: 12px;
+    font-size: 9px;
     margin-left: 5px;
   }
 `;
