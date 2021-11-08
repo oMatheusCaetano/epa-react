@@ -1,11 +1,9 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react';
 import { FaSearch, FaPlus, FaMobileAlt, FaCog } from 'react-icons/fa';
 import { useAppStore } from '~/core/hooks';
 
-import { CompanyLogo, WikiLogo, EpaLogo, Dropdown, Image, Link, IFrame } from '~/core/view/components';
+import { Dropdown, Image, Link, IFrame } from '~/core/view/components';
 import { getLastAccessedMenus, getMenusList } from '~/features/System/domain/store/menu';
-// import Todo from './components/Todo';
 
 import * as Styled from './styles';
 
@@ -22,7 +20,14 @@ const Navbar: React.FC = () => {
   return (
     <Styled.Container className="navbar navbar-expand-lg navbar-light bg-white">
       <div className="container-fluid">
-        <CompanyLogo />
+        <Link className="navbar-brand" href="principal.php" toLegacyEpa>
+          <Image
+            fromEpa
+            style={{ maxHeight: '50px', maxWidth: '100px' }}
+            alt={store.SYSTEM.systemInfo.companyCode}
+            src={store.SYSTEM.systemInfo.companyLogo}
+          />
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -95,8 +100,26 @@ const Navbar: React.FC = () => {
             </Styled.MiddleBottom>
           </section>
 
-          <EpaLogo />
-          <WikiLogo className="ms-4" />
+          <Image
+            title={`Versão: ${store.SYSTEM.systemInfo.version}`}
+            fromEpa
+            style={{ maxHeight: '40px', maxWidth: '100px' }}
+            alt={store.SYSTEM.systemInfo.version}
+            src="figuras/styles/logo-epa.png"
+          />
+
+          <a
+            className="navbar-brand ms-4"
+            href="https://wiki.simeon.com.br/"
+            target="_blank"
+            title="Base de conhecimento"
+          >
+            <Image
+              fromEpa
+              style={{ maxHeight: '30px', maxWidth: '30px' }}
+              src="figuras/knowledge.png"
+            />
+          </a>
         </div>
       </div>
     </Styled.Container>
