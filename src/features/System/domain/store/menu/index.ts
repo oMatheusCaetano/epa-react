@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { AppDispatch, AppThunk } from '~/core/domain/store';
-import { STORAGE } from '~/core/helpers';
+import { STORAGE, StorageToken } from '~/core/helpers';
 import { GetLastAccessedMenus, GetMenusList } from '~/features/System/data/datasources/menu';
 import { IMenuItem } from '~/features/System/domain/models';
 
@@ -40,13 +40,20 @@ export const {
   setError,
 } = store.actions;
 
-export function getLastAccessedMenus(): AppThunk {
+export function getMenusList(): AppThunk {
   return async function exec(dispatch: AppDispatch) {
     dispatch(setLoading(true));
-    return new GetLastAccessedMenus().exec({
+    const menus = STORAGE.getMenus();
+
+    if (menus.length) {
+      dispatch(setMenusList(menus));
+    }
+
+    return new GetMenusList().exec({
       onSuccess: (menus) => {
         dispatch(setError(''));
-        dispatch(setLastAccessedMenus(menus as IMenuItem[]));
+        dispatch(setMenusList(menus as IMenuItem[]));
+        STORAGE.setMenus(menus as IMenuItem[]);
       },
       onFinally: () => {
         dispatch(setLoading(false));
@@ -55,20 +62,20 @@ export function getLastAccessedMenus(): AppThunk {
   };
 }
 
-export function getMenusList(): AppThunk {
+export function getLastAccessedMenus(): AppThunk {
   return async function exec(dispatch: AppDispatch) {
-    const menus = STORAGE.getMenus();
+    dispatch(setLoading(true));
+    const menus = STORAGE.getMenus(StorageToken.LAST_ACCESSED_MENUS);
 
     if (menus.length) {
-      dispatch(setMenusList(menus));
+      dispatch(setLastAccessedMenus(menus));
     }
 
-    dispatch(setLoading(true));
-    return new GetMenusList().exec({
+    return new GetLastAccessedMenus().exec({
       onSuccess: (menus) => {
         dispatch(setError(''));
-        dispatch(setMenusList(menus as IMenuItem[]));
-        STORAGE.setMenus(menus as IMenuItem[]);
+        dispatch(setLastAccessedMenus(menus as IMenuItem[]));
+        STORAGE.setMenus(menus as IMenuItem[], StorageToken.LAST_ACCESSED_MENUS);
       },
       onFinally: () => {
         dispatch(setLoading(false));
