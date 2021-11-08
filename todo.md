@@ -18,5 +18,6 @@
 - [ ] Link para a página de editar um post
 - [ ] Funcionalidade de imprimir postagem
 - [ ] Funcionalidade de deletar uma postagem
-- [ ] Cache dos items da navbar
+- [x] Cache dos items da navbar
 - [ ] Loading do datatable
+

@@ -57,6 +57,20 @@ export const QrCode = styled(IFrame)`
   }
 `;
 
+export const Logout = styled.button`
+  margin: 0 10px;
+  margin-left: 10px;
+  border-radius: 50%;
+  padding: 6px 7px;
+  background: transparent;
+  border: none;
+  transition: .3s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.light};
+  }
+`;
+
 export const MiddleBottom = styled.ul`
   display: flex;
   align-items: center;

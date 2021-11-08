@@ -27,4 +27,8 @@ export const STORAGE = {
     const item = localStorage.getItem(token);
     return item ? JSON.parse(item) : null;
   },
+
+  clearAll() {
+    localStorage.clear();
+  },
 };

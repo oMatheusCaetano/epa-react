@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { FaSearch, FaPlus, FaMobileAlt, FaCog } from 'react-icons/fa';
+import { FaSearch, FaPlus, FaMobileAlt, FaCog, FaRegTimesCircle } from 'react-icons/fa';
+import { STORAGE, URL } from '~/core/helpers';
 import { useAppStore } from '~/core/hooks';
 
 import { Dropdown, Image, Link, IFrame } from '~/core/view/components';
@@ -16,6 +17,11 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => { console.log(store.MENU.menusList); }, [store.MENU.menusList]);
+
+  function logout() {
+    STORAGE.clearAll();
+    URL.getToEpaPage('login.php');
+  }
 
   return (
     <Styled.Container className="navbar navbar-expand-lg navbar-light bg-white">
@@ -86,6 +92,12 @@ const Navbar: React.FC = () => {
                   alt={store.AUTH.authUser.login}
                   src={store.AUTH.authUser.image}
                 />
+              </li>
+
+              <li>
+                <Styled.Logout onClick={logout}>
+                  <FaRegTimesCircle size={15} />
+                </Styled.Logout>
               </li>
             </Styled.MiddleTop>
 
