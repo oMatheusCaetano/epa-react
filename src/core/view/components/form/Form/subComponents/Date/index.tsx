@@ -37,9 +37,6 @@ const FormDate: React.FC<IFormDateProps> = ({
       clearValue: (ref) => {
         ref.clear();
       },
-      setValue: (_, value) => {
-        // setDate(value);
-      },
       getValue: (ref) => (typeof ref.props.value === 'string'
         ? ref.props.value
         : DATE.extractDate(ref.props.value, DateFormat.PT_BR)

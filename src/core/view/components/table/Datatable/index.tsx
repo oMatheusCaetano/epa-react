@@ -79,7 +79,7 @@ const Datatable: React.FC<IProps> & DatatableSubComponents = ({
       <Styled.TableHeader>
         <aside>
           <span>Mostrar </span>
-          <select>
+          <select disabled={loading}>
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="30">30</option>

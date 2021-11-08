@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import IFrame from '~/core/view/components/iframe/IFrame';
+import Link from '~/core/view/components/link/Link';
 
 export const Container = styled.nav`
   box-shadow: 0px 5px 15px rgb(0 0 0 / 5%);
@@ -23,6 +24,12 @@ export const SearchUser = styled.button`
   &:hover {
     background: ${({ theme }) => theme.colors.light};
   }
+`;
+
+export const Radar = styled(Link)`
+  font-weight: 500;
+  color: #555;
+  margin-left: 3px;
 `;
 
 export const NewOs = styled(IFrame)`
@@ -55,6 +62,11 @@ export const QrCode = styled(IFrame)`
   &:hover {
     background: ${({ theme }) => theme.colors.light};
   }
+`;
+
+export const Profile = styled(IFrame)`
+  outline: none;
+  border: none;
 `;
 
 export const Logout = styled.button`

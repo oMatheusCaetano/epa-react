@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaFilter, FaPlus, FaAngleDoubleUp, FaSearch } from 'react-icons/fa';
+import { FaFilter, FaPlus, FaAngleDoubleUp } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
 import * as Styled from './styles';

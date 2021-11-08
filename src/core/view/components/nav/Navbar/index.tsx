@@ -3,7 +3,7 @@ import { FaSearch, FaPlus, FaMobileAlt, FaCog, FaRegTimesCircle } from 'react-ic
 import { STORAGE, URL } from '~/core/helpers';
 import { useAppStore } from '~/core/hooks';
 
-import { Dropdown, Image, Link, IFrame } from '~/core/view/components';
+import { Dropdown, Image, Link } from '~/core/view/components';
 import { getLastAccessedMenus, getMenusList } from '~/features/System/domain/store/menu';
 
 import * as Styled from './styles';
@@ -16,8 +16,6 @@ const Navbar: React.FC = () => {
     dispatch(getLastAccessedMenus());
   }, []);
 
-  useEffect(() => { console.log(store.MENU.menusList); }, [store.MENU.menusList]);
-
   function logout() {
     STORAGE.clearAll();
     URL.getToEpaPage('login.php');
@@ -27,12 +25,14 @@ const Navbar: React.FC = () => {
     <Styled.Container className="navbar navbar-expand-lg navbar-light bg-white">
       <div className="container-fluid">
         <Link className="navbar-brand" href="principal.php" toLegacyEpa>
+          {!!store.SYSTEM.systemInfo.companyLogo?.length && (
           <Image
             fromEpa
             style={{ maxHeight: '50px', maxWidth: '100px' }}
             alt={store.SYSTEM.systemInfo.companyCode}
             src={store.SYSTEM.systemInfo.companyLogo}
           />
+          )}
         </Link>
 
         <button
@@ -57,6 +57,10 @@ const Navbar: React.FC = () => {
                   </Dropdown>
                 </li>
               ))}
+
+              <li className="nav-item">
+                <Styled.Radar href="radar_gerencial.php" toLegacyEpa>Radar</Styled.Radar>
+              </li>
 
               <li className="nav-item">
                 <Styled.NewOs
@@ -90,12 +94,21 @@ const Navbar: React.FC = () => {
               </li>
 
               <li className="nav-item">
-                <Image
-                  fromEpa
-                  style={{ maxHeight: '30px' }}
-                  alt={store.AUTH.authUser.login}
-                  src={store.AUTH.authUser.image}
-                />
+                {!!store.AUTH.authUser.id && (
+                  <Styled.Profile
+                    fromLegacyEpa
+                    href={`informacoesusuario.php?codigo=${store.AUTH.authUser.id}`}
+                    id="iframe-profile"
+                  >
+                    <Image
+                      fromEpa
+                      style={{ maxHeight: '30px' }}
+                      alt={store.AUTH.authUser.login}
+                      src={store.AUTH.authUser.image}
+                    />
+                  </Styled.Profile>
+                )}
+
               </li>
 
               <li>

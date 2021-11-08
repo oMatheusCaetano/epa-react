@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { IReadDatasourceFilters } from '~/core/data/datasources/api';
 import { GetPosts, Withes } from '~/features/CorporateWall/data/datasources/post';
 import { IPost } from '~/features/CorporateWall/domain/models';
-import { DATE, DateFormat, DT_FILTER, IFilterItem } from '~/core/helpers';
+import { DT_FILTER } from '~/core/helpers';
 import { useAppStore } from '~/core/hooks';
 import { getPostsCategories } from '~/features/CorporateWall/domain/store';
 import {
@@ -34,7 +33,6 @@ const CorporateWall: React.FC = () => {
   }
 
   const onFilter: FormSubmit = (data) => {
-    console.clear(); console.log(data);
     const newFilters = handleFixedFilters();
 
     for (const [column, value] of Object.entries(data)) {
@@ -138,7 +136,7 @@ const CorporateWall: React.FC = () => {
             name: 'Ações',
             data: 'id',
             width: '100px',
-            selector: (post: IPost) => <Datatable.Actions />,
+            selector: () => <Datatable.Actions />,
           },
           {
             name: 'Código',
