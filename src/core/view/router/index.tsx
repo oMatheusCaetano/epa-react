@@ -1,21 +1,15 @@
 import React from 'react';
-import { HashRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Global from '~/core/view/Global';
-import GrossInternalHappiness from '~/features/GrossInternalHappiness/view/router';
-import CorporateWall from '~/features/CorporateWall/view/router';
+import PageNotFound from '~/core/view/pages/PageNotFound';
 
 const Router: React.FC = () => (
   <>
-    <Global />
-    <HashRouter>
+    <BrowserRouter>
       <Switch>
-        <GrossInternalHappiness />
+        <Route component={PageNotFound} />
       </Switch>
-      <Switch>
-        <CorporateWall />
-      </Switch>
-    </HashRouter>
+    </BrowserRouter>
   </>
 );
 

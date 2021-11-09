@@ -22,6 +22,10 @@ export default createGlobalStyle`
     }
   }
 
+  body, #root {
+    min-height: 100vh;
+  }
+
   h2 {
     margin: 0;
   }

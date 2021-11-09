@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { URL } from '~/core/helpers';
+import { URL } from '~/core/domain/helpers';
 
 import * as Styled from './styles';
 
-export interface IProps {
+export interface LinkProps {
   to?: string;
   href?: string;
   className?: string;
   toLegacyEpa?: boolean;
 }
 
-const Link: React.FC<IProps> = ({ to, href, className, toLegacyEpa, children }) => {
+const Link: React.FC<LinkProps> = ({ to, href, className, toLegacyEpa, children }) => {
   if (toLegacyEpa && href) {
     return (
       <Styled.HrefLink href={URL.makeEPAPageUrl(href)} className={className}>
