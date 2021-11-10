@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import Router from '~/core/view/router';
-import store from '~/core/domain/store';
+import store from '~/core/domain/stores';
 
 import EpaThemeProvider from '~/core/view/components/misc/EpaThemeProvider';
 
