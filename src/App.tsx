@@ -14,4 +14,5 @@ const App: React.FC = () => (
     </EpaThemeProvider>
   </Provider>
 );
+
 export default App;

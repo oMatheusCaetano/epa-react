@@ -1,6 +1,18 @@
+//! Button
+export * from './button/IconButton';
+export { default as IconButton } from './button/IconButton';
+
+//! Container
+export * from './container/PageContainer';
+export { default as PageContainer } from './container/PageContainer';
+
 //! Dropdown
 export * from './dropdown/MenuDropdown';
 export { default as MenuDropdown } from './dropdown/MenuDropdown';
+
+//! Header
+export * from './header/PageHeader';
+export { default as PageHeader } from './header/PageHeader';
 
 //! Img
 export * from './img/Image';
