@@ -2,12 +2,15 @@ import api from '~/core/data/services/apis/epa';
 
 import Datasource, { DatasourceParams } from '~/core/data/datasources/Datasource';
 
-export interface GetDatasourceParams<ApiData> extends DatasourceParams {
-  onSuccess?: ((data: ApiData) => void);
+export interface QueryParams {
   with?: string[];
   orderBy?: string[];
   hasText?: string;
-  filters?: { field: string, value: string, operator?: string }[]
+  filters?: { field: string, value: string, operator?: string }[];
+}
+
+export interface GetDatasourceParams<ApiData> extends DatasourceParams, QueryParams {
+  onSuccess?: ((data: ApiData) => void);
 }
 
 export default abstract class GetDatasource<ApiData>
@@ -41,6 +44,7 @@ export default abstract class GetDatasource<ApiData>
   protected handleQueryParams(params: GetDatasourceParams<ApiData>) {
     let queryParams = '';
 
+    queryParams = this.handleQueryParam(queryParams, this.handleWith(params));
     queryParams = this.handleQueryParam(queryParams, this.handleFilters(params));
     queryParams = this.handleQueryParam(queryParams, this.handleOrderBy(params));
 
@@ -52,6 +56,12 @@ export default abstract class GetDatasource<ApiData>
    */
   protected handleEndpoint(params: GetDatasourceParams<ApiData>) {
     return this.endpoint(params) + this.handleQueryParams(params);
+  }
+
+  protected handleWith(params: GetDatasourceParams<ApiData>) {
+    return params.with?.length
+      ? `with=${params.with.join(',')}`
+      : '';
   }
 
   protected handleOrderBy(params: GetDatasourceParams<ApiData>) {

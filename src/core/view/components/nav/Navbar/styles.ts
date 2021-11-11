@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-// import IFrame from '~/core/view/components/iframe/IFrame';
+import IFrame from '~/core/view/components/iframe/IFrame';
 import Link from '~/core/view/components/link/Link';
 
 export const Container = styled.nav`
@@ -32,42 +32,61 @@ export const Radar = styled(Link)`
   margin-left: 3px;
 `;
 
-// export const NewOs = styled(IFrame)`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   border-radius: 40px;
-//   background: #2D6987;
-//   border: none;
-//   padding: 4px 6px;
-//   transition: .3s;
-//   margin-left: 10px;
+export const Todo = styled.button`
+  background: transparent;
+  border-radius: ${({ theme }) => theme.radius.small};
+  border: none;
+  outline: none;
+  transition: .3s;
+  padding: 5px;
+  font-weight: 500;
+  margin-left: 5px;
+  color: #555;
 
-//   span {
-//     color: white;
-//     font-size: 9px;
-//     margin-left: 5px;
-//   }
-// `;
+  &:hover {
+    background: ${({ theme }) => theme.colors.light};
+  }
+`;
 
-// export const QrCode = styled(IFrame)`
-//   margin: 0 10px;
-//   margin-left: 0;
-//   border-radius: 50%;
-//   padding: 6px 7px;
-//   background: transparent;
-//   border: none;
-//   transition: .3s;
+export const NewOs = styled(IFrame)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  background: #2D6987;
+  border: none;
+  padding: 4px 6px;
+  transition: .3s;
+  margin-left: 10px;
 
-//   &:hover {
-//     background: ${({ theme }) => theme.colors.light};
-//   }
-// `;
+  span {
+    color: white;
+    font-size: 9px;
+    margin-left: 5px;
+  }
+`;
 
-// export const Profile = styled(IFrame)`
-//   outline: none;
-//   border: none;
-// `;
+export const QrCode = styled(IFrame)`
+  margin: 0 10px;
+  margin-left: 0;
+  border-radius: 50%;
+  padding: 6px 7px;
+  background: transparent;
+  border: none;
+  transition: .3s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.light};
+  }
+`;
+
+export const Profile = styled(IFrame)`
+  outline: none;
+  border: none;
+  background: white;
+  color: #555;
+  font-weight: 500;
+`;
 
 export const Logout = styled.button`
   margin: 0 10px;

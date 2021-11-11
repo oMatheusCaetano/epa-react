@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FaRegTimesCircle, FaCog } from 'react-icons/fa';
+import { FaRegTimesCircle, FaCog, FaPlus, FaSearch, FaMobileAlt } from 'react-icons/fa';
 
 import { useAppStore } from '~/core/view/hooks';
 
@@ -21,6 +21,11 @@ const Navbar: React.FC = () => {
   function logout() {
     STORAGE.clearAll();
     URL.replaceToEpaPage('login.php');
+  }
+
+  function handleUnavailableFeatures() {
+    // eslint-disable-next-line no-alert
+    alert('Volte à página inicial e tente novamente.');
   }
 
   return (
@@ -64,11 +69,58 @@ const Navbar: React.FC = () => {
               </li>
 
               <li className="nav-item">
-                <S.Radar>To-do</S.Radar>
+                <S.Todo onClick={handleUnavailableFeatures}>To-do</S.Todo>
+              </li>
+
+              <li className="nav-item">
+                <S.NewOs
+                  fromLegacyEpa
+                  href="incluir_solicitacao.php"
+                  id="iframe-new-os"
+                >
+                  <FaPlus size={7} fill="white" />
+                  <span>SOL</span>
+                </S.NewOs>
+              </li>
+
+              <li className="nav-item">
+                <S.SearchUser onClick={handleUnavailableFeatures}>
+                  <FaSearch />
+                </S.SearchUser>
+              </li>
+
+              <li className="nav-item">
+                <S.QrCode
+                  fromLegacyEpa
+                  href="qr-code-app.php"
+                  id="iframe-qrcode"
+                >
+                  <FaMobileAlt size={15} />
+                </S.QrCode>
+              </li>
+
+              <li className="nav-item">
+                {!!store.AUTH.user.codigo_cliente && (
+                  <S.Profile
+                    fromLegacyEpa
+                    href={`informacoesusuario.php?codigo=${store.AUTH.user.codigo_cliente}`}
+                    id="iframe-profile"
+                  >
+                    {!store.AUTH.user.cliente?.foto ? (
+                      <C.Image
+                        fromEpa
+                        style={{ maxHeight: '30px' }}
+                        alt={store.AUTH.user.login}
+                        src={store.AUTH.user.cliente?.foto}
+                      />
+                    ) : store.AUTH.user.login}
+
+                  </S.Profile>
+                )}
               </li>
 
               <li>
-                <S.Logout>
+                <S.Logout onClick={logout}>
                   <FaRegTimesCircle size={15} />
                 </S.Logout>
               </li>
