@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaFilter, FaAngleUp } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
 import * as S from './styles';
@@ -10,6 +10,7 @@ export enum IconButtonIconSize {
 }
 
 export enum IconButtonType {
+  FILTER = 'FILTER',
   CREATE = 'CREATE',
 }
 
@@ -19,6 +20,7 @@ export interface IconButtonProps {
   icon?: IconType;
   iconSize?: IconButtonIconSize;
   disabled?: boolean,
+  showFilters?: boolean;
   type?: 'button' | 'submit' | 'reset',
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }
@@ -30,7 +32,9 @@ const IconButton: React.FC<IconButtonProps> = ({
   disabled,
   className,
   iconSize = IconButtonIconSize.default,
+  showFilters,
   type = 'button',
+  ...rest
 }) => {
   const theme = useTheme();
 
@@ -48,6 +52,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         className={`default-button ${className}`}
         style={{ backgroundColor: background }}
         type={type}
+        {...rest}
       >
         {!!Icon && <Icon size={iconSize} fill={color} />}
       </S.Button>
@@ -57,6 +62,11 @@ const IconButton: React.FC<IconButtonProps> = ({
   switch (styleAs) {
     case IconButtonType.CREATE:
       return renderButton(theme.colors.primary, theme.colors.textInPrimary, FaPlus);
+
+    case IconButtonType.FILTER:
+      return renderButton(
+        theme.colors.light, theme.colors.textInLight, showFilters ? FaAngleUp : FaFilter,
+      );
 
     default:
       return renderButton(theme.colors.light, theme.colors.textInLight);

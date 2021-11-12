@@ -1,19 +1,9 @@
-// import { IMenuItem } from '~/features/System/domain/models';
-
 export enum StorageToken {
   MENUS = '@EPA:menus',
   LAST_ACCESSED_MENUS = '@EPA:lastAccessedMenus',
 }
 
 export const STORAGE = {
-  setMenus(menus: any[], token = StorageToken.MENUS) {
-    return STORAGE.set(menus, token);
-  },
-
-  getMenus(token = StorageToken.MENUS): any[] {
-    return STORAGE.get(token) ?? [];
-  },
-
   set(data: unknown, token: StorageToken): boolean {
     try {
       localStorage.setItem(token, JSON.stringify(data));

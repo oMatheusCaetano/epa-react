@@ -18,7 +18,7 @@ export default abstract class GetDatasource<ApiData>
   /**
    * Faz a chamada à API.
    */
-  exec(params: GetDatasourceParams<ApiData>) {
+  execute(params: GetDatasourceParams<ApiData>) {
     return api.get<ApiData>(this.handleEndpoint(params))
       .then(({ data }) => this.requestSucceeded(data, params))
       .finally(() => this.whenFinally(params));

@@ -17,6 +17,11 @@ export interface ListDatasourceParams<Model>
 
 export default abstract class ListDatasource<Model>
   extends GetDatasource<Model[] | PaginatedResponse<Model[]>> {
+  exec(params: ListDatasourceParams<Model>): Promise<void> {
+    this.params = params;
+    return this.execute(params);
+  }
+
   protected handleQueryParams(params: GetDatasourceParams<Model[] | PaginatedResponse<Model[]>>) {
     let queryParams = super.handleQueryParams(params);
     queryParams = this.handleQueryParam(queryParams, this.handlePagination(params));
