@@ -22,6 +22,10 @@ export default createGlobalStyle`
     }
   }
 
+  a {
+    text-decoration: none;
+  }
+
   body, #root {
     min-height: 100vh;
   }
@@ -80,6 +84,8 @@ export default createGlobalStyle`
   }
 
   .default-button {
+    display: flex;
+    align-items: center;
     height: 32px;
     padding: 0 16px;
     transition: .2s;

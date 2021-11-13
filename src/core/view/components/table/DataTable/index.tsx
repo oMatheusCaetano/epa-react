@@ -1,14 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
-import { QueryParams } from '~/core/data/datasources/GetDatasource';
-import ListDatasource, { PaginatedResponse } from '~/core/data/datasources/ListDatasource';
+import { renderToStaticMarkup } from 'react-dom/server';
 
-// import { Container } from './styles';
+import { QueryParams } from '~/core/data/datasources/GetDatasource';
+import ListDatasource from '~/core/data/datasources/ListDatasource';
+
+import PerPageSelector from './components/PerPageSelector';
+import LiveSearchInput from './components/LiveSearchInput';
+import Table from './components/Table';
+import ExportPDF from './components/ExportPDF';
+import ExportCSV from './components/ExportCSV';
+
+import * as C from '~/core/view/components';
+
+interface DataTablePagination {
+  total: number;
+  page: number;
+  from: number;
+  to: number;
+  lastPage: number;
+  perPage: number;
+}
 
 export interface DataTableColumn {
   field?: string;
   title?: string;
-  render?: (row: any, colIndex: number, rowIndex: number) => any;
+  render?: (row: any) => string | boolean | number | React.ReactNode;
 }
 
 export interface DataTableProps {
@@ -26,88 +43,141 @@ const DataTable: React.FC<DataTableProps> = ({
   datasourceParams,
   columns,
 }) => {
+  const [cachedData, setCachedData] = useState<any[]>([]);
+  const [dataWithoutPagination, setDataWithoutPagination] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
-  const [perPage, setPerPage] = useState('10');
-  const cColumns = columns;
+  const [liveSearch, setLiveSearch] = useState('');
+  const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
+  const [csvData, setCsvData] = useState([] as any[]);
+  const [pagination, setPagination] = useState({
+    from: 1,
+    to: 10,
+    page: 1,
+    perPage: 10,
+  } as DataTablePagination);
 
   useEffect(() => {
-    if (perPage !== 'ALL') {
-      datasource?.exec({
-        ...datasourceParams,
-        pagination: {
-          value: true,
-          perPage: Number(perPage),
-          page: 1,
-        },
-        onSuccess: (items) => {
-          items = items as PaginatedResponse<any>;
-          setData(items.data);
-          console.log(items);
-        },
-      });
-    } else {
-      datasource?.exec({
-        ...datasourceParams,
-        onSuccess: (items) => {
-          setData(items as any[]);
-          console.log(items);
-        },
-      });
-    }
-  }, [perPage]);
+    datasource?.exec({
+      ...datasourceParams,
+      onSuccess: (items) => {
+        setCachedData(items as any[]);
+        setData(handleData(items as any[]));
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!cachedData.length) return;
+    setData(handleData(cachedData));
+  }, [liveSearch, pagination.page, pagination.perPage]);
+
+  /**
+   * Lida com os dados que devem ser renderizados.
+   */
+  function handleData(items = [] as any[]) {
+    setDataWithoutPagination(handleLiveSearch(handleDataToRender(items)));
+    return handlePagination(handleLiveSearch(handleDataToRender(items)));
+  }
+
+  /**
+   * Filtra os dados para pegar apenas os itens da página atual.
+   */
+  function paginate(perPage = 10, page = 1, items = [] as any[]) {
+    return items.slice((page - 1) * perPage, page * perPage);
+  }
+
+  /**
+   * Lida com a lógica da paginação.
+   */
+  function handlePagination(items = [] as any[]) {
+    const toBase = pagination.page * pagination.perPage;
+
+    setPagination({
+      ...pagination,
+      total: items.length,
+      from: items.length ? ((pagination.page - 1) * pagination.perPage) + 1 : 0,
+      to: toBase >= items.length ? items.length : toBase,
+      lastPage: Math.ceil(items.length / pagination.perPage),
+    });
+
+    return paginate(pagination.perPage, pagination.page, items);
+  }
+
+  /**
+   * Define quais dados devem ser renderizados.
+   */
+  function handleDataToRender(items = [] as any[]) {
+    return items.map((item) => (
+      handleHiddenColumns().map((column) => (column.render ? column.render(item) : ''))
+    ));
+  }
+
+  /**
+   * Define quais colunas devem ser renderizadas.
+   */
+  function handleHiddenColumns() {
+    if (!columns?.length) return [];
+    return columns.filter((column) => (
+      column.title ? !hiddenColumns.includes(column.title) : column
+    ));
+  }
+
+  /**
+   * Filtra os dados de acordo com o live search
+   * para pegar apenas os items que devem ser renderizados.
+   */
+  function handleLiveSearch(items = [] as any[]) {
+    return items.filter((item) => item.findIndex((itemData: any) => (
+      typeof itemData === 'object'
+        ? renderToStaticMarkup(itemData)
+          ?.toString()
+          .toLowerCase()
+          .includes(liveSearch.toLowerCase())
+        : itemData
+          ?.toString()
+          .toLowerCase()
+          .includes(liveSearch.toLowerCase()))) > -1);
+  }
+
+  /**
+   * Troca a página atual da tabela.
+   */
+  function goToPage(page: number) {
+    setPagination({ ...pagination, page });
+  }
 
   return (
-    <div className={`w-100 ${className}`} id={id}>
-      <header>
-        <aside>
-          <label>Mostrar</label>
-          <select onChange={({ target }) => setPerPage(target.value)}>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="ALL">Todos</option>
-          </select>
-          <label>resultados por página</label>
-        </aside>
-        <aside>
-          <section>
-            <input placeholder="Procurar por" />
+    <div className={`w-100 mt-2 ${className}`} id={id}>
+      <header className="d-flex align-items-center justify-content-between mb-3">
+        <PerPageSelector
+          total={data.length}
+          onChange={(perPage) => setPagination({ ...pagination, perPage })}
+        />
+
+        <aside className="d-flex align-items-center">
+          <LiveSearchInput value={liveSearch} onChange={setLiveSearch} />
+
+          <section className="ms-4 d-flex align-items-center">
+            <ExportPDF id={id} columns={handleHiddenColumns()} data={dataWithoutPagination} />
+            <ExportCSV data={dataWithoutPagination} />
           </section>
         </aside>
       </header>
 
       <main>
-        <table>
-          <thead>
-            <tr>
-              {!!cColumns?.length && cColumns.map((item, index) => (
-                <th key={`${id}--tr--${index}`}>
-                  {item.title}
-                </th>
-              ))}
-            </tr>
-          </thead>
+        <Table id={id} columns={handleHiddenColumns()} data={data} />
 
-          <tbody>
-            {!!data?.length && data.map((item, index) => (
-              <tr key={`${id}--tr--${index}`}>
-                {!!cColumns?.length && cColumns.map((column, cIndex) => (
-                  <td key={`${id}--td--${cIndex}`}>
-                    {column.render
-                      ? column.render(item, index, cIndex)
-                      : ''}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <footer className="d-flex mt-3">
+          <p>Mostrando {pagination.from} até {pagination.to} de {pagination.total}</p>
+
+          <C.Paginator
+            className="ms-auto"
+            onPageChange={goToPage}
+            page={pagination.page}
+            lastPage={pagination.lastPage}
+          />
+        </footer>
       </main>
-
-      <footer>
-        <aside />
-        <aside />
-      </footer>
     </div>
   );
 };

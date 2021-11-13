@@ -7,7 +7,7 @@ import { Post, PostCategory } from '~/features/CorporateWall/domain/models';
 import { User } from '~/features/Users/domain/models';
 
 const CorporateWall: React.FC = () => {
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const getPostsDatasource = new GetPosts();
   const getPostsDatasourceParams: QueryParams = {
     with: ['usuario_inclusao', 'categoria'],
@@ -45,7 +45,7 @@ const CorporateWall: React.FC = () => {
             },
             {
               title: 'Título',
-              render: (row: Post) => row.titulo,
+              render: (row: Post) => <span>{row.titulo}</span>,
             },
             {
               title: 'Categoria',

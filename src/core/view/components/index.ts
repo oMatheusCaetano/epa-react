@@ -2,6 +2,9 @@
 export * from './button/IconButton';
 export { default as IconButton } from './button/IconButton';
 
+export * from './button/Button';
+export { default as Button } from './button/Button';
+
 //! Container
 export * from './container/PageContainer';
 export { default as PageContainer } from './container/PageContainer';
@@ -48,6 +51,10 @@ export { default as Global } from './misc/Global';
 //! Nav
 export * from './nav/Navbar';
 export { default as Navbar } from './nav/Navbar';
+
+//! Pagination
+export * from './pagination/Paginator';
+export { default as Paginator } from './pagination/Paginator';
 
 //! Table
 export * from './table/DataTable';
