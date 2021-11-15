@@ -86,6 +86,7 @@ export default createGlobalStyle`
   .default-button {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 32px;
     padding: 0 16px;
     transition: .2s;

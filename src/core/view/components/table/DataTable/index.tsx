@@ -48,7 +48,6 @@ const DataTable: React.FC<DataTableProps> = ({
   const [data, setData] = useState<any[]>([]);
   const [liveSearch, setLiveSearch] = useState('');
   const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
-  const [csvData, setCsvData] = useState([] as any[]);
   const [pagination, setPagination] = useState({
     from: 1,
     to: 10,
@@ -75,8 +74,9 @@ const DataTable: React.FC<DataTableProps> = ({
    * Lida com os dados que devem ser renderizados.
    */
   function handleData(items = [] as any[]) {
-    setDataWithoutPagination(handleLiveSearch(handleDataToRender(items)));
-    return handlePagination(handleLiveSearch(handleDataToRender(items)));
+    const data = handleOrder(handleLiveSearch(handleDataToRender(items)));
+    setDataWithoutPagination(data);
+    return handlePagination(data);
   }
 
   /**
@@ -84,6 +84,11 @@ const DataTable: React.FC<DataTableProps> = ({
    */
   function paginate(perPage = 10, page = 1, items = [] as any[]) {
     return items.slice((page - 1) * perPage, page * perPage);
+  }
+
+  function handleOrder(items = [] as any[]) {
+    //! Implementar lógica de sorting
+    return items;
   }
 
   /**
@@ -148,7 +153,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className={`w-100 mt-2 ${className}`} id={id}>
-      <header className="d-flex align-items-center justify-content-between mb-3">
+      <header className="d-flex align-items-center justify-content-between mb-2">
         <PerPageSelector
           total={data.length}
           onChange={(perPage) => setPagination({ ...pagination, perPage })}
@@ -165,10 +170,14 @@ const DataTable: React.FC<DataTableProps> = ({
       </header>
 
       <main>
-        <Table id={id} columns={handleHiddenColumns()} data={data} />
+        <Table
+          id={id}
+          columns={handleHiddenColumns()}
+          data={data}
+        />
 
         <footer className="d-flex mt-3">
-          <p>Mostrando {pagination.from} até {pagination.to} de {pagination.total}</p>
+          <p>Mostrando de {pagination.from} até {pagination.to} de {pagination.total}</p>
 
           <C.Paginator
             className="ms-auto"
