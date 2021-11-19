@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaPlus, FaFilter, FaAngleUp } from 'react-icons/fa';
+import { FaPlus, FaFilter, FaAngleUp, FaLongArrowAltLeft } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
 import * as S from './styles';
@@ -12,6 +12,7 @@ export enum IconButtonIconSize {
 export enum IconButtonType {
   FILTER = 'FILTER',
   CREATE = 'CREATE',
+  RETURN = 'RETURN',
 }
 
 export interface IconButtonProps {
@@ -66,6 +67,11 @@ const IconButton: React.FC<IconButtonProps> = ({
     case IconButtonType.FILTER:
       return renderButton(
         theme.colors.light, theme.colors.textInLight, showFilters ? FaAngleUp : FaFilter,
+      );
+
+    case IconButtonType.RETURN:
+      return renderButton(
+        theme.colors.light, theme.colors.textInLight, FaLongArrowAltLeft,
       );
 
     default:

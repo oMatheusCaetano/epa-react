@@ -1,13 +1,16 @@
-import { RouteProps } from 'react-router-dom';
+import { RouterType } from '~/core/view/router';
 
 import CorporateWall from '~/features/CorporateWall/view/pages/CorporateWall';
 
-const CorporateWallRoutes: RouteProps[] = [
-  {
-    path: '/corporate-wall',
-    component: CorporateWall,
-    exact: true,
-  },
-];
+const CorporateWallRoutes: RouterType = {
+  name: 'CorporateWallRoutes',
+  routes: [
+    {
+      path: '/corporate-wall',
+      component: CorporateWall,
+      exact: true,
+    },
+  ],
+};
 
 export default CorporateWallRoutes;

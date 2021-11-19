@@ -20,7 +20,7 @@ const PageContainer: React.FC<PageContainerProps> = (props) => (
         {props.actions}
       </C.PageHeader>
       <section className="mx-3">
-        <C.FiltersContainer show={props.showFilters} id={props.filtersContainerId}>
+        <C.FiltersContainer show={props.showFilters ?? false} id={props.filtersContainerId}>
           {props.filters}
         </C.FiltersContainer>
 
