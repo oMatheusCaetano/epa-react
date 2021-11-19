@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { QueryParams } from '~/core/data/datasources/GetDatasource';
+import { URL } from '~/core/domain/helpers';
 
 import * as C from '~/core/view/components';
 import { GetPosts } from '~/features/CorporateWall/data/datasources/post';
@@ -12,6 +13,14 @@ const CorporateWall: React.FC = () => {
   const getPostsDatasourceParams: QueryParams = {
     with: ['usuario_inclusao', 'categoria'],
   };
+
+  function deletePost() {
+    alert('Deletar post');
+  }
+
+  function printPost() {
+    alert('Imprimir post');
+  }
 
   return (
     <C.PageContainer
@@ -37,7 +46,18 @@ const CorporateWall: React.FC = () => {
           columns={[
             {
               title: 'Ações',
-              render: (row: Post) => row.codigo,
+              render: (row: Post) => (
+                <C.DataTable.Actions
+                  actions={[
+                    {
+                      label: 'Editar',
+                      onClick: () => URL.openToEpaPage(`comunicacao_mural.php?codigo=${row.codigo}&action=2`),
+                    },
+                    { label: 'Excluir', onClick: deletePost },
+                    { label: 'Imprimir', onClick: printPost },
+                  ]}
+                />
+              ),
             },
             {
               title: 'Código',
@@ -45,7 +65,7 @@ const CorporateWall: React.FC = () => {
             },
             {
               title: 'Título',
-              render: (row: Post) => <span>{row.titulo}</span>,
+              render: (row: Post) => row.titulo,
             },
             {
               title: 'Categoria',
@@ -56,18 +76,15 @@ const CorporateWall: React.FC = () => {
             },
             {
               title: 'Data de Inclusão',
-              render: (row: Post) => row.data_inclusao,
+              render: (row: Post) => <C.DataTable.Date date={row.data_inclusao} />,
             },
             {
               title: 'Data de Publicação',
-              render: (row: Post) => row.data_inclusao,
+              render: (row: Post) => <C.DataTable.Date date={row.data_publicacao} />,
             },
             {
               title: 'Criado Por',
-              render: (row: Post) => {
-                const usuario_inclusao = row.usuario_inclusao as User;
-                return usuario_inclusao?.cliente?.nome;
-              },
+              render: (row: Post) => <C.DataTable.User user={row.usuario_inclusao as User} />,
             },
           ]}
         />

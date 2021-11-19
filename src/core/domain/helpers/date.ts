@@ -46,11 +46,25 @@ export const DATE = {
   currentMonth: () => DATE.extractMonth(new Date()),
 
   /**
-  * Ex: 3 de fevereiro de 2021 04:06 OR 3 de fevereiro de 2021 (withTime = false)
+  * Ex: 17 Mai 2019 às 17:32
   */
-  formatToDisplay: (date: string, withTime = true) => (withTime
-    ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(date))
-    : new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date(date))),
+  formatToDisplay: (date: string, withTime = true) => {
+    function handleDate(dateToFormat: string) {
+      const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const newDate = new Date(dateToFormat);
+      const day = newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate();
+      return `${day} ${meses[(newDate.getMonth())]} ${newDate.getFullYear()}`;
+    }
+
+    function handleTime(dateToFormat: string) {
+      const newDate = new Date(dateToFormat);
+      const hours = newDate.getHours() < 10 ? `0${newDate.getHours()}` : newDate.getHours();
+      const minutes = newDate.getMinutes() < 10 ? `0${newDate.getMinutes()}` : newDate.getMinutes();
+      return `${hours}:${minutes}`;
+    }
+
+    return withTime ? `${handleDate(date)} às ${handleTime(date)}` : handleDate(date);
+  },
 
   handleZero(value: string|number) {
     return String(value).length === 1 ? `0${value}` : value;
@@ -65,6 +79,7 @@ export const DATE = {
         return `${DATE.extractYear(date)}/${DATE.extractMonth(date)}/${DATE.extractDay(date)}`;
     }
   },
+
   extractYear: (date: Date) => date.getFullYear(),
 
   extractMonth: (date: Date) => DATE.handleZero(Number(date.getMonth()) + 1),

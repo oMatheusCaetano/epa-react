@@ -5,6 +5,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryParams } from '~/core/data/datasources/GetDatasource';
 import ListDatasource from '~/core/data/datasources/ListDatasource';
 
+import User, { UserProps } from './subComponents/User';
+import Date, { DateProps } from './subComponents/Date';
+import Actions, { ActionsProps } from './subComponents/Actions';
+
 import PerPageSelector from './components/PerPageSelector';
 import LiveSearchInput from './components/LiveSearchInput';
 import Table from './components/Table';
@@ -36,7 +40,13 @@ export interface DataTableProps {
   columns?: DataTableColumn[];
 }
 
-const DataTable: React.FC<DataTableProps> = ({
+interface DataTableSubComponents {
+  User: React.FC<UserProps>;
+  Date: React.FC<DateProps>;
+  Actions: React.FC<ActionsProps>;
+}
+
+const DataTable: React.FC<DataTableProps> & DataTableSubComponents = ({
   id,
   className,
   datasource,
@@ -191,4 +201,7 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 };
 
+DataTable.User = User;
+DataTable.Date = Date;
+DataTable.Actions = Actions;
 export default DataTable;

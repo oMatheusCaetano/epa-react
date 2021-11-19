@@ -11,4 +11,6 @@ export const URL = {
   makeEPAPageUrl: (href: string) => URL.origin() + URL.epaEnv() + href,
 
   replaceToEpaPage: (href: string) => window.location.replace(URL.makeEPAPageUrl(href)),
+
+  openToEpaPage: (href: string) => window.open(URL.makeEPAPageUrl(href)),
 };
