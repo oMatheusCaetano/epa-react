@@ -57,7 +57,7 @@ const DataTable: React.FC<DataTableProps> & DataTableSubComponents = ({
   const [dataWithoutPagination, setDataWithoutPagination] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
   const [liveSearch, setLiveSearch] = useState('');
-  const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
+  const [hiddenColumns] = useState<string[]>([]);
   const [pagination, setPagination] = useState({
     from: 1,
     to: 10,

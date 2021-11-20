@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useState } from 'react';
 import { QueryParams } from '~/core/data/datasources/GetDatasource';
 import { URL } from '~/core/domain/helpers';

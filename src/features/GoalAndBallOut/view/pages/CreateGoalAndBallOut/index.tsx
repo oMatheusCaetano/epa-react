@@ -16,19 +16,21 @@ const CreateGoalAndBallOut: React.FC = () => (
       <C.Formik
         initialValues={{
           picked: '',
+          unidade_gerencial: '1',
+          clientes: '',
         }}
         onSubmit={async (values) => {
-          console.log(values.picked);
-          await new Promise((r) => setTimeout(r, 500));
-          alert(JSON.stringify(values, null, 2));
+          // eslint-disable-next-line no-console
+          console.log('FORM VALUES', values);
         }}
       >
         <C.Formik.GoalAndBallOutRadioGroup name="picked" />
         <br />
         <br />
         <S.Middle>
-          <C.ClienteInput className="col-4 me-4" label="Quem marcou o gol?" />
-          <C.ClienteInput className="col-4" label="Quem marcou o gol?" multiple />
+          <C.Formik.ClienteInput className="col-4 me-4" name="unidade_gerencial" label="Quem marcou o gol?" multiple />
+          {/* <C.Formik.ClienteInput className="col-4"
+          name="clientes" label="Quem marcou o gol?" multiple /> */}
         </S.Middle>
         <br />
         <br />

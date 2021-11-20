@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
@@ -14,9 +15,12 @@ export interface ClienteInputProps {
   multiple?: boolean;
   value?: number | string;
   label?: string;
+  name?: string;
   placeholder?: string;
   error?: string;
   className?: string;
+  onChange?: (cliente?: Cliente | Cliente[]) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const ClienteInput: React.FC<ClienteInputProps> = ({
@@ -27,14 +31,18 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
   placeholder = 'Mínimo de 3 caracteres..',
   error,
   className,
+  name,
+  onChange,
+  onBlur,
 }) => {
   const minLength = 3;
-  const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLInputElement>(null);
   const [showList, setShowList] = useState(false);
   const [showSelectedList, setShowSelectedList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [hiddenInputValue, setHiddenInputValue] = useState(value);
   const [selectedCliente, setSelectedCliente] = useState(
     multiple ? [] as Cliente[] : {} as Cliente,
   );
@@ -89,15 +97,16 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
       return;
     }
 
-    if (!inputRef.current) return;
-
     const data = selectedCliente as Cliente;
-    inputRef.current.value = data.nome ?? '';
+    setInputValue(data.nome ?? '');
   }
 
   async function handleSearch(value: string) {
+    setInputValue(value);
     if (value.length === 0 && !multiple) {
       setSelectedCliente({} as Cliente);
+      setHiddenInputValue('');
+      if (onChange) onChange(undefined);
       return;
     }
 
@@ -156,7 +165,10 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
 
   function removeSelectedCliente(cliente: Cliente) {
     const list = selectedCliente as Cliente[];
-    setSelectedCliente(list.filter((item) => item.codigo !== cliente.codigo));
+    const newList = list.filter((item) => item.codigo !== cliente.codigo);
+    setSelectedCliente(newList);
+    setHiddenInputValue(newList.map((cliente) => cliente.codigo).join(','));
+    if (onChange) onChange(newList);
   }
 
   function getSelectedClientesCountList() {
@@ -211,11 +223,21 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
     if (multiple) {
       const list = selectedCliente as Cliente[];
       const item = list.find((item) => item.codigo === cliente.codigo);
-      item ? removeSelectedCliente(cliente) : setSelectedCliente([...list, cliente]);
+      if (item) {
+        removeSelectedCliente(cliente);
+        return;
+      }
+
+      const newList = [...list, cliente];
+      setSelectedCliente(newList);
+      setHiddenInputValue(newList.map((cliente) => cliente.codigo).join(','));
+      if (onChange) onChange(newList);
       return;
     }
 
     const item = selectedCliente as Cliente;
+    setHiddenInputValue(cliente.codigo);
+    if (onChange) onChange(cliente);
     item.codigo === cliente.codigo
       ? setSelectedCliente({} as Cliente)
       : setSelectedCliente(cliente);
@@ -237,7 +259,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
   return (
     <S.Container ref={listRef} className={className}>
       <div>
-        <input value={getSelectedClienteValue()} hidden />
+        <input value={hiddenInputValue ?? ''} readOnly hidden />
         <C.Label label={label} />
         {
           multiple
@@ -251,7 +273,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
                 {getSelectedClientesCountList()}
 
                 <S.MultipleInput
-                  ref={inputRef}
+                  value={inputValue}
                   className="form-input-style"
                   placeholder={placeholder}
                   onClick={onInputClick}
@@ -264,7 +286,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
                 {getSingleUserImage()}
                 <S.SingleInput
                   type="search"
-                  ref={inputRef}
+                  value={inputValue}
                   className="form-input-style"
                   placeholder={placeholder}
                   onClick={onInputClick}

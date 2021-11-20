@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { FaUser, FaUserCheck, FaTimes } from 'react-icons/fa';
+import { FaUser, FaUserCheck } from 'react-icons/fa';
 import Image from '~/core/view/components/img/Image';
 
 export const Container = styled.div`
