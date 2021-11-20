@@ -34,7 +34,6 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
   const [showList, setShowList] = useState(false);
   const [showSelectedList, setShowSelectedList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [nothingFound, setNothingFound] = useState(false);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [selectedCliente, setSelectedCliente] = useState(
     multiple ? [] as Cliente[] : {} as Cliente,
@@ -121,7 +120,6 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
         setClientes(list);
         setShowSelectedList(false);
         setShowList(true);
-        setNothingFound(!!list.length);
       },
       onFinally: () => setIsLoading(false),
     });
@@ -285,7 +283,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
           </div>
         </li>
 
-        <li className="text-center" hidden={isLoading && !nothingFound}>
+        <li className="text-center" hidden={isLoading || !!clientes.length}>
           <span>Nenhum resultado</span>
         </li>
 
