@@ -4,6 +4,7 @@ import { FaSearch, FaFilePdf, FaFileCsv } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 
 export enum ButtonStyle {
+  SAVE,
   SEARCH,
   DELETE,
   PDF,
@@ -11,6 +12,7 @@ export enum ButtonStyle {
 }
 
 export interface ButtonProps {
+  type?: 'button' | 'submit' | 'reset';
   styleAs?: ButtonStyle;
   disabled?: boolean;
   className?: string;
@@ -18,7 +20,9 @@ export interface ButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ children,
+const Button: React.FC<ButtonProps> = ({
+  type = 'button',
+  children,
   styleAs,
   icon,
   disabled,
@@ -32,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({ children,
 
     return (
       <button
+        type={type}
         onClick={onClick}
         disabled={disabled}
         className={`default-button ${className}`}
@@ -55,6 +60,9 @@ const Button: React.FC<ButtonProps> = ({ children,
 
     case ButtonStyle.CSV:
       return render('white', '#005225CC', 'Excel', icon ?? FaFileCsv);
+
+    case ButtonStyle.SAVE:
+      return render('white', theme.colors.success, 'Salvar', icon);
 
     default:
       return render(theme.colors.textInLight, theme.colors.light, '');

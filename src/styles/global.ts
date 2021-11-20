@@ -110,4 +110,8 @@ export default createGlobalStyle`
       margin-bottom: 1px;
     }
   }
+
+  .w-45 {
+    width: 45%;
+  }
 `;

@@ -5,8 +5,9 @@ import Datasource, { DatasourceParams } from '~/core/data/datasources/Datasource
 export interface QueryParams {
   with?: string[];
   orderBy?: string[];
-  hasText?: string;
-  filters?: { field: string, value: string, operator?: string }[];
+  onlyColumns?: string[];
+  hasText?: string | boolean | number;
+  filters?: { field: string, value: string | number | boolean, operator?: string }[];
 }
 
 export interface GetDatasourceParams<ApiData> extends DatasourceParams, QueryParams {
@@ -44,9 +45,11 @@ export default abstract class GetDatasource<ApiData>
   protected handleQueryParams(params: GetDatasourceParams<ApiData>) {
     let queryParams = '';
 
-    queryParams = this.handleQueryParam(queryParams, this.handleWith(params));
+    queryParams = this.handleStringArrayParam(queryParams, 'with', params.with);
+    queryParams = this.handleParam(queryParams, 'hasText', params.hasText);
+    queryParams = this.handleStringArrayParam(queryParams, 'onlyColumns', params.onlyColumns);
+    queryParams = this.handleStringArrayParam(queryParams, 'order_by', params.orderBy);
     queryParams = this.handleQueryParam(queryParams, this.handleFilters(params));
-    queryParams = this.handleQueryParam(queryParams, this.handleOrderBy(params));
 
     return queryParams;
   }
@@ -58,17 +61,22 @@ export default abstract class GetDatasource<ApiData>
     return this.endpoint(params) + this.handleQueryParams(params);
   }
 
-  protected handleWith(params: GetDatasourceParams<ApiData>) {
-    return params.with?.length
-      ? `with=${params.with.join(',')}`
-      : '';
+  protected handleStringArrayParam(queryParams: string, key: string, items?: string[]) {
+    const data = items?.filter((item: string) => item.length);
+    const result = data?.length ? `${key}=${data.join(',')}` : '';
+    return this.handleQueryParam(queryParams, result);
   }
 
-  protected handleOrderBy(params: GetDatasourceParams<ApiData>) {
-    const filteredOrderBy = params.orderBy?.filter((orderBy) => orderBy.length);
-    return filteredOrderBy?.length
-      ? `order_by=${filteredOrderBy.join(',')}`
-      : '';
+  protected handleParam(queryParams: string, key: string, param?: string | number | boolean) {
+    if (typeof param === 'string') {
+      return this.handleQueryParam(queryParams, param?.length ? `${key}=${param}` : '');
+    }
+
+    if (typeof param === 'boolean' || typeof param === 'number') {
+      return this.handleQueryParam(queryParams, `${key}=${param}`);
+    }
+
+    return queryParams;
   }
 
   protected handleFilters(params: GetDatasourceParams<ApiData>) {

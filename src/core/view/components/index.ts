@@ -22,6 +22,10 @@ export { default as SectionContainer } from './container/SectionContainer';
 export * from './dropdown/MenuDropdown';
 export { default as MenuDropdown } from './dropdown/MenuDropdown';
 
+//! Form
+export * from './form/Formik';
+export { default as Formik } from './form/Formik';
+
 //! Header
 export * from './header/PageHeader';
 export { default as PageHeader } from './header/PageHeader';
@@ -36,6 +40,9 @@ export { default as Image } from './img/Image';
 //! Iframe
 export * from './iframe/IFrame';
 export { default as IFrame } from './iframe/IFrame';
+
+export * from './input/ClienteInput';
+export { default as ClienteInput } from './input/ClienteInput';
 
 //! Link
 export * from './link/Link';
@@ -59,3 +66,10 @@ export { default as Paginator } from './pagination/Paginator';
 //! Table
 export * from './table/DataTable';
 export { default as DataTable } from './table/DataTable';
+
+//! Text
+export * from './text/Label';
+export { default as Label } from './text/Label';
+
+export * from './text/SmallText';
+export { default as SmallText } from './text/SmallText';

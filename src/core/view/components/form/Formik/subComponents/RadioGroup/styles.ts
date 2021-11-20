@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-
-`;
-
-export const Middle = styled.div`
+export const ChildrenContainer = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 `;
