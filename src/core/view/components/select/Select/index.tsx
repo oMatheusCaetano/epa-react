@@ -19,6 +19,7 @@ export interface SelectOption {
 export interface SelectProps {
   error?: string;
   label?: string;
+  value?: string;
   className?: string;
   collapsible?: boolean;
   all?: boolean;
@@ -34,6 +35,7 @@ const Select: React.FC<SelectProps> = ({
   options = [] as SelectOption[],
   onChange,
   collapsible,
+  value,
   all,
   multiple,
 }) => {
@@ -45,7 +47,6 @@ const Select: React.FC<SelectProps> = ({
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [shownOptions, setShownOptions] = useState(options);
 
-  useEffect(() => { setShownOptions(options); }, [options]);
   useEffect(() => { handleAmountIndicatorMessage(); }, [hiddenInputValue]);
   useEffect(() => {
     handleValue(false);
@@ -68,6 +69,7 @@ const Select: React.FC<SelectProps> = ({
       document.removeEventListener('keydown', handleEscKeyPressed, true);
     };
   }, []);
+  useEffect(() => { handleInitialValue(); }, [options, value]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClickOutside = ({ target }: any) => {
@@ -82,6 +84,36 @@ const Select: React.FC<SelectProps> = ({
       setShowList(false);
     }
   };
+
+  async function handleInitialValue() {
+    if (!value?.length) {
+      setShownOptions(options);
+      return;
+    }
+
+    const values = value.split(',');
+
+    if (!values.length) {
+      setShownOptions(options);
+      return;
+    }
+
+    for (const value of values) {
+      handleInitialValueRecursive(options, value);
+    }
+
+    setShownOptions(options);
+    handleValue(false, options);
+  }
+
+  function handleInitialValueRecursive(optionsList: SelectOption[], value: string) {
+    for (const option of optionsList) {
+      if (String(option.value) === value) {
+        option.selected = true;
+      }
+      if (option.children?.length) handleInitialValueRecursive(option.children, value);
+    }
+  }
 
   function handleLiveSearch(optionsList: SelectOption[], value: string) {
     for (const option of optionsList) {
@@ -119,8 +151,8 @@ const Select: React.FC<SelectProps> = ({
     setAmountIndicator(amount < 1 ? 'Nenhum item selecionado' : `${amount} ${items} ${selected}..`);
   }
 
-  function handleValue(triggerOnChange = true) {
-    const rValue = handleValueRecursion(shownOptions);
+  function handleValue(triggerOnChange = true, optionsList?: SelectOption[]) {
+    const rValue = handleValueRecursion(optionsList ?? shownOptions);
     setHiddenInputValue(multiple ? rValue : rValue[0]);
     if (triggerOnChange && onChange) {
       if (multiple) onChange(rValue);

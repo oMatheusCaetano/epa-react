@@ -16,6 +16,8 @@ export const ListContainer = styled.div`
   z-index: 9999999999;
   border-radius: ${({ theme }) => theme.radius.default};
   min-width: 300px;
+  width: 100%;
+  max-width: 80vw;
   box-shadow: 0px 10px 50px rgb(0 0 0 / 10%);
   background: white;
   overflow: hidden;
