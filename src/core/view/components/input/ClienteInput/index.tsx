@@ -20,7 +20,6 @@ export interface ClienteInputProps {
   error?: string;
   className?: string;
   onChange?: (cliente?: Cliente | Cliente[]) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const ClienteInput: React.FC<ClienteInputProps> = ({
@@ -31,9 +30,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
   placeholder = 'Mínimo de 3 caracteres..',
   error,
   className,
-  name,
   onChange,
-  onBlur,
 }) => {
   const minLength = 3;
   const listRef = useRef<HTMLInputElement>(null);
@@ -57,7 +54,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
       document.removeEventListener('click', handleClickOutside, true);
       document.removeEventListener('keydown', handleEscKeyPressed, true);
     };
-  });
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClickOutside = ({ target }: any) => {

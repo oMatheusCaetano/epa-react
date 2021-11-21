@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 
 import * as C from '~/core/view/components';
@@ -20,20 +21,37 @@ const CreateGoalAndBallOut: React.FC = () => (
           clientes: '',
         }}
         onSubmit={async (values) => {
-          // eslint-disable-next-line no-console
           console.log('FORM VALUES', values);
         }}
       >
         <C.Formik.GoalAndBallOutRadioGroup name="picked" />
-        <br />
-        <br />
         <S.Middle>
+          <C.Select
+            multiple
+            collapsible
+            all
+            label="Unidade Gerencial"
+            onChange={(e) => console.log(e)}
+            options={[
+              { label: 'Hello World 1.1', value: 'Hello World 1' },
+              { label: 'Hello World 2',
+                value: 'Hello World 2',
+                children: [
+                  { label: 'Hello World 2.1', value: 'Hello World 2.1', selected: true },
+                  {
+                    label: 'Hello World 2.2',
+                    value: 'Hello World 2.2',
+                    children: [
+                      { label: 'Hello World 2.2.1', value: 'Hello world 2.2.1', selected: true },
+                      { label: 'Hello World 2.2.2', value: 'Hello world 2.2.2' },
+                    ],
+                  },
+                ],
+              },
+            ]}
+          />
           <C.Formik.ClienteInput className="col-4 me-4" name="unidade_gerencial" label="Quem marcou o gol?" multiple />
-          {/* <C.Formik.ClienteInput className="col-4"
-          name="clientes" label="Quem marcou o gol?" multiple /> */}
         </S.Middle>
-        <br />
-        <br />
         <C.Formik.Submit />
       </C.Formik>
     </C.SectionContainer>

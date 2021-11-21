@@ -11,32 +11,27 @@ export interface ClienteInputProps extends C.ClienteInputProps {
 
 const ClienteInput: React.FC<ClienteInputProps> = (props) => (
   <Field name={props.name}>
-    {({ field, form }: any) => {
-      console.log('FIELD', field);
-      console.log('FORM', form);
+    {({ field, form }: any) => (
+      <C.ClienteInput
+        {...props}
+        {...field}
+        onChange={(cliente) => {
+          if (!cliente) {
+            form.setFieldValue(props.name, '');
+            return;
+          }
 
-      return (
-        <C.ClienteInput
-          {...props}
-          {...field}
-          onChange={(cliente) => {
-            if (!cliente) {
-              form.setFieldValue(props.name, '');
-              return;
-            }
+          if (props.multiple) {
+            const list = cliente as Cliente[];
+            form.setFieldValue(props.name, list.map((cliente) => cliente.codigo).join(','));
+            return;
+          }
 
-            if (props.multiple) {
-              const list = cliente as Cliente[];
-              form.setFieldValue(props.name, list.map((cliente) => cliente.codigo).join(','));
-              return;
-            }
-
-            const item = cliente as Cliente;
-            form.setFieldValue(props.name, item.codigo ?? '');
-          }}
-        />
-      );
-    }}
+          const item = cliente as Cliente;
+          form.setFieldValue(props.name, item.codigo ?? '');
+        }}
+      />
+    )}
   </Field>
 );
 

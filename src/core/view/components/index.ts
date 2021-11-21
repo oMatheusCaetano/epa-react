@@ -73,3 +73,7 @@ export { default as Label } from './text/Label';
 
 export * from './text/SmallText';
 export { default as SmallText } from './text/SmallText';
+
+//! Select
+export * from './select/Select';
+export { default as Select } from './select/Select';
