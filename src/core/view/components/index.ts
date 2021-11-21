@@ -77,3 +77,6 @@ export { default as SmallText } from './text/SmallText';
 //! Select
 export * from './select/Select';
 export { default as Select } from './select/Select';
+
+export * from './select/ManagementUnitSelect';
+export { default as ManagementUnitSelect } from './select/ManagementUnitSelect';

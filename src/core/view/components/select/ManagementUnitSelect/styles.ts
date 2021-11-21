@@ -54,8 +54,6 @@ export const Button = styled.button`
 export const List = styled.ul`
   list-style: none;
   padding: 0;
-  max-height: 300px;
-  overflow-y: auto;
 `;
 
 export interface ListItemProps {

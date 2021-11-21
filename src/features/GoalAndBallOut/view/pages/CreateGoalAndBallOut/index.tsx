@@ -2,6 +2,7 @@
 import React from 'react';
 
 import * as C from '~/core/view/components';
+import { ManagementUnitHierarchyType } from '~/features/ManagementUnits/domain/stores/management-unit';
 import * as S from './styles';
 
 const CreateGoalAndBallOut: React.FC = () => (
@@ -26,29 +27,11 @@ const CreateGoalAndBallOut: React.FC = () => (
       >
         <C.Formik.GoalAndBallOutRadioGroup name="picked" />
         <S.Middle>
-          <C.Select
-            multiple
-            collapsible
+          <C.ManagementUnitSelect
             all
-            label="Unidade Gerencial"
+            multiple
+            unitType={ManagementUnitHierarchyType.STRATEGY}
             onChange={(e) => console.log(e)}
-            options={[
-              { label: 'Hello World 1.1', value: 'Hello World 1' },
-              { label: 'Hello World 2',
-                value: 'Hello World 2',
-                children: [
-                  { label: 'Hello World 2.1', value: 'Hello World 2.1', selected: true },
-                  {
-                    label: 'Hello World 2.2',
-                    value: 'Hello World 2.2',
-                    children: [
-                      { label: 'Hello World 2.2.1', value: 'Hello world 2.2.1', selected: true },
-                      { label: 'Hello World 2.2.2', value: 'Hello world 2.2.2' },
-                    ],
-                  },
-                ],
-              },
-            ]}
           />
           <C.Formik.ClienteInput className="col-4 me-4" name="unidade_gerencial" label="Quem marcou o gol?" multiple />
         </S.Middle>

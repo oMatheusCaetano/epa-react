@@ -45,6 +45,7 @@ const Select: React.FC<SelectProps> = ({
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [shownOptions, setShownOptions] = useState(options);
 
+  useEffect(() => { setShownOptions(options); }, [options]);
   useEffect(() => { handleAmountIndicatorMessage(); }, [hiddenInputValue]);
   useEffect(() => {
     handleValue(false);
@@ -215,7 +216,7 @@ const Select: React.FC<SelectProps> = ({
   function handleAllSelectionRecursive(optionsList: SelectOption[], value: boolean) {
     for (const item of optionsList) {
       item.selected = value;
-      item.expanded = value;
+      item.expanded = collapsible ? value : true;
 
       if (item.children?.length) handleAllSelectionRecursive(item.children, value);
     }
@@ -227,7 +228,7 @@ const Select: React.FC<SelectProps> = ({
   ): JSX.Element {
     return (
       <>
-        {all && tabIndex === 1 && (
+        {all && multiple && tabIndex === 1 && (
           <div>
             <S.ListItem tabIndex={tabIndex} onClick={handleAllSelection}>
               <div>
