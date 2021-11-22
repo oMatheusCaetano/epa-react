@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 import { ManagementUnitHierarchy } from '~/features/ManagementUnits/domain/models';
 
@@ -111,4 +111,4 @@ const ManagementUnitSelect: React.FC<ManagementUnitSelectProps> = (props) => {
   );
 };
 
-export default ManagementUnitSelect;
+export default memo(ManagementUnitSelect);

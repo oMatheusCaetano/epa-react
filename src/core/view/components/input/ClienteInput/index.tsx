@@ -20,6 +20,7 @@ export interface ClienteInputProps {
   error?: string;
   className?: string;
   onChange?: (cliente?: Cliente | Cliente[]) => void;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 }
 
 const ClienteInput: React.FC<ClienteInputProps> = ({
@@ -31,6 +32,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
   error,
   className,
   onChange,
+  onBlur,
 }) => {
   const minLength = 3;
   const listRef = useRef<HTMLInputElement>(null);
@@ -274,6 +276,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
                   className="form-input-style"
                   placeholder={placeholder}
                   onClick={onInputClick}
+                  onBlur={onBlur}
                   onChange={({ target }) => handleSearch(target.value)}
                 />
               </S.MultipleInputContainer>
@@ -287,6 +290,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
                   className="form-input-style"
                   placeholder={placeholder}
                   onClick={onInputClick}
+                  onBlur={onBlur}
                   onChange={({ target }) => handleSearch(target.value)}
                 />
               </S.SingleInputContainer>

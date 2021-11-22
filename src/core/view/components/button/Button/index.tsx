@@ -53,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
       return render(theme.colors.textInSuccess, theme.colors.success, 'Pesquisar', icon ?? FaSearch);
 
     case ButtonStyle.DELETE:
-      return render(theme.colors.textInDanger, theme.colors.danger, 'Remover', icon ?? FaSearch);
+      return render(theme.colors.textInDanger, theme.colors.danger, 'Excluir', icon);
 
     case ButtonStyle.PDF:
       return render('white', '#C90000DD', 'PDF', icon ?? FaFilePdf);

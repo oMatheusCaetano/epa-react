@@ -19,6 +19,7 @@
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
     "click-events-have-key-events": "off",
     "no-static-element-interactions": "off",
     "no-noninteractive-element-interactions": "off",

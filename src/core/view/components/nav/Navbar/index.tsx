@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { FaRegTimesCircle, FaCog, FaPlus, FaSearch, FaMobileAlt } from 'react-icons/fa';
 
 import { useAppStore } from '~/core/view/hooks';
@@ -163,4 +163,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

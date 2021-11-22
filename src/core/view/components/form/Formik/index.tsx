@@ -5,6 +5,7 @@ import RadioGroupItem, { RadioGroupItemProps } from './subComponents/RadioGroupI
 import GoalAndBallOutRadioGroup, { GoalAndBallOutRadioGroupProps } from './subComponents/GoalAndBallOutRadioGroup';
 import ClienteInput, { ClienteInputProps } from './subComponents/ClienteInput';
 import ManagementUnitSelect, { ManagementUnitSelectProps } from './subComponents/ManagementUnitSelect';
+import RichText, { RichTextProps } from './subComponents/RichText';
 import Submit from './subComponents/Submit';
 import { ButtonProps } from '../..';
 
@@ -14,6 +15,7 @@ interface FormikSubComponents {
   GoalAndBallOutRadioGroup: React.FC<GoalAndBallOutRadioGroupProps>;
   ClienteInput: React.FC<ClienteInputProps>;
   ManagementUnitSelect: React.FC<ManagementUnitSelectProps>;
+  RichText: React.FC<RichTextProps>;
   Submit: React.FC<ButtonProps>;
 }
 
@@ -35,5 +37,6 @@ Formik.RadioGroupItem = RadioGroupItem;
 Formik.GoalAndBallOutRadioGroup = GoalAndBallOutRadioGroup;
 Formik.ClienteInput = ClienteInput;
 Formik.ManagementUnitSelect = ManagementUnitSelect;
+Formik.RichText = RichText;
 Formik.Submit = Submit;
 export default Formik;

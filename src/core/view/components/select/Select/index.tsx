@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, memo } from 'react';
 import { FaAngleDown, FaAngleRight, FaCheck } from 'react-icons/fa';
 
 import * as C from '~/core/view/components';
@@ -26,6 +26,8 @@ export interface SelectProps {
   options?: SelectOption[];
   multiple?: boolean;
   onChange?: (value: SelectOption | SelectOption[] | undefined) => void;
+  onClick?: () => void;
+  onBlur?: () => void;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -34,6 +36,8 @@ const Select: React.FC<SelectProps> = ({
   className,
   options = [] as SelectOption[],
   onChange,
+  onClick,
+  onBlur,
   collapsible,
   value,
   all,
@@ -44,9 +48,14 @@ const Select: React.FC<SelectProps> = ({
   const [hiddenInputValue, setHiddenInputValue] = useState<SelectOption | SelectOption[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [showList, setShowList] = useState(false);
+  const [denyBlur, setDenyBlur] = useState(true);
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [shownOptions, setShownOptions] = useState(options);
 
+  useEffect(() => {
+    if (!showList && onBlur && !denyBlur) onBlur();
+    setDenyBlur(false);
+  }, [showList]);
   useEffect(() => { handleAmountIndicatorMessage(); }, [hiddenInputValue]);
   useEffect(() => {
     handleValue(false);
@@ -84,6 +93,11 @@ const Select: React.FC<SelectProps> = ({
       setShowList(false);
     }
   };
+
+  function onButtonClick() {
+    setShowList(!showList);
+    if (onClick) onClick();
+  }
 
   async function handleInitialValue() {
     if (!value?.length) {
@@ -303,7 +317,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <S.Container className={className} ref={listRef}>
       <C.Label label={label} />
-      <S.SelectButton type="button" className="form-input-style" onClick={() => setShowList(!showList)}>
+      <S.SelectButton type="button" className="form-input-style" onClick={onButtonClick}>
         <span>{amountIndicator}</span>
         <FaAngleDown />
       </S.SelectButton>
@@ -334,4 +348,4 @@ const Select: React.FC<SelectProps> = ({
   );
 };
 
-export default Select;
+export default memo(Select);

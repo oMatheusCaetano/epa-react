@@ -63,6 +63,10 @@ export { default as Navbar } from './nav/Navbar';
 export * from './pagination/Paginator';
 export { default as Paginator } from './pagination/Paginator';
 
+//! RichText
+export * from './rich-text/RichText';
+export { default as RichText } from './rich-text/RichText';
+
 //! Table
 export * from './table/DataTable';
 export { default as DataTable } from './table/DataTable';

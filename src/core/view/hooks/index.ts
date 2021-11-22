@@ -1,12 +1,5 @@
-import { useDialog } from './useDialog';
-import { useAppStore } from './useAppStore';
+import { useParams } from 'react-router-dom';
 
 export * from './useDialog';
 export * from './useAppStore';
-
-export function useHooks() {
-  return {
-    DIALOG: useDialog(),
-    APP_STORE: useAppStore(),
-  };
-}
+export const useRoute = () => useParams<any>();
