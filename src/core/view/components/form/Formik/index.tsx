@@ -6,7 +6,10 @@ import GoalAndBallOutRadioGroup, { GoalAndBallOutRadioGroupProps } from './subCo
 import ClienteInput, { ClienteInputProps } from './subComponents/ClienteInput';
 import ManagementUnitSelect, { ManagementUnitSelectProps } from './subComponents/ManagementUnitSelect';
 import RichText, { RichTextProps } from './subComponents/RichText';
+import Input, { InputProps } from './subComponents/Input';
+import Select, { SelectProps } from './subComponents/Select';
 import Submit from './subComponents/Submit';
+import Search from './subComponents/Search';
 import { ButtonProps } from '../..';
 
 interface FormikSubComponents {
@@ -16,14 +19,18 @@ interface FormikSubComponents {
   ClienteInput: React.FC<ClienteInputProps>;
   ManagementUnitSelect: React.FC<ManagementUnitSelectProps>;
   RichText: React.FC<RichTextProps>;
+  Input: React.FC<InputProps>;
+  Select: React.FC<SelectProps>;
   Submit: React.FC<ButtonProps>;
+  Search: React.FC<ButtonProps>;
 }
 
 const Formik: React.FC<FormikConfig<FormikValues>> & FormikSubComponents = ({
   children,
+  enableReinitialize = true,
   ...rest
 }) => (
-  <FormikForm {...rest}>
+  <FormikForm {...rest} enableReinitialize={enableReinitialize}>
     <Form>
       {children}
     </Form>
@@ -39,4 +46,7 @@ Formik.ClienteInput = ClienteInput;
 Formik.ManagementUnitSelect = ManagementUnitSelect;
 Formik.RichText = RichText;
 Formik.Submit = Submit;
+Formik.Search = Search;
+Formik.Input = Input;
+Formik.Select = Select;
 export default Formik;

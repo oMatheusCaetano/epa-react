@@ -4,11 +4,11 @@ import { Field } from 'formik';
 
 import * as C from '~/core/view/components';
 
-export interface RichTextProps extends C.RichTextProps {
+export interface InputProps extends C.InputProps {
   name: string;
 }
 
-const RichText: React.FC<RichTextProps> = (props) => {
+const Input: React.FC<InputProps> = (props) => {
   function getErrorMessage(form: any, err?: string) {
     let error = '';
 
@@ -22,18 +22,14 @@ const RichText: React.FC<RichTextProps> = (props) => {
   return (
     <Field name={props.name}>
       {({ field, form }: any) => (
-        <C.RichText
+        <C.Input
           {...props}
           {...field}
           error={getErrorMessage(form, props.error)}
-          onBlur={() => { form.setFieldTouched(props.name, true); }}
-          onChange={(richTextValue) => {
-            form.setFieldValue(props.name, richTextValue);
-          }}
         />
       )}
     </Field>
   );
 };
 
-export default RichText;
+export default Input;

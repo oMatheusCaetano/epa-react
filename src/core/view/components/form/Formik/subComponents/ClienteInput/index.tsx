@@ -10,14 +10,14 @@ export interface ClienteInputProps extends C.ClienteInputProps {
 }
 
 const ClienteInput: React.FC<ClienteInputProps> = (props) => {
-  function getErrorMessage(form: any) {
+  function getErrorMessage(form: any, err?: string) {
     let error = '';
 
     if (form.touched[props.name] && form.errors[props.name]) {
       error = form.errors[props.name];
     }
 
-    return error ?? props.error;
+    return error || err;
   }
 
   return (
@@ -26,7 +26,7 @@ const ClienteInput: React.FC<ClienteInputProps> = (props) => {
         <C.ClienteInput
           {...props}
           {...field}
-          error={getErrorMessage(form)}
+          error={getErrorMessage(form, props.error)}
           onBlur={() => { form.setFieldTouched(props.name, true); }}
           onChange={(cliente) => {
             if (!cliente) {

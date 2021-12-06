@@ -9,11 +9,10 @@ import { Post, PostCategory } from '~/features/CorporateWall/domain/models';
 import { User } from '~/features/Users/domain/models';
 
 const CorporateWall: React.FC = () => {
-  const [showFilters, setShowFilters] = useState(false);
-  const getPostsDatasource = new GetPosts();
-  const getPostsDatasourceParams: QueryParams = {
+  const [showFilters, setShowFilters] = useState(true);
+  const [getPostsDatasourceParams, setGetPostsDatasourceParams] = useState<QueryParams>({
     with: ['usuario_inclusao', 'categoria'],
-  };
+  });
 
   function deletePost() {
     alert('Deletar post');
@@ -21,6 +20,18 @@ const CorporateWall: React.FC = () => {
 
   function printPost() {
     alert('Imprimir post');
+  }
+
+  function onFilter(values: C.FormikValues) {
+    setGetPostsDatasourceParams({
+      ...getPostsDatasourceParams,
+      filters: [
+        { field: 'unidades_gerenciais', value: values.unidades_gerenciais },
+        { field: 'text', value: values.text },
+        { field: 'codigo', value: values.codigo },
+        { field: values.tipo_data, value: values.codigo },
+      ],
+    });
   }
 
   return (
@@ -39,10 +50,99 @@ const CorporateWall: React.FC = () => {
           </C.Link>
         </>
       )}
+      filters={(
+        <C.Formik
+          onSubmit={onFilter}
+          initialValues={{
+            text: '',
+            codigo: '',
+            unidades_gerenciais: '',
+            tipo_data: 'data_inclusao',
+          }}
+        >
+          {/* <C.Formik.ManagementUnitSelect
+            multiple
+            name="unidades_gerenciais"
+            unitType={ManagementUnitHierarchyType.STRATEGY}
+          /> */}
+
+          <div className="d-flex justify-content-between mt-2">
+            <div className="input-append date" id="dp3" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
+              <input className="span2" size={16} type="text" value="12-02-2012" />
+              <span className="add-on"><i className="icon-th" /></span>
+            </div>
+            <C.Formik.Input
+              className="col-1"
+              label="Código"
+              name="codigo"
+              type="number"
+            />
+
+            <C.Formik.Select
+              multiple
+              className="col-3"
+              label="Categoria"
+              name="categoria"
+              options={[
+                { value: '', label: 'Todas' },
+              ]}
+            />
+
+            <C.Formik.Select
+              multiple
+              className="col-3"
+              label="Categoria"
+              name="categoria"
+              options={[
+                { value: '', label: 'Todas' },
+              ]}
+            />
+
+            <C.Formik.Input
+              className="col-4"
+              label="Contendo o texto"
+              name="text"
+            />
+          </div>
+
+          <div className="d-flex mt-3">
+            <C.Formik.Select
+              className="me-4"
+              label="Tipo de Data"
+              name="tipo_data"
+              options={[
+                { value: 'data_inclusao', label: 'Data de Inclusão' },
+                { value: 'data_publicacao', label: 'Data de Publicação' },
+              ]}
+            />
+
+            <C.Formik.Select
+              className="me-4"
+              label="Tipo de Data"
+              name="tipo_data"
+              options={[
+                { value: 'data_inclusao', label: 'Data de Inclusão' },
+                { value: 'data_publicacao', label: 'Data de Publicação' },
+              ]}
+            />
+
+            <C.Formik.Select
+              label="Tipo de Data"
+              name="tipo_data"
+              options={[
+                { value: 'data_inclusao', label: 'Data de Inclusão' },
+                { value: 'data_publicacao', label: 'Data de Publicação' },
+              ]}
+            />
+          </div>
+
+          <C.Formik.Search className="ms-auto my-2" />
+        </C.Formik>
+    )}
     >
       <C.SectionContainer title="Lista de postagens">
         <C.DataTable
-          datasource={getPostsDatasource}
+          datasource={new GetPosts()}
           datasourceParams={getPostsDatasourceParams}
           columns={[
             {

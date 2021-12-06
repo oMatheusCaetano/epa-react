@@ -21,14 +21,14 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   name,
   ...rest
 }) => {
-  function getErrorMessage(form: any) {
+  function getErrorMessage(form: any, err?: string) {
     let errorMessage = '';
 
     if (form.touched[name] && form.errors[name]) {
       errorMessage = form.errors[name];
     }
 
-    return errorMessage ?? error;
+    return errorMessage || err;
   }
 
   return (
@@ -41,7 +41,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
             <S.ChildrenContainer>
               {children}
             </S.ChildrenContainer>
-            <C.SmallText error={getErrorMessage(form)} />
+            <C.SmallText error={getErrorMessage(form, error)} />
           </>
         )}
       </Field>

@@ -9,14 +9,14 @@ export interface ManagementUnitSelectProps extends C.ManagementUnitSelectProps {
 }
 
 const ManagementUnitSelect: React.FC<ManagementUnitSelectProps> = (props) => {
-  function getErrorMessage(form: any) {
+  function getErrorMessage(form: any, err?: string) {
     let error = '';
 
     if (form.touched[props.name] && form.errors[props.name]) {
       error = form.errors[props.name];
     }
 
-    return error ?? props.error;
+    return error || err;
   }
 
   return (
@@ -25,7 +25,7 @@ const ManagementUnitSelect: React.FC<ManagementUnitSelectProps> = (props) => {
         <C.ManagementUnitSelect
           {...props}
           {...field}
-          error={getErrorMessage(form)}
+          error={getErrorMessage(form, props.error)}
           onBlur={() => { form.setFieldTouched(props.name, true); }}
           onChange={(options) => {
             if (!options) {

@@ -73,7 +73,7 @@ const DataTable: React.FC<DataTableProps> & DataTableSubComponents = ({
         setData(handleData(items as any[]));
       },
     });
-  }, []);
+  }, [datasourceParams]);
 
   useEffect(() => {
     if (!cachedData.length) return;

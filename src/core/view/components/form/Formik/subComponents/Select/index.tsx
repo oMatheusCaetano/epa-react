@@ -4,11 +4,11 @@ import { Field } from 'formik';
 
 import * as C from '~/core/view/components';
 
-export interface RichTextProps extends C.RichTextProps {
+export interface SelectProps extends C.SelectProps {
   name: string;
 }
 
-const RichText: React.FC<RichTextProps> = (props) => {
+const Select: React.FC<SelectProps> = (props) => {
   function getErrorMessage(form: any, err?: string) {
     let error = '';
 
@@ -22,13 +22,25 @@ const RichText: React.FC<RichTextProps> = (props) => {
   return (
     <Field name={props.name}>
       {({ field, form }: any) => (
-        <C.RichText
+        <C.Select
           {...props}
           {...field}
           error={getErrorMessage(form, props.error)}
           onBlur={() => { form.setFieldTouched(props.name, true); }}
-          onChange={(richTextValue) => {
-            form.setFieldValue(props.name, richTextValue);
+          onChange={(options) => {
+            if (!options) {
+              form.setFieldValue(props.name, '');
+              return;
+            }
+
+            if (props.multiple) {
+              const list = options as C.SelectOption[];
+              form.setFieldValue(props.name, list.map((cliente) => cliente.value).join(','));
+              return;
+            }
+
+            const item = options as C.SelectOption;
+            form.setFieldValue(props.name, item.value ?? '');
           }}
         />
       )}
@@ -36,4 +48,4 @@ const RichText: React.FC<RichTextProps> = (props) => {
   );
 };
 
-export default RichText;
+export default Select;

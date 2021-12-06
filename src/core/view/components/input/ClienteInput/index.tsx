@@ -46,7 +46,7 @@ const ClienteInput: React.FC<ClienteInputProps> = ({
     multiple ? [] as Cliente[] : {} as Cliente,
   );
 
-  useEffect(() => { getInitialValue(); }, []);
+  useEffect(() => { getInitialValue(); }, [value]);
   useEffect(updateVisibleSelection, [selectedCliente]);
 
   useEffect(() => {

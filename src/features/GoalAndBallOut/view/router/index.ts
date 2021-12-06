@@ -10,7 +10,7 @@ const GoalAndBallOutRoutes: RouterType = {
       exact: true,
     },
     {
-      path: '/goal-and-ball-out/:id',
+      path: '/goal-and-ball-out/update/:id',
       component: CreateGoalAndBallOut,
       exact: true,
     },

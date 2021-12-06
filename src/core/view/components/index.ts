@@ -41,6 +41,10 @@ export { default as Image } from './img/Image';
 export * from './iframe/IFrame';
 export { default as IFrame } from './iframe/IFrame';
 
+//! Input
+export * from './input/Input';
+export { default as Input } from './input/Input';
+
 export * from './input/ClienteInput';
 export { default as ClienteInput } from './input/ClienteInput';
 

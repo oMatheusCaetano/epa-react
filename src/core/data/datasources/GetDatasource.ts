@@ -16,9 +16,6 @@ export interface GetDatasourceParams<ApiData> extends DatasourceParams, QueryPar
 
 export default abstract class GetDatasource<ApiData>
   extends Datasource<GetDatasourceParams<ApiData>> {
-  /**
-   * Faz a chamada à API.
-   */
   execute(params: GetDatasourceParams<ApiData>) {
     return api.get<ApiData>(this.handleEndpoint(params))
       .then(({ data }) => this.requestSucceeded(data, params))
@@ -84,9 +81,11 @@ export default abstract class GetDatasource<ApiData>
 
     if (!filters?.length) return '';
 
-    return filters.map((filter) => {
-      const { field, value, operator } = filter;
-      return `${field}${operator ?? ''}=${value}`;
-    }).join('&');
+    return filters
+      .filter((filter) => filter.value !== undefined)
+      .map((filter) => {
+        const { field, value, operator } = filter;
+        return `${field}${operator ?? ''}=${value}`;
+      }).join('&');
   }
 }
