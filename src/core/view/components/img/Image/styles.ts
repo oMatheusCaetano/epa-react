@@ -35,5 +35,5 @@ export const Overlay = styled.div`
 `;
 
 export const Image = styled.img`
-  border-radius: ${({ theme }) => theme.radius.small};
+  border-radius: ${({ theme }) => theme.radius?.small};
 `;

@@ -7,12 +7,14 @@ import * as C from '~/core/view/components';
 
 export interface ExportPDFProps {
   id?: string;
-  columns: { title?: string }[];
-  data?: any[];
+  columns: { title: string }[];
+  hiddenColumns: string[];
+  data: any[];
 }
 
-const ExportPDF: React.FC<ExportPDFProps> = ({ id, columns, data }) => {
+const ExportPDF: React.FC<ExportPDFProps> = ({ hiddenColumns, columns, data }) => {
   const tableToExportAsPdfRef = useRef(null);
+  hiddenColumns = [...hiddenColumns, 'Ações'];
 
   return (
     <>
@@ -23,11 +25,35 @@ const ExportPDF: React.FC<ExportPDFProps> = ({ id, columns, data }) => {
 
       <div hidden>
         <div ref={tableToExportAsPdfRef}>
-          <Table
-            id={id}
-            columns={columns}
-            data={data}
-          />
+          <table className="table table-borderless">
+            <thead className="table-light">
+              <tr>
+                {
+                columns
+                  .filter((column) => !hiddenColumns.includes(column.title)) // Colunas escondidas
+                  .map((column) => (
+                    <th key={column.title}>
+                      {column.title}
+                    </th>
+                  ))
+              }
+              </tr>
+            </thead>
+
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={index}>
+                  {columns
+                    .filter((column) => !hiddenColumns.includes(column.title))
+                    .map((column) => (
+                      <td key={column.title}>
+                        {item.ds__data[column.title]}
+                      </td>
+                    ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
